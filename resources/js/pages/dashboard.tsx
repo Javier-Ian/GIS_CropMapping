@@ -3,9 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { toast, useToast } from '@/components/ui/use-toast';
+import SimpleToast from '@/components/ui/simple-toast';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { Calendar, FileText, MapPin, Plus, Users, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -38,9 +40,19 @@ interface Map {
 
 interface Props {
     maps: Map[];
+    auth: {
+        user: {
+            id: number;
+            name: string;
+            email: string;
+        };
+    };
 }
 
 export default function Dashboard({ maps = [] }: Props) {
+    const { auth } = usePage().props as any;
+    const { toasts, dismiss } = useToast();
+    
     const formatFileSize = (bytes: number) => {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -65,9 +77,34 @@ export default function Dashboard({ maps = [] }: Props) {
             .join('');
     };
 
+    const handleUnauthorizedAction = (action: string, mapOwner: string) => {
+        toast({
+            title: "Action Not Permitted",
+            description: `You cannot ${action} maps uploaded by ${mapOwner}. Only the map owner can perform this action.`,
+            variant: "destructive",
+        });
+    };
+
+    const canUserEditMap = (mapUserId: number) => {
+        return auth.user.id === mapUserId;
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
+            
+            {/* Toast notifications */}
+            {toasts.map((toast) => (
+                <SimpleToast
+                    key={toast.id}
+                    id={toast.id}
+                    title={toast.title}
+                    description={toast.description}
+                    variant={toast.variant}
+                    onClose={() => dismiss(toast.id)}
+                />
+            ))}
+            
             <div className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">
@@ -89,33 +126,33 @@ export default function Dashboard({ maps = [] }: Props) {
                 <div className="grid gap-4 md:grid-cols-3">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Maps</CardTitle>
+                            <CardTitle className="text-sm font-medium">Community Maps</CardTitle>
                             <MapPin className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{maps.length}</div>
                             <p className="text-xs text-muted-foreground">
-                                Maps in your collection
+                                Maps shared by community
                             </p>
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">GIS Files</CardTitle>
+                            <CardTitle className="text-sm font-medium">Your Maps</CardTitle>
                             <FileText className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">
-                                {maps.reduce((total, map) => total + (map.gis_file_paths?.length || 0), 0)}
+                                {maps.filter(map => map.user.id === auth.user.id).length}
                             </div>
                             <p className="text-xs text-muted-foreground">
-                                Total uploaded files
+                                Maps you've uploaded
                             </p>
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Storage Used</CardTitle>
+                            <CardTitle className="text-sm font-medium">Total Storage</CardTitle>
                             <Users className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
@@ -127,7 +164,7 @@ export default function Dashboard({ maps = [] }: Props) {
                                 )}
                             </div>
                             <p className="text-xs text-muted-foreground">
-                                Across all maps
+                                Used by community
                             </p>
                         </CardContent>
                     </Card>
@@ -136,9 +173,9 @@ export default function Dashboard({ maps = [] }: Props) {
                 {/* Maps Feed */}
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-bold">Your Maps</h2>
+                        <h2 className="text-xl font-bold">Community Maps</h2>
                         <p className="text-sm text-muted-foreground">
-                            {maps.length} {maps.length === 1 ? 'map' : 'maps'} in your collection
+                            {maps.length} {maps.length === 1 ? 'map' : 'maps'} shared by the community
                         </p>
                     </div>
                     
@@ -192,13 +229,35 @@ export default function Dashboard({ maps = [] }: Props) {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem asChild>
-                                                            <Link href={`/maps/${map.id}/edit`} className="flex items-center gap-2">
-                                                                <Pencil className="h-3 w-3" />
-                                                                Edit Map
-                                                            </Link>
+                                                        <DropdownMenuItem 
+                                                            onClick={(e) => {
+                                                                if (!canUserEditMap(map.user.id)) {
+                                                                    e.preventDefault();
+                                                                    handleUnauthorizedAction("edit", map.user.name);
+                                                                } else {
+                                                                    window.location.href = `/maps/${map.id}/edit`;
+                                                                }
+                                                            }}
+                                                            className="flex items-center gap-2"
+                                                        >
+                                                            <Pencil className="h-3 w-3" />
+                                                            Edit Map
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem className="flex items-center gap-2 text-destructive">
+                                                        <DropdownMenuItem 
+                                                            onClick={(e) => {
+                                                                if (!canUserEditMap(map.user.id)) {
+                                                                    e.preventDefault();
+                                                                    handleUnauthorizedAction("delete", map.user.name);
+                                                                } else {
+                                                                    // Add delete confirmation logic here
+                                                                    if (window.confirm('Are you sure you want to delete this map?')) {
+                                                                        // Add delete API call here
+                                                                        console.log('Deleting map:', map.id);
+                                                                    }
+                                                                }
+                                                            }}
+                                                            className="flex items-center gap-2 text-destructive"
+                                                        >
                                                             <Trash2 className="h-3 w-3" />
                                                             Delete Map
                                                         </DropdownMenuItem>
