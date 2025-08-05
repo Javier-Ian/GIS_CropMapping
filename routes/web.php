@@ -29,6 +29,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('maps/upload', [MapController::class, 'upload'])->name('maps.upload');
     Route::post('maps', [MapController::class, 'store'])->name('maps.store');
     Route::get('maps', [MapController::class, 'index'])->name('maps.index');
+    Route::get('maps/{map}', [MapController::class, 'show'])->name('maps.show');
+    Route::get('maps/{map}/edit', [MapController::class, 'edit'])->name('maps.edit');
+    Route::put('maps/{map}', [MapController::class, 'update'])->name('maps.update');
+    Route::delete('maps/{map}', [MapController::class, 'destroy'])->name('maps.destroy');
 });
 
 require __DIR__.'/settings.php';

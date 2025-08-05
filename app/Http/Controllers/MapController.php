@@ -120,4 +120,166 @@ class MapController extends Controller
 
         return response()->json($maps);
     }
+
+    public function show(Map $map)
+    {
+        // Ensure the user owns this map
+        if ($map->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized access to this map.');
+        }
+
+        // Add the full URL for the map image if it exists
+        if ($map->map_image_path) {
+            $map->map_image_url = Storage::url($map->map_image_path);
+        }
+
+        // Add full URLs for GIS files if they exist
+        if ($map->gis_file_paths) {
+            $map->gis_file_paths = collect($map->gis_file_paths)->map(function ($file) {
+                $file['url'] = Storage::url($file['path']);
+                return $file;
+            })->toArray();
+        }
+
+        return Inertia::render('maps/show', [
+            'map' => $map
+        ]);
+    }
+
+    public function edit(Map $map)
+    {
+        // Ensure the user owns this map
+        if ($map->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized access to this map.');
+        }
+
+        return Inertia::render('maps/edit', [
+            'map' => $map
+        ]);
+    }
+
+    public function update(Request $request, Map $map)
+    {
+        // Ensure the user owns this map
+        if ($map->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized access to this map.');
+        }
+
+        \Log::info('Map update request received', [
+            'map_id' => $map->id,
+            'title' => $request->title,
+            'description' => $request->description,
+            'has_map_image' => $request->hasFile('map_image'),
+            'has_gis_files' => $request->hasFile('gis_files'),
+        ]);
+
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'map_image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240', // 10MB
+                'gis_files.*' => 'nullable|file|max:51200', // 50MB per file
+                'remove_map_image' => 'nullable|boolean',
+                'remove_gis_files' => 'nullable|array',
+            ]);
+
+            $mapImagePath = $map->map_image_path;
+            $gisFilePaths = $map->gis_file_paths ?: [];
+
+            // Handle map image removal
+            if ($request->boolean('remove_map_image') && $mapImagePath) {
+                Storage::disk('public')->delete($mapImagePath);
+                $mapImagePath = null;
+            }
+
+            // Handle new map image upload
+            if ($request->hasFile('map_image')) {
+                // Delete old image if exists
+                if ($mapImagePath) {
+                    Storage::disk('public')->delete($mapImagePath);
+                }
+                $mapImagePath = $request->file('map_image')->store('maps/images', 'public');
+                \Log::info('Map image updated', ['path' => $mapImagePath]);
+            }
+
+            // Handle GIS files removal
+            if ($request->has('remove_gis_files')) {
+                $filesToRemove = $request->input('remove_gis_files', []);
+                foreach ($filesToRemove as $index) {
+                    if (isset($gisFilePaths[$index])) {
+                        Storage::disk('public')->delete($gisFilePaths[$index]['path']);
+                        unset($gisFilePaths[$index]);
+                    }
+                }
+                $gisFilePaths = array_values($gisFilePaths); // Re-index array
+            }
+
+            // Handle new GIS files upload
+            if ($request->hasFile('gis_files')) {
+                foreach ($request->file('gis_files') as $index => $file) {
+                    $filename = $file->getClientOriginalName();
+                    $path = $file->storeAs('maps/gis', time() . '_' . $filename, 'public');
+                    $gisFilePaths[] = [
+                        'original_name' => $filename,
+                        'path' => $path,
+                        'size' => $file->getSize(),
+                        'extension' => $file->getClientOriginalExtension(),
+                    ];
+                }
+                \Log::info('GIS files updated', ['count' => count($request->file('gis_files'))]);
+            }
+
+            // Update the map record
+            $map->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'map_image_path' => $mapImagePath,
+                'gis_file_paths' => $gisFilePaths,
+            ]);
+
+            \Log::info('Map updated successfully', ['map_id' => $map->id]);
+
+            return redirect()
+                ->route('maps.show', $map)
+                ->with('success', 'Map updated successfully!');
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to update map', ['error' => $e->getMessage()]);
+            return back()->withErrors(['general' => 'Failed to update map: ' . $e->getMessage()]);
+        }
+    }
+
+    public function destroy(Map $map)
+    {
+        // Ensure the user owns this map
+        if ($map->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized access to this map.');
+        }
+
+        try {
+            // Delete associated files
+            if ($map->map_image_path) {
+                Storage::disk('public')->delete($map->map_image_path);
+            }
+
+            if ($map->gis_file_paths) {
+                foreach ($map->gis_file_paths as $file) {
+                    Storage::disk('public')->delete($file['path']);
+                }
+            }
+
+            // Delete the map record
+            $map->delete();
+
+            \Log::info('Map deleted successfully', ['map_id' => $map->id]);
+
+            return redirect()
+                ->route('dashboard')
+                ->with('success', 'Map deleted successfully!');
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to delete map', ['error' => $e->getMessage()]);
+            return back()->withErrors(['general' => 'Failed to delete map: ' . $e->getMessage()]);
+        }
+    }
 }

@@ -2,10 +2,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { Calendar, FileText, MapPin, Plus, Users } from 'lucide-react';
+import { Calendar, FileText, MapPin, Plus, Users, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -119,68 +120,137 @@ export default function Dashboard({ maps = [] }: Props) {
                     </Card>
                 </div>
 
-                {/* Maps Grid */}
-                <div>
-                    <h2 className="text-xl font-semibold mb-4">Your Maps</h2>
+                {/* Maps Feed */}
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-xl font-bold">Your Maps</h2>
+                        <p className="text-sm text-muted-foreground">
+                            {maps.length} {maps.length === 1 ? 'map' : 'maps'} in your collection
+                        </p>
+                    </div>
+                    
                     {maps.length === 0 ? (
-                        <Card className="p-8">
-                            <div className="text-center">
-                                <MapPin className="mx-auto h-12 w-12 text-muted-foreground" />
-                                <h3 className="mt-4 text-lg font-semibold">No maps yet</h3>
-                                <p className="mt-2 text-muted-foreground">
-                                    Get started by uploading your first GIS map
-                                </p>
-                                <Link href="/maps/upload" className="mt-4 inline-block">
-                                    <Button>
-                                        <Plus className="mr-2 h-4 w-4" />
-                                        Upload Map
-                                    </Button>
-                                </Link>
-                            </div>
-                        </Card>
-                    ) : (
-                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                            {maps.map((map) => (
-                                <Card key={map.id} className="overflow-hidden">
-                                    <div className="relative aspect-video">
-                                        {map.map_image_url ? (
-                                            <img
-                                                src={map.map_image_url}
-                                                alt={map.title}
-                                                className="absolute inset-0 h-full w-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="absolute inset-0 bg-muted flex items-center justify-center">
-                                                <PlaceholderPattern className="size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                                                <MapPin className="absolute h-8 w-8 text-muted-foreground" />
-                                            </div>
-                                        )}
+                        <div className="max-w-2xl mx-auto">
+                            <Card className="border-dashed border-2 p-8">
+                                <div className="text-center">
+                                    <div className="mx-auto h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center mb-3">
+                                        <MapPin className="h-6 w-6 text-muted-foreground" />
                                     </div>
+                                    <h3 className="text-lg font-semibold mb-2">No maps yet</h3>
+                                    <p className="text-muted-foreground mb-4 max-w-sm mx-auto">
+                                        Get started by uploading your first GIS map and begin exploring spatial data
+                                    </p>
+                                    <Link href="/maps/upload">
+                                        <Button className="shadow-md">
+                                            <Plus className="mr-2 h-4 w-4" />
+                                            Upload Your First Map
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </Card>
+                        </div>
+                    ) : (
+                        <div className="max-w-2xl mx-auto space-y-4">
+                            {maps.map((map) => (
+                                <Card key={map.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 border-0 bg-card/50 backdrop-blur-sm">
+                                    {/* Map Header - Like a social media post header */}
                                     <CardHeader className="pb-2">
-                                        <CardTitle className="text-lg">{map.title}</CardTitle>
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-start gap-3">
+                                                {/* User Avatar */}
+                                                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
+                                                    IJ
+                                                </div>
+                                                {/* Map Info */}
+                                                <div className="space-y-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm font-semibold text-foreground">IAN DAVE JAVIER</span>
+                                                        <span className="text-xs text-muted-foreground">•</span>
+                                                        <span className="text-xs text-muted-foreground">uploaded {formatDate(map.created_at)}</span>
+                                                    </div>
+                                                    <CardTitle className="text-lg font-bold">{map.title}</CardTitle>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+                                                            <MoreHorizontal className="h-3 w-3" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem asChild>
+                                                            <Link href={`/maps/${map.id}/edit`} className="flex items-center gap-2">
+                                                                <Pencil className="h-3 w-3" />
+                                                                Edit Map
+                                                            </Link>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem className="flex items-center gap-2 text-destructive">
+                                                            <Trash2 className="h-3 w-3" />
+                                                            Delete Map
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </div>
+                                        </div>
                                         {map.description && (
-                                            <CardDescription className="line-clamp-2">
+                                            <CardDescription className="text-sm leading-relaxed pt-2 ml-13">
                                                 {map.description}
                                             </CardDescription>
                                         )}
                                     </CardHeader>
-                                    <CardContent className="space-y-3">
-                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                            <Calendar className="h-3 w-3" />
-                                            {formatDate(map.created_at)}
+
+                                    {/* Map Image - Full width like social media */}
+                                    <div className="relative">
+                                        <div className="aspect-[16/9] relative bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-950/50 dark:to-green-950/50">
+                                            {map.map_image_url ? (
+                                                <img
+                                                    src={map.map_image_url}
+                                                    alt={map.title}
+                                                    className="absolute inset-0 h-full w-full object-cover rounded-none"
+                                                />
+                                            ) : (
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <PlaceholderPattern className="size-full stroke-neutral-900/10 dark:stroke-neutral-100/10" />
+                                                    <div className="absolute inset-0 flex items-center justify-center">
+                                                        <div className="text-center space-y-1">
+                                                            <MapPin className="h-8 w-8 text-muted-foreground/60 mx-auto" />
+                                                            <p className="text-xs text-muted-foreground/80 font-medium">Map Preview</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {/* Overlay gradient for better text readability */}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
                                         </div>
+                                    </div>
+
+                                    {/* Map Details & Actions - Like social media engagement section */}
+                                    <CardContent className="p-3 space-y-3">
+                                        {/* GIS Files Tags */}
                                         {map.gis_file_paths && map.gis_file_paths.length > 0 && (
                                             <div className="space-y-2">
-                                                <p className="text-sm font-medium">GIS Files:</p>
+                                                <div className="flex items-center justify-between">
+                                                    <p className="text-xs font-medium text-muted-foreground">
+                                                        {map.gis_file_paths.length} GIS {map.gis_file_paths.length === 1 ? 'file' : 'files'}
+                                                    </p>
+                                                    <p className="text-xs text-muted-foreground">
+                                                        {formatFileSize(map.gis_file_paths.reduce((total, file) => total + file.size, 0))}
+                                                    </p>
+                                                </div>
                                                 <div className="flex flex-wrap gap-1">
-                                                    {map.gis_file_paths.slice(0, 3).map((file, index) => (
-                                                        <Badge key={index} variant="secondary" className="text-xs">
+                                                    {map.gis_file_paths.slice(0, 4).map((file, index) => (
+                                                        <Badge 
+                                                            key={index} 
+                                                            variant="secondary" 
+                                                            className="text-xs font-medium px-2 py-0.5 bg-primary/10 text-primary hover:bg-primary/20"
+                                                        >
                                                             {file.extension.toUpperCase()}
                                                         </Badge>
                                                     ))}
-                                                    {map.gis_file_paths.length > 3 && (
-                                                        <Badge variant="outline" className="text-xs">
-                                                            +{map.gis_file_paths.length - 3} more
+                                                    {map.gis_file_paths.length > 4 && (
+                                                        <Badge variant="outline" className="text-xs font-medium">
+                                                            +{map.gis_file_paths.length - 4} more
                                                         </Badge>
                                                     )}
                                                 </div>
