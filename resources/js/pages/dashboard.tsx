@@ -29,6 +29,11 @@ interface Map {
     }> | null;
     created_at: string;
     updated_at: string;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+    };
 }
 
 interface Props {
@@ -50,6 +55,14 @@ export default function Dashboard({ maps = [] }: Props) {
             month: 'short',
             day: 'numeric',
         });
+    };
+
+    const getUserInitials = (name: string) => {
+        return name
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase())
+            .slice(0, 2)
+            .join('');
     };
 
     return (
@@ -159,12 +172,12 @@ export default function Dashboard({ maps = [] }: Props) {
                                             <div className="flex items-start gap-3">
                                                 {/* User Avatar */}
                                                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
-                                                    IJ
+                                                    {getUserInitials(map.user.name)}
                                                 </div>
                                                 {/* Map Info */}
                                                 <div className="space-y-1">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-sm font-semibold text-foreground">IAN DAVE JAVIER</span>
+                                                        <span className="text-sm font-semibold text-foreground">{map.user.name.toUpperCase()}</span>
                                                         <span className="text-xs text-muted-foreground">•</span>
                                                         <span className="text-xs text-muted-foreground">uploaded {formatDate(map.created_at)}</span>
                                                     </div>

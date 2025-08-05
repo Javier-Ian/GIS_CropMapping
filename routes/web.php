@@ -10,7 +10,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        $maps = \App\Models\Map::where('user_id', auth()->id())
+        $maps = \App\Models\Map::with('user') // Load user relationship
             ->latest()
             ->get()
             ->map(function ($map) {
