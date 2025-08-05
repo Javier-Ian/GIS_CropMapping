@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚨 EMERGENCY TEST - BLACK TEXT + ROYAL BLUE BUTTON 🚨</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* FORCE BLACK TEXT AND ROYAL BLUE BUTTON - NO CACHE ISSUES */
+        .swal2-title {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+            text-shadow: none !important;
+            background: none !important;
+            -webkit-background-clip: initial !important;
+            background-clip: initial !important;
+        }
+
+        .swal2-html-container {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+            text-shadow: none !important;
+        }
+
+        .swal2-confirm {
+            background: linear-gradient(145deg, #1e40af, #3b82f6) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 12px !important;
+            padding: 14px 28px !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4) !important;
+        }
+
+        .swal2-confirm:hover {
+            background: linear-gradient(145deg, #1d4ed8, #2563eb) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 20px rgba(30, 64, 175, 0.5) !important;
+        }
+
+        .swal2-popup {
+            background: rgba(255, 255, 255, 0.98) !important;
+            border-radius: 24px !important;
+            padding: 40px !important;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .test-button {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 20px;
+            text-transform: uppercase;
+        }
+
+        .test-button:hover {
+            background: #cc3333;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 3px solid #ffc107;
+            color: #856404;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #ff0000; font-size: 36px; margin-bottom: 20px;">🔥 EMERGENCY SweetAlert TEST 🔥</h1>
+    
+    <div class="warning">
+        ⚠️ REQUIREMENTS: Text must be BLACK, OK button must be ROYAL BLUE ⚠️
+    </div>
+    
+    <p style="font-size: 20px; color: #333; margin: 30px 0;">
+        Press CTRL+F5 to force refresh, then click the button below.<br>
+        If the alert text is NOT black or button is NOT royal blue, something is wrong!
+    </p>
+    
+    <button class="test-button" onclick="emergencyTest()">🚨 CLICK TO TEST ALERT 🚨</button>
+
+    <script>
+        function emergencyTest() {
+            Swal.fire({
+                title: 'THIS TEXT MUST BE BLACK!',
+                text: 'This content text must also be completely black. The OK button must be royal blue.',
+                icon: 'success',
+                confirmButtonText: 'OK (ROYAL BLUE)',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showCancelButton: false,
+                customClass: {
+                    popup: 'emergency-popup'
+                }
+            });
+        }
+    </script>
+</body>
+</html>

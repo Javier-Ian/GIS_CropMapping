@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🚨 DIRECT CSS TEST 🚨</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- LOAD THE EXACT SAME CSS YOUR APP IS USING -->
+    <link rel="stylesheet" href="http://127.0.0.1:8000/public/build/assets/app-UtHlfHxP.css">
+    
+    <style>
+        body {
+            background: #f8f9fa;
+            padding: 50px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .urgent-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 20px;
+            text-transform: uppercase;
+        }
+        .info {
+            background: #fff3cd;
+            border: 3px solid #ffc107;
+            color: #856404;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #dc3545; font-size: 36px;">🔥 FINAL VERIFICATION 🔥</h1>
+    
+    <div class="info">
+        ⚠️ This loads the EXACT CSS file your GIS app uses! ⚠️<br>
+        Text MUST be BLACK, Button MUST be ROYAL BLUE
+    </div>
+    
+    <button class="urgent-btn" onclick="finalTest()">🚨 CLICK TO TEST WITH REAL CSS 🚨</button>
+
+    <script>
+        function finalTest() {
+            Swal.fire({
+                title: 'THIS TEXT MUST BE BLACK!',
+                text: 'This content text must also be completely black. The OK button must be royal blue.',
+                icon: 'success',
+                confirmButtonText: 'OK Button (ROYAL BLUE)',
+                customClass: {
+                    popup: 'success-notification ultra-bounce-animation',
+                    confirmButton: 'royal-blue-button'
+                }
+            });
+        }
+    </script>
+</body>
+</html>

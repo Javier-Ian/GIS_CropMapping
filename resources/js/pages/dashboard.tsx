@@ -3,11 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { toast, useToast } from '@/components/ui/use-toast';
-import SimpleToast from '@/components/ui/simple-toast';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { notify } from '@/lib/notifications';
+import { useFlashNotifications } from '@/hooks/use-flash-notifications';
+import { Head, Link, router } from '@inertiajs/react';
 import { Calendar, FileText, MapPin, Plus, Users, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -49,10 +49,10 @@ interface Props {
     };
 }
 
-export default function Dashboard({ maps = [] }: Props) {
-    const { auth } = usePage().props as any;
-    const { toasts, dismiss } = useToast();
-    
+export default function Dashboard({ maps = [], auth }: Props) {
+    // Handle flash notifications from Laravel
+    useFlashNotifications();
+
     const formatFileSize = (bytes: number) => {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -77,34 +77,47 @@ export default function Dashboard({ maps = [] }: Props) {
             .join('');
     };
 
-    const handleUnauthorizedAction = (action: string, mapOwner: string) => {
-        toast({
-            title: "Action Not Permitted",
-            description: `You cannot ${action} maps uploaded by ${mapOwner}. Only the map owner can perform this action.`,
-            variant: "destructive",
-        });
+    const handleEditMap = (map: Map) => {
+        // Check if current user owns the map
+        if (map.user.id !== auth.user.id) {
+            notify.permissionDenied(map.user.name.toUpperCase(), 'edit');
+            return;
+        }
+        // If user owns the map, navigate to edit page
+        window.location.href = `/maps/${map.id}/edit`;
     };
 
-    const canUserEditMap = (mapUserId: number) => {
-        return auth.user.id === mapUserId;
+    const handleDeleteMap = (map: Map) => {
+        // Check if current user owns the map
+        if (map.user.id !== auth.user.id) {
+            notify.permissionDenied(map.user.name.toUpperCase(), 'delete');
+            return;
+        }
+        
+        // Show themed confirmation dialog
+        notify.mapDeleteConfirm(map.title).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(`/maps/${map.id}`, {
+                    onSuccess: () => {
+                        notify.success(
+                            '🗑️ Map Deleted Successfully!',
+                            `Your map "${map.title}" has been permanently removed.`
+                        );
+                    },
+                    onError: () => {
+                        notify.error(
+                            '❌ Deletion Failed!',
+                            'There was a problem deleting your map. Please try again.'
+                        );
+                    }
+                });
+            }
+        });
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            
-            {/* Toast notifications */}
-            {toasts.map((toast) => (
-                <SimpleToast
-                    key={toast.id}
-                    id={toast.id}
-                    title={toast.title}
-                    description={toast.description}
-                    variant={toast.variant}
-                    onClose={() => dismiss(toast.id)}
-                />
-            ))}
-            
             <div className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">
@@ -120,39 +133,64 @@ export default function Dashboard({ maps = [] }: Props) {
                             Upload New Map
                         </Button>
                     </Link>
+                    
+                    {/* Notification Demo - Remove in production */}
+                    <div className="flex gap-2">
+                        <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => notify.permissionDenied('IAN DAVE JAVIER', 'edit')}
+                        >
+                            Demo Permission
+                        </Button>
+                        <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => notify.mapUploadSuccess('Demo Map')}
+                        >
+                            Demo Success
+                        </Button>
+                        <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => notify.welcomeToast(auth.user.name)}
+                        >
+                            Demo Toast
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Stats Cards */}
                 <div className="grid gap-4 md:grid-cols-3">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Community Maps</CardTitle>
+                            <CardTitle className="text-sm font-medium">Total Maps</CardTitle>
                             <MapPin className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{maps.length}</div>
                             <p className="text-xs text-muted-foreground">
-                                Maps shared by community
+                                Maps in your collection
                             </p>
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Your Maps</CardTitle>
+                            <CardTitle className="text-sm font-medium">GIS Files</CardTitle>
                             <FileText className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">
-                                {maps.filter(map => map.user.id === auth.user.id).length}
+                                {maps.reduce((total, map) => total + (map.gis_file_paths?.length || 0), 0)}
                             </div>
                             <p className="text-xs text-muted-foreground">
-                                Maps you've uploaded
+                                Total uploaded files
                             </p>
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Storage</CardTitle>
+                            <CardTitle className="text-sm font-medium">Storage Used</CardTitle>
                             <Users className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
@@ -164,7 +202,7 @@ export default function Dashboard({ maps = [] }: Props) {
                                 )}
                             </div>
                             <p className="text-xs text-muted-foreground">
-                                Used by community
+                                Across all maps
                             </p>
                         </CardContent>
                     </Card>
@@ -173,9 +211,9 @@ export default function Dashboard({ maps = [] }: Props) {
                 {/* Maps Feed */}
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-bold">Community Maps</h2>
+                        <h2 className="text-xl font-bold">Your Maps</h2>
                         <p className="text-sm text-muted-foreground">
-                            {maps.length} {maps.length === 1 ? 'map' : 'maps'} shared by the community
+                            {maps.length} {maps.length === 1 ? 'map' : 'maps'} in your collection
                         </p>
                     </div>
                     
@@ -230,33 +268,15 @@ export default function Dashboard({ maps = [] }: Props) {
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuItem 
-                                                            onClick={(e) => {
-                                                                if (!canUserEditMap(map.user.id)) {
-                                                                    e.preventDefault();
-                                                                    handleUnauthorizedAction("edit", map.user.name);
-                                                                } else {
-                                                                    window.location.href = `/maps/${map.id}/edit`;
-                                                                }
-                                                            }}
-                                                            className="flex items-center gap-2"
+                                                            onClick={() => handleEditMap(map)}
+                                                            className="flex items-center gap-2 cursor-pointer"
                                                         >
                                                             <Pencil className="h-3 w-3" />
                                                             Edit Map
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem 
-                                                            onClick={(e) => {
-                                                                if (!canUserEditMap(map.user.id)) {
-                                                                    e.preventDefault();
-                                                                    handleUnauthorizedAction("delete", map.user.name);
-                                                                } else {
-                                                                    // Add delete confirmation logic here
-                                                                    if (window.confirm('Are you sure you want to delete this map?')) {
-                                                                        // Add delete API call here
-                                                                        console.log('Deleting map:', map.id);
-                                                                    }
-                                                                }
-                                                            }}
-                                                            className="flex items-center gap-2 text-destructive"
+                                                            onClick={() => handleDeleteMap(map)}
+                                                            className="flex items-center gap-2 text-destructive cursor-pointer"
                                                         >
                                                             <Trash2 className="h-3 w-3" />
                                                             Delete Map

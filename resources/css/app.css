@@ -1,4 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @import 'tailwindcss';
+
+/* SweetAlert2 Custom Styles - FORCE INCLUDE */
+@import url('./sweetalert2-custom.css');
 
 @plugin 'tailwindcss-animate';
 

@@ -33,6 +33,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('maps/{map}/edit', [MapController::class, 'edit'])->name('maps.edit');
     Route::put('maps/{map}', [MapController::class, 'update'])->name('maps.update');
     Route::delete('maps/{map}', [MapController::class, 'destroy'])->name('maps.destroy');
+    
+    // Ultra-Unique Notification Test Route
+    Route::get('notification-test', function () {
+        return Inertia::render('notification-test');
+    })->name('notification.test');
 });
 
 require __DIR__.'/settings.php';

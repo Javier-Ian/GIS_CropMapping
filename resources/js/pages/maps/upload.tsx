@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';  
+import { useFlashNotifications } from '@/hooks/use-flash-notifications';
 import { Head, router } from '@inertiajs/react';
 import { Upload, FileType, MapPin } from 'lucide-react';
 import { useState } from 'react';
@@ -21,6 +22,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function MapUpload() {
+    // Handle flash notifications from Laravel
+    useFlashNotifications();
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [mapImage, setMapImage] = useState<File | null>(null);

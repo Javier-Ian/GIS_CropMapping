@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIXED SweetAlert Demo</title>
+    <link rel="stylesheet" href="public/build/assets/app-UtHlfHxP.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .demo-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+        }
+        .demo-button {
+            background: linear-gradient(145deg, #1e40af, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(30, 64, 175, 0.4);
+        }
+        h1 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+        p {
+            color: #6b7280;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>✅ FIXED SweetAlert Design</h1>
+        <p><strong>BLACK TEXT</strong> and <strong>ROYAL BLUE OK BUTTON</strong> - NO MORE BULLSHIT!</p>
+        
+        <button class="demo-button" onclick="showSuccess()">
+            ✅ Success Alert
+        </button>
+        
+        <button class="demo-button" onclick="showError()">
+            ❌ Error Alert
+        </button>
+        
+        <button class="demo-button" onclick="showInfo()">
+            ℹ️ Info Alert
+        </button>
+        
+        <button class="demo-button" onclick="showWarning()">
+            ⚠️ Warning Alert
+        </button>
+        
+        <button class="demo-button" onclick="showConfirm()">
+            ❓ Confirmation
+        </button>
+    </div>
+
+    <script>
+        function showSuccess() {
+            Swal.fire({
+                title: 'Map Uploaded Successfully',
+                text: 'Your map "Demo Map" has been uploaded and is ready to explore.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function showError() {
+            Swal.fire({
+                title: 'Access Denied',
+                text: 'You cannot edit maps uploaded by IAN DAVE JAVIER. Only the map owner can perform this action.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function showInfo() {
+            Swal.fire({
+                title: 'Information',
+                text: 'This is an informational message with BLACK text and ROYAL BLUE button.',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function showWarning() {
+            Swal.fire({
+                title: 'Warning',
+                text: 'This action requires your attention. Please proceed with caution.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function showConfirm() {
+            Swal.fire({
+                title: 'Delete Map?',
+                text: 'Are you sure you want to delete "Demo Map"? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel'
+            });
+        }
+    </script>
+</body>
+</html>

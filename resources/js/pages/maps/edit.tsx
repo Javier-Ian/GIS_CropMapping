@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import { useFlashNotifications } from '@/hooks/use-flash-notifications';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { AlertCircle, Eye, FileText, MapPin, Save, Trash2, Upload, X } from 'lucide-react';
 import { useState } from 'react';
@@ -34,6 +35,9 @@ interface Props {
 }
 
 export default function MapEdit({ map, errors }: Props) {
+    // Handle flash notifications from Laravel
+    useFlashNotifications();
+
     const [previewImage, setPreviewImage] = useState<string | null>(map.map_image_url || null);
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const [isDragging, setIsDragging] = useState(false);
