@@ -1,7 +1,7 @@
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
-import { MapPin, Globe, Users, TreePine, Wheat, Map, BarChart, Sprout, ChevronRight, FileText } from 'lucide-react';
+import { MapPin, Leaf, BarChart3, Globe, Users, ArrowRight, Satellite, TreePine, Wheat } from 'lucide-react';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
@@ -18,25 +18,25 @@ export default function Welcome() {
 
     const features = [
         {
-            icon: <Map className="w-8 h-8" />,
-            title: "Upload Mapping",
-            description: "Upload and analyze your own mapping data for precise crop management"
+            icon: <Satellite className="w-8 h-8" />,
+            title: "Satellite Mapping",
+            description: "Advanced satellite imagery analysis for precise crop monitoring"
         },
         {
-            icon: <BarChart className="w-8 h-8" />,
+            icon: <BarChart3 className="w-8 h-8" />,
             title: "Data Analytics",
             description: "Comprehensive analytics to optimize agricultural productivity"
         },
         {
-            icon: <FileText className="w-8 h-8" />,
-            title: "GIS File Management",
-            description: "Support for QGIS projects, Shapefiles, GeoJSON, KML and other GIS formats"
+            icon: <TreePine className="w-8 h-8" />,
+            title: "Environmental Impact",
+            description: "Monitor environmental changes and sustainability metrics"
         }
     ];
 
     return (
         <>
-            <Head title="GIS CROP LAND USE MAPPING - Welcome">
+            <Head title="GIS Crop Mapping - Welcome">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700&display=swap" rel="stylesheet" />
                 <style>{`
@@ -55,68 +55,6 @@ export default function Welcome() {
                         50% { transform: translateY(-15px); }
                     }
                     
-                    @keyframes extend-line {
-                        0% { width: 0%; opacity: 0; }
-                        20% { opacity: 1; }
-                        100% { width: 100%; opacity: 0.8; }
-                    }
-                    
-                    @keyframes slide-right {
-                        0% { transform: translateX(-20px); opacity: 0; }
-                        50% { opacity: 1; }
-                        100% { transform: translateX(150px); opacity: 0; }
-                    }
-                    
-                    @keyframes slide-right-delayed {
-                        0% { transform: translateX(-15px); opacity: 0; }
-                        60% { opacity: 1; }
-                        100% { transform: translateX(120px); opacity: 0; }
-                    }
-                    
-                    @keyframes slide-right-slow {
-                        0% { transform: translateX(-10px); opacity: 0; }
-                        40% { opacity: 1; }
-                        100% { transform: translateX(100px); opacity: 0; }
-                    }
-                    
-                    @keyframes grow-vertical {
-                        0% { height: 0; opacity: 0; }
-                        30% { opacity: 1; }
-                        100% { height: 3rem; opacity: 0.6; }
-                    }
-                    
-                    @keyframes grow-vertical-delayed {
-                        0% { height: 0; opacity: 0; }
-                        40% { opacity: 1; }
-                        100% { height: 4rem; opacity: 0.4; }
-                    }
-                    
-                    @keyframes grow-vertical-slow {
-                        0% { height: 0; opacity: 0; }
-                        50% { opacity: 1; }
-                        100% { height: 2rem; opacity: 0.5; }
-                    }
-                    
-                    @keyframes float-dot {
-                        0%, 100% { transform: translateY(0px) scale(1); opacity: 0.3; }
-                        50% { transform: translateY(-30px) scale(1.5); opacity: 1; }
-                    }
-                    
-                    @keyframes float-dot-delayed {
-                        0%, 100% { transform: translateY(0px) scale(1); opacity: 0.2; }
-                        50% { transform: translateY(-25px) scale(1.3); opacity: 0.8; }
-                    }
-                    
-                    @keyframes fade-up {
-                        0% { opacity: 0; transform: translateY(10px); }
-                        100% { opacity: 0.6; transform: translateY(0px); }
-                    }
-                    
-                    @keyframes fade-up-delayed {
-                        0% { opacity: 0; transform: translateY(8px); }
-                        100% { opacity: 0.4; transform: translateY(0px); }
-                    }
-                    
                     .animate-float {
                         animation: float 6s ease-in-out infinite;
                     }
@@ -128,56 +66,12 @@ export default function Welcome() {
                     .animate-float-slow {
                         animation: float-slow 10s ease-in-out infinite;
                     }
-                    
-                    .animate-extend-line {
-                        animation: extend-line 4s ease-out infinite;
-                    }
-                    
-                    .animate-slide-right {
-                        animation: slide-right 6s ease-in-out infinite;
-                    }
-                    
-                    .animate-slide-right-delayed {
-                        animation: slide-right-delayed 7s ease-in-out infinite 1s;
-                    }
-                    
-                    .animate-slide-right-slow {
-                        animation: slide-right-slow 8s ease-in-out infinite 2s;
-                    }
-                    
-                    .animate-grow-vertical {
-                        animation: grow-vertical 3s ease-out infinite;
-                    }
-                    
-                    .animate-grow-vertical-delayed {
-                        animation: grow-vertical-delayed 4s ease-out infinite 1.5s;
-                    }
-                    
-                    .animate-grow-vertical-slow {
-                        animation: grow-vertical-slow 5s ease-out infinite 3s;
-                    }
-                    
-                    .animate-float-dot {
-                        animation: float-dot 4s ease-in-out infinite;
-                    }
-                    
-                    .animate-float-dot-delayed {
-                        animation: float-dot-delayed 5s ease-in-out infinite 2s;
-                    }
-                    
-                    .animate-fade-up {
-                        animation: fade-up 2s ease-out forwards;
-                    }
-                    
-                    .animate-fade-up-delayed {
-                        animation: fade-up-delayed 3s ease-out forwards 1s;
-                    }
                 `}</style>
             </Head>
 
-            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative">
+            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative overflow-hidden">
                 {/* Animated Background Elements */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 overflow-hidden">
                     <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-green-200/30 rounded-full mix-blend-multiply filter blur-xl animate-float"></div>
                     <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-emerald-200/30 rounded-full mix-blend-multiply filter blur-xl animate-float-delayed"></div>
                     <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-teal-200/30 rounded-full mix-blend-multiply filter blur-xl animate-float-slow"></div>
@@ -194,12 +88,10 @@ export default function Welcome() {
                                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full animate-ping"></div>
                             </div>
                             <div>
-                                <h1 className="text-lg lg:text-xl font-bold bg-gradient-to-r from-green-700 to-emerald-700 bg-clip-text text-transparent leading-tight">
-                                    GIS CROP LAND USE MAPPING
+                                <h1 className="text-xl font-bold bg-gradient-to-r from-green-700 to-emerald-700 bg-clip-text text-transparent">
+                                    GIS Crop Mapping
                                 </h1>
-                                <p className="text-xs text-green-600/70 font-bold uppercase">
-                                    REMOTE <span className="font-extrabold">DATA MANAGEMENT</span> SYSTEM
-                                </p>
+                                <p className="text-xs text-green-600/70">Agricultural Intelligence</p>
                             </div>
                         </div>
                         
@@ -224,7 +116,7 @@ export default function Welcome() {
                                         href={route('register')}
                                         className="group relative px-6 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-full font-medium transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25 hover:scale-105"
                                     >
-                                        <span className="relative z-10">Register</span>
+                                        <span className="relative z-10">Get Started</span>
                                         <div className="absolute inset-0 bg-gradient-to-r from-green-700 to-emerald-700 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                     </Link>
                                 </>
@@ -240,55 +132,61 @@ export default function Welcome() {
                         <div className={`space-y-8 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                             <div className="space-y-4">
                                 <div className="inline-flex items-center px-4 py-2 bg-green-100 rounded-full text-green-700 text-sm font-medium">
-                                    <Sprout className="w-4 h-4 mr-2 animate-bounce" />
-                                    Advanced Crop Mapping
+                                    <Leaf className="w-4 h-4 mr-2 animate-bounce" />
+                                    Next-Generation Agriculture
                                 </div>
                                 
                                 <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
                                     <span className="bg-gradient-to-r from-green-700 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                                        Land Use
+                                        Smart Farming
                                     </span>
                                     <br />
                                     <span className="text-gray-800">
-                                        Mapping &
+                                        Through
                                     </span>
                                     <br />
                                     <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
-                                        Data Management
+                                        GIS Technology
                                     </span>
                                 </h1>
                                 
                                 <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
-                                    Upload, analyze, and manage your agricultural GIS data with support for QGIS projects, 
-                                    Shapefiles, and multiple file formats for comprehensive crop land use mapping.
+                                    Revolutionize your agricultural practices with cutting-edge GIS mapping, 
+                                    real-time crop monitoring, and data-driven insights for sustainable farming.
                                 </p>
                             </div>
                             
-                            {/* Minimalist Cinematic Animation */}
-                            <div className="relative py-12 max-w-full">
-                                {/* Main Moving Line */}
-                                <div className="relative h-20 overflow-hidden">
-                                    <div className="absolute inset-0">
-                                        {/* Horizontal line that extends */}
-                                        <div className="absolute top-10 left-0 h-0.5 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 animate-extend-line max-w-md"></div>
-                                        
-                                        {/* Moving geometric shapes */}
-                                        <div className="absolute top-8 left-4 w-4 h-4 bg-green-500 rotate-45 animate-slide-right opacity-80"></div>
-                                        <div className="absolute top-6 left-20 w-3 h-3 bg-emerald-500 rounded-full animate-slide-right-delayed opacity-60"></div>
-                                        <div className="absolute top-12 left-32 w-5 h-2 bg-teal-500 animate-slide-right-slow opacity-70"></div>
-                                        
-                                        {/* Vertical accent lines */}
-                                        <div className="absolute top-4 left-12 w-0.5 h-12 bg-green-300 animate-grow-vertical"></div>
-                                        <div className="absolute top-2 left-28 w-0.5 h-16 bg-emerald-300 animate-grow-vertical-delayed"></div>
-                                        <div className="absolute top-6 left-44 w-0.5 h-8 bg-teal-300 animate-grow-vertical-slow"></div>
-                                    </div>
-                                </div>
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <Link
+                                    href={auth.user ? route('dashboard') : route('register')}
+                                    className="group relative px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-2xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:shadow-green-500/30 hover:scale-105 flex items-center justify-center"
+                                >
+                                    <span className="relative z-10 mr-2">
+                                        {auth.user ? 'Go to Dashboard' : 'Start Mapping'}
+                                    </span>
+                                    <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
+                                    <div className="absolute inset-0 bg-gradient-to-r from-green-700 to-emerald-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                </Link>
                                 
-                                {/* Floating minimalist elements */}
-                                <div className="absolute inset-0 pointer-events-none">
-                                    <div className="absolute top-2 right-8 w-1 h-1 bg-green-400 rounded-full animate-float-dot"></div>
-                                    <div className="absolute bottom-4 left-16 w-1 h-1 bg-emerald-400 rounded-full animate-float-dot-delayed"></div>
-                                    <div className="absolute top-8 right-20 w-2 h-0.5 bg-teal-400 animate-pulse"></div>
+                                <button className="group px-8 py-4 border-2 border-green-200 text-green-700 rounded-2xl font-semibold text-lg transition-all duration-300 hover:border-green-300 hover:bg-green-50 flex items-center justify-center">
+                                    <MapPin className="w-5 h-5 mr-2 group-hover:animate-pulse" />
+                                    View Demo
+                                </button>
+                            </div>
+                            
+                            {/* Stats */}
+                            <div className="grid grid-cols-3 gap-6 pt-8">
+                                <div className="text-center">
+                                    <div className="text-3xl font-bold text-green-600">500+</div>
+                                    <div className="text-sm text-gray-600">Farms Mapped</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-3xl font-bold text-emerald-600">95%</div>
+                                    <div className="text-sm text-gray-600">Accuracy Rate</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-3xl font-bold text-teal-600">24/7</div>
+                                    <div className="text-sm text-gray-600">Monitoring</div>
                                 </div>
                             </div>
                         </div>
@@ -330,6 +228,35 @@ export default function Welcome() {
                                                 </div>
                                             ))}
                                         </div>
+                                        
+                                        {/* Live Data Simulation */}
+                                        <div className="border-t border-gray-200 pt-6">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <h4 className="font-semibold text-gray-800">Live Crop Data</h4>
+                                                <div className="flex items-center space-x-2">
+                                                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                                    <span className="text-xs text-gray-600">Real-time</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="bg-green-50 rounded-xl p-3">
+                                                    <div className="flex items-center space-x-2">
+                                                        <Wheat className="w-4 h-4 text-green-600" />
+                                                        <span className="text-sm text-green-800">Wheat</span>
+                                                    </div>
+                                                    <div className="text-lg font-bold text-green-700">847 acres</div>
+                                                </div>
+                                                
+                                                <div className="bg-amber-50 rounded-xl p-3">
+                                                    <div className="flex items-center space-x-2">
+                                                        <TreePine className="w-4 h-4 text-amber-600" />
+                                                        <span className="text-sm text-amber-800">Corn</span>
+                                                    </div>
+                                                    <div className="text-lg font-bold text-amber-700">623 acres</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 
@@ -343,6 +270,71 @@ export default function Welcome() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                {/* Features Section */}
+                <div className={`relative z-10 max-w-7xl mx-auto px-6 pb-24 transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-bold text-gray-800 mb-4">
+                            Why Choose Our <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">GIS Platform?</span>
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                            Experience the future of agriculture with our comprehensive GIS solutions
+                        </p>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            {
+                                icon: <Satellite className="w-12 h-12" />,
+                                title: "Precision Mapping",
+                                description: "High-resolution satellite imagery and drone mapping for accurate field analysis",
+                                color: "from-blue-500 to-cyan-500"
+                            },
+                            {
+                                icon: <BarChart3 className="w-12 h-12" />,
+                                title: "Advanced Analytics",
+                                description: "AI-powered insights and predictive analytics for optimal crop management",
+                                color: "from-green-500 to-emerald-500"
+                            },
+                            {
+                                icon: <Leaf className="w-12 h-12" />,
+                                title: "Sustainable Solutions",
+                                description: "Environmentally conscious farming practices with real-time monitoring",
+                                color: "from-amber-500 to-orange-500"
+                            }
+                        ].map((item, index) => (
+                            <div
+                                key={index}
+                                className="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/50 hover:shadow-xl transition-all duration-300 hover:scale-105"
+                            >
+                                <div className={`w-16 h-16 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                                    {item.icon}
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-800 mb-4">{item.title}</h3>
+                                <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* CTA Section */}
+                <div className={`relative z-10 max-w-4xl mx-auto px-6 pb-24 transition-all duration-1000 delay-900 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                    <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-3xl p-12 text-center shadow-2xl">
+                        <h2 className="text-3xl font-bold text-white mb-4">
+                            Ready to Transform Your Farm?
+                        </h2>
+                        <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
+                            Join thousands of farmers who are already using our GIS technology to optimize their crops and increase yields.
+                        </p>
+                        <Link
+                            href={auth.user ? route('dashboard') : route('register')}
+                            className="group inline-flex items-center px-8 py-4 bg-white text-green-600 rounded-2xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
+                        >
+                            <span className="mr-2">{auth.user ? 'Access Dashboard' : 'Start Free Trial'}</span>
+                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                        </Link>
                     </div>
                 </div>
             </div>
