@@ -138,31 +138,6 @@ export default function Dashboard({ maps = [], auth }: Props) {
                             Upload New Map
                         </Button>
                     </Link>
-                    
-                    {/* Notification Demo - Remove in production */}
-                    <div className="flex gap-2">
-                        <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => notify.permissionDenied('IAN DAVE JAVIER', 'edit')}
-                        >
-                            Demo Permission
-                        </Button>
-                        <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => notify.mapUploadSuccess('Demo Map')}
-                        >
-                            Demo Success
-                        </Button>
-                        <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => notify.welcomeToast(auth.user.name)}
-                        >
-                            Demo Toast
-                        </Button>
-                    </div>
                 </div>
 
                 {/* Stats Cards */}
