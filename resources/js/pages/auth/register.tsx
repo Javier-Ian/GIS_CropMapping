@@ -108,7 +108,7 @@ export default function Register() {
                                             onChange={(e) => setData('name', e.target.value)}
                                             disabled={processing}
                                             placeholder="Enter your full name"
-                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20"
+                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.name} className="mt-1" />
                                     </div>
@@ -128,7 +128,7 @@ export default function Register() {
                                             onChange={(e) => setData('email', e.target.value)}
                                             disabled={processing}
                                             placeholder="Enter your email address"
-                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20"
+                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.email} />
                                     </div>
@@ -148,7 +148,7 @@ export default function Register() {
                                             onChange={(e) => setData('password', e.target.value)}
                                             disabled={processing}
                                             placeholder="Create a secure password"
-                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20"
+                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.password} />
                                     </div>
@@ -168,7 +168,7 @@ export default function Register() {
                                             onChange={(e) => setData('password_confirmation', e.target.value)}
                                             disabled={processing}
                                             placeholder="Confirm your password"
-                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20"
+                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.password_confirmation} />
                                     </div>

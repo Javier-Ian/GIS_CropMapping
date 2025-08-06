@@ -1,5 +1,5 @@
 import { Head, useForm, Link } from '@inertiajs/react';
-import { LoaderCircle, Globe, Mail, ArrowLeft } from 'lucide-react';
+import { LoaderCircle, Globe, Key, ArrowLeft } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 
 import InputError from '@/components/input-error';
@@ -7,10 +7,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+type ResetPasswordForm = {
+    email: string;
+    password: string;
+    password_confirmation: string;
+};
+
 export default function ForgotPassword({ status }: { status?: string }) {
     const [isVisible, setIsVisible] = useState(false);
-    const { data, setData, post, processing, errors } = useForm<Required<{ email: string }>>({
+    const { data, setData, post, processing, errors } = useForm<Required<ResetPasswordForm>>({
         email: '',
+        password: '',
+        password_confirmation: '',
     });
 
     useEffect(() => {
@@ -19,12 +27,12 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('password.email'));
+        post(route('password.update'));
     };
 
     return (
         <>
-            <Head title="Forgot Password - GIS Crop Land Use Mapping" />
+            <Head title="Reset Password - GIS Crop Land Use Mapping" />
             
             <div className="h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative overflow-hidden">
                 {/* Animated Background Elements */}
@@ -74,7 +82,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                                 {/* Badge */}
                                 <div className="inline-flex items-center px-3 py-1.5 bg-green-100 rounded-full text-green-700 text-sm font-medium">
-                                    <Mail className="w-3 h-3 mr-2 animate-bounce" />
+                                    <Key className="w-3 h-3 mr-2 animate-bounce" />
                                     Reset Your Password
                                 </div>
                             </div>
@@ -88,7 +96,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                             <div className="text-center mb-6">
                                 <p className="text-gray-600 text-sm">
-                                    Enter your email address and we'll send you a link to reset your password.
+                                    Enter your registered email address and create a new password.
                                 </p>
                             </div>
 
@@ -103,14 +111,53 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                             name="email"
                                             required
                                             autoFocus
+                                            tabIndex={1}
                                             autoComplete="email"
                                             value={data.email}
                                             onChange={(e) => setData('email', e.target.value)}
                                             disabled={processing}
-                                            placeholder="Enter your email address"
-                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-green-500/20 transition-all duration-300"
+                                            placeholder="Enter your registered email"
+                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-green-500/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.email} />
+                                    </div>
+
+                                    {/* New Password Field */}
+                                    <div className="space-y-1">
+                                        <Label htmlFor="password" className="text-gray-700 font-medium text-sm">New Password</Label>
+                                        <Input
+                                            id="password"
+                                            type="password"
+                                            name="password"
+                                            required
+                                            tabIndex={2}
+                                            autoComplete="new-password"
+                                            value={data.password}
+                                            onChange={(e) => setData('password', e.target.value)}
+                                            disabled={processing}
+                                            placeholder="Create a new secure password"
+                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-green-500/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500"
+                                        />
+                                        <InputError message={errors.password} />
+                                    </div>
+
+                                    {/* Confirm Password Field */}
+                                    <div className="space-y-1">
+                                        <Label htmlFor="password_confirmation" className="text-gray-700 font-medium text-sm">Confirm New Password</Label>
+                                        <Input
+                                            id="password_confirmation"
+                                            type="password"
+                                            name="password_confirmation"
+                                            required
+                                            tabIndex={3}
+                                            autoComplete="new-password"
+                                            value={data.password_confirmation}
+                                            onChange={(e) => setData('password_confirmation', e.target.value)}
+                                            disabled={processing}
+                                            placeholder="Confirm your new password"
+                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-green-500/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500"
+                                        />
+                                        <InputError message={errors.password_confirmation} />
                                     </div>
                                 </div>
 
@@ -118,10 +165,11 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 <Button 
                                     type="submit" 
                                     className="w-full h-10 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-semibold transition-all duration-300 hover:shadow-xl hover:shadow-green-500/30 hover:scale-105" 
+                                    tabIndex={4}
                                     disabled={processing}
                                 >
                                     {processing && <LoaderCircle className="h-4 w-4 animate-spin mr-2" />}
-                                    Send Reset Link
+                                    Reset Password
                                 </Button>
 
                                 {/* Back to Login Link */}
@@ -130,6 +178,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                         Remember your password?{' '}
                                         <Link 
                                             href={route('login')}
+                                            tabIndex={5}
                                             className="font-medium text-green-600 hover:text-green-700 transition-colors duration-300"
                                         >
                                             Sign in here
