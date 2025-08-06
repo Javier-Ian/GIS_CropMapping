@@ -21,11 +21,11 @@ const mainNavItems: NavItem[] = [
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset">
-            <SidebarHeader>
+        <Sidebar collapsible="icon" variant="inset" className="bg-gradient-to-b from-green-50 to-emerald-50 border-r border-green-200">
+            <SidebarHeader className="bg-gradient-to-r from-green-100 to-emerald-100 border-b border-green-200">
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+                        <SidebarMenuButton size="lg" asChild className="hover:bg-green-200/50">
                             <Link href="/dashboard" prefetch>
                                 <AppLogo />
                             </Link>
@@ -34,11 +34,11 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent className="bg-gradient-to-b from-green-50 to-emerald-50">
                 <NavMain items={mainNavItems} />
             </SidebarContent>
 
-            <SidebarFooter>
+            <SidebarFooter className="bg-gradient-to-r from-green-100 to-emerald-100 border-t border-green-200">
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

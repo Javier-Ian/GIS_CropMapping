@@ -8,7 +8,7 @@ import AppLayout from '@/layouts/app-layout';
 import { notify } from '@/lib/notifications';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Eye, FileText, MapPin, MoreHorizontal, Pencil, Plus, Trash2, Users } from 'lucide-react';
+import { Eye, FileText, MapPin, MoreHorizontal, Pencil, Plus, Trash2, Users, Heart, MessageCircle, Share2, Download, Calendar, Clock } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -117,15 +117,15 @@ export default function Dashboard({ maps = [], auth }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6">
+            <div className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6 bg-white">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-                        <p className="text-muted-foreground">Welcome to your GIS mapping workspace</p>
+                        <h1 className="text-3xl font-bold tracking-tight text-green-800">Dashboard</h1>
+                        <p className="text-green-600">Welcome to your GIS mapping workspace</p>
                     </div>
                     <Link href="/maps/upload">
-                        <Button className="flex items-center gap-2">
+                        <Button className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white">
                             <Plus className="h-4 w-4" />
                             Upload New Map
                         </Button>
@@ -134,195 +134,166 @@ export default function Dashboard({ maps = [], auth }: Props) {
 
                 {/* Stats Cards */}
                 <div className="grid gap-4 md:grid-cols-3">
-                    <Card>
+                    <Card className="border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Maps</CardTitle>
-                            <MapPin className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium text-green-700">Total Maps</CardTitle>
+                            <MapPin className="h-4 w-4 text-green-600" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{maps.length}</div>
-                            <p className="text-xs text-muted-foreground">Maps in your collection</p>
+                            <div className="text-2xl font-bold text-green-800">{maps.length}</div>
+                            <p className="text-xs text-green-600">Maps in your collection</p>
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">GIS Files</CardTitle>
-                            <FileText className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium text-emerald-700">GIS Files</CardTitle>
+                            <FileText className="h-4 w-4 text-emerald-600" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{maps.reduce((total, map) => total + (map.gis_file_paths?.length || 0), 0)}</div>
-                            <p className="text-xs text-muted-foreground">Total uploaded files</p>
+                            <div className="text-2xl font-bold text-emerald-800">{maps.reduce((total, map) => total + (map.gis_file_paths?.length || 0), 0)}</div>
+                            <p className="text-xs text-emerald-600">Total uploaded files</p>
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className="border-teal-200 bg-gradient-to-br from-teal-50 to-cyan-50">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Storage Used</CardTitle>
-                            <Users className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium text-teal-700">Storage Used</CardTitle>
+                            <Users className="h-4 w-4 text-teal-600" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">
-                                {formatFileSize(
-                                    maps.reduce(
-                                        (total, map) => total + (map.gis_file_paths?.reduce((fileTotal, file) => fileTotal + file.size, 0) || 0),
-                                        0,
-                                    ),
-                                )}
+                            <div className="text-2xl font-bold text-teal-800">
+                                {formatFileSize(maps.reduce((total, map) => total + (map.gis_file_paths?.reduce((fileTotal, file) => fileTotal + file.size, 0) || 0), 0))}
                             </div>
-                            <p className="text-xs text-muted-foreground">Across all maps</p>
+                            <p className="text-xs text-teal-600">Across all maps</p>
                         </CardContent>
                     </Card>
                 </div>
 
-                {/* Maps Feed */}
+                {/* Maps Section */}
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-bold">Your Maps</h2>
-                        <p className="text-sm text-muted-foreground">
-                            {maps.length} {maps.length === 1 ? 'map' : 'maps'} in your collection
-                        </p>
+                        <h2 className="text-xl font-bold text-green-800">Your Maps</h2>
+                        <div className="text-sm text-green-600">
+                            {maps.length} maps in your collection
+                        </div>
                     </div>
 
                     {maps.length === 0 ? (
-                        <div className="mx-auto max-w-2xl">
-                            <Card className="border-2 border-dashed p-8">
-                                <div className="text-center">
-                                    <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted/50">
-                                        <MapPin className="h-6 w-6 text-muted-foreground" />
-                                    </div>
-                                    <h3 className="mb-2 text-lg font-semibold">No maps yet</h3>
-                                    <p className="mx-auto mb-4 max-w-sm text-muted-foreground">
-                                        Get started by uploading your first GIS map and begin exploring spatial data
+                        <div className="max-w-2xl mx-auto">
+                            <Card className="border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
+                                <CardContent className="flex flex-col items-center justify-center py-12">
+                                    <PlaceholderPattern className="mb-4 h-16 w-16 text-green-300" />
+                                    <h3 className="mb-2 text-lg font-semibold text-green-800">No maps uploaded yet</h3>
+                                    <p className="mb-6 text-center text-green-600">
+                                        Start by uploading your first GIS map to begin your agricultural data analysis journey.
                                     </p>
                                     <Link href="/maps/upload">
-                                        <Button className="shadow-md">
+                                        <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white">
                                             <Plus className="mr-2 h-4 w-4" />
                                             Upload Your First Map
                                         </Button>
                                     </Link>
-                                </div>
+                                </CardContent>
                             </Card>
                         </div>
                     ) : (
-                        <div className="mx-auto max-w-2xl space-y-4">
+                        <div className="space-y-6 max-w-2xl mx-auto">
                             {maps.map((map) => (
-                                <Card
-                                    key={map.id}
-                                    className="overflow-hidden border-0 bg-card/50 shadow-sm backdrop-blur-sm transition-shadow duration-200 hover:shadow-md"
-                                >
-                                    {/* Map Header - Like a social media post header */}
-                                    <CardHeader className="pb-2">
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex items-start gap-3">
-                                                {/* User Avatar */}
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                                <Card key={map.id} className="border-green-200 bg-white shadow-md hover:shadow-lg transition-all duration-200 rounded-xl overflow-hidden">
+                                    {/* Post Header - User Info */}
+                                    <div className="p-4 pb-0">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center space-x-3">
+                                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-semibold text-sm">
                                                     {getUserInitials(map.user.name)}
                                                 </div>
-                                                {/* Map Info */}
-                                                <div className="space-y-1">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="text-sm font-semibold text-foreground">{map.user.name.toUpperCase()}</span>
-                                                        <span className="text-xs text-muted-foreground">•</span>
-                                                        <span className="text-xs text-muted-foreground">uploaded {formatDate(map.created_at)}</span>
-                                                    </div>
-                                                    <CardTitle className="text-lg font-bold">{map.title}</CardTitle>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                                                            <MoreHorizontal className="h-3 w-3" />
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleViewMap(map)}
-                                                            className="flex cursor-pointer items-center gap-2"
-                                                        >
-                                                            <Eye className="h-3 w-3" />
-                                                            View Details
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleEditMap(map)}
-                                                            className="flex cursor-pointer items-center gap-2"
-                                                        >
-                                                            <Pencil className="h-3 w-3" />
-                                                            Edit Map
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleDeleteMap(map)}
-                                                            className="flex cursor-pointer items-center gap-2 text-destructive"
-                                                        >
-                                                            <Trash2 className="h-3 w-3" />
-                                                            Delete Map
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </div>
-                                        </div>
-                                        {map.description && (
-                                            <CardDescription className="ml-13 pt-2 text-sm leading-relaxed">{map.description}</CardDescription>
-                                        )}
-                                    </CardHeader>
-
-                                    {/* Map Image - Full width like social media */}
-                                    <div className="relative">
-                                        <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-950/50 dark:to-green-950/50">
-                                            {map.map_image_url ? (
-                                                <img
-                                                    src={map.map_image_url}
-                                                    alt={map.title}
-                                                    className="absolute inset-0 h-full w-full rounded-none object-cover"
-                                                />
-                                            ) : (
-                                                <div className="absolute inset-0 flex items-center justify-center">
-                                                    <PlaceholderPattern className="size-full stroke-neutral-900/10 dark:stroke-neutral-100/10" />
-                                                    <div className="absolute inset-0 flex items-center justify-center">
-                                                        <div className="space-y-1 text-center">
-                                                            <MapPin className="mx-auto h-8 w-8 text-muted-foreground/60" />
-                                                            <p className="text-xs font-medium text-muted-foreground/80">Map Preview</p>
-                                                        </div>
+                                                <div>
+                                                    <h3 className="font-semibold text-gray-900">{map.user.name}</h3>
+                                                    <div className="flex items-center text-sm text-gray-500">
+                                                        <Clock className="w-3 h-3 mr-1" />
+                                                        {formatDate(map.created_at)}
+                                                        {map.user.id === auth.user.id && (
+                                                            <Badge className="ml-2 bg-green-100 text-green-700 text-xs">
+                                                                Your Map
+                                                            </Badge>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            )}
-                                            {/* Overlay gradient for better text readability */}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
+                                            </div>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="sm" className="h-8 w-8 rounded-full hover:bg-gray-100">
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end" className="w-48">
+                                                    <DropdownMenuItem onClick={() => handleViewMap(map)}>
+                                                        <Eye className="mr-2 h-4 w-4" />
+                                                        View Details
+                                                    </DropdownMenuItem>
+                                                    {map.user.id === auth.user.id && (
+                                                        <>
+                                                            <DropdownMenuItem onClick={() => handleEditMap(map)}>
+                                                                <Pencil className="mr-2 h-4 w-4" />
+                                                                Edit Map
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem
+                                                                onClick={() => handleDeleteMap(map)}
+                                                                className="text-red-600 focus:text-red-600"
+                                                            >
+                                                                <Trash2 className="mr-2 h-4 w-4" />
+                                                                Delete Map
+                                                            </DropdownMenuItem>
+                                                        </>
+                                                    )}
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
                                         </div>
                                     </div>
 
-                                    {/* Map Details & Actions - Like social media engagement section */}
-                                    <CardContent className="space-y-3 p-3">
-                                        {/* GIS Files Tags */}
-                                        {map.gis_file_paths && map.gis_file_paths.length > 0 && (
-                                            <div className="space-y-2">
-                                                <div className="flex items-center justify-between">
-                                                    <p className="text-xs font-medium text-muted-foreground">
-                                                        {map.gis_file_paths.length} GIS {map.gis_file_paths.length === 1 ? 'file' : 'files'}
-                                                    </p>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        {formatFileSize(map.gis_file_paths.reduce((total, file) => total + file.size, 0))}
-                                                    </p>
-                                                </div>
-                                                <div className="flex flex-wrap gap-1">
-                                                    {map.gis_file_paths.slice(0, 4).map((file, index) => (
-                                                        <Badge
-                                                            key={index}
-                                                            variant="secondary"
-                                                            className="bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary hover:bg-primary/20"
-                                                        >
-                                                            {file.extension.toUpperCase()}
-                                                        </Badge>
-                                                    ))}
-                                                    {map.gis_file_paths.length > 4 && (
-                                                        <Badge variant="outline" className="text-xs font-medium">
-                                                            +{map.gis_file_paths.length - 4} more
-                                                        </Badge>
-                                                    )}
-                                                </div>
+                                    {/* Post Content */}
+                                    <div className="px-4 py-2">
+                                        <h4 className="text-lg font-semibold text-gray-900 mb-2">{map.title}</h4>
+                                        <p className="text-gray-700 mb-3">{map.description}</p>
+                                        
+                                        {/* GIS File Info */}
+                                        <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                                            <div className="flex items-center">
+                                                <FileText className="w-4 h-4 mr-1 text-green-600" />
+                                                <span>{map.gis_file_paths?.length || 0} files</span>
                                             </div>
-                                        )}
-                                    </CardContent>
+                                            {map.gis_file_paths && map.gis_file_paths.length > 0 && (
+                                                <div className="flex items-center">
+                                                    <Download className="w-4 h-4 mr-1 text-green-600" />
+                                                    <span>{formatFileSize(map.gis_file_paths.reduce((total, file) => total + file.size, 0))}</span>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center">
+                                                <MapPin className="w-4 h-4 mr-1 text-green-600" />
+                                                <span>GIS Data</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Map Image */}
+                                    {map.map_image_url && (
+                                        <div className="relative">
+                                            <img 
+                                                src={map.map_image_url} 
+                                                alt={map.title} 
+                                                className="w-full object-contain cursor-pointer hover:opacity-95 transition-opacity bg-gray-50"
+                                                onClick={() => handleViewMap(map)}
+                                                style={{ maxHeight: '500px' }}
+                                            />
+                                            <div className="absolute top-3 right-3">
+                                                <Badge className="bg-black/50 text-white backdrop-blur-sm">
+                                                    <MapPin className="w-3 h-3 mr-1" />
+                                                    Map Preview
+                                                </Badge>
+                                            </div>
+                                        </div>
+                                    )}
+
                                 </Card>
                             ))}
                         </div>

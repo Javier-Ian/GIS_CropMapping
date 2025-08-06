@@ -1,4 +1,4 @@
-import { Head, useForm, Link } from '@inertiajs/react';
+import { Head, useForm, Link, router } from '@inertiajs/react';
 import { LoaderCircle, Globe, Key, ArrowLeft } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 
@@ -27,7 +27,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('password.update'));
+        post('/forgot-password');
     };
 
     return (
@@ -44,13 +44,16 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                 {/* Back to Login Link */}
                 <div className="absolute top-4 left-4 z-10">
-                    <Link 
-                        href={route('login')} 
-                        className="group flex items-center space-x-2 px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full text-green-700 font-medium transition-all duration-300 hover:bg-white hover:shadow-lg text-sm"
+                    <button
+                        onClick={() => {
+                            console.log('Navigating to login page');
+                            router.visit('/login');
+                        }}
+                        className="group flex items-center space-x-2 px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full text-green-700 font-medium transition-all duration-300 hover:bg-white hover:shadow-lg text-sm cursor-pointer"
                     >
                         <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform duration-300" />
                         <span>Back to Login</span>
-                    </Link>
+                    </button>
                 </div>
 
                 {/* Main Content */}
@@ -176,13 +179,16 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 <div className="text-center pt-2">
                                     <p className="text-gray-600 text-sm">
                                         Remember your password?{' '}
-                                        <Link 
-                                            href={route('login')}
+                                        <button
+                                            onClick={() => {
+                                                console.log('Navigating to login page from form');
+                                                router.visit('/login');
+                                            }}
                                             tabIndex={5}
-                                            className="font-medium text-green-600 hover:text-green-700 transition-colors duration-300"
+                                            className="font-medium text-green-600 hover:text-green-700 transition-colors duration-300 cursor-pointer underline"
                                         >
                                             Sign in here
-                                        </Link>
+                                        </button>
                                     </p>
                                 </div>
                             </form>

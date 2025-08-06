@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
 import { ArrowLeft, Globe, LoaderCircle, Sprout } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 
@@ -29,7 +29,7 @@ export default function Register() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('register'), {
+        post('/register', {
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
@@ -48,13 +48,16 @@ export default function Register() {
 
                 {/* Back to Home Link */}
                 <div className="absolute top-4 left-4 z-10">
-                    <Link
-                        href={route('home')}
-                        className="group flex items-center space-x-2 rounded-full bg-white/80 px-3 py-1.5 text-sm font-medium text-green-700 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:shadow-lg"
+                    <button
+                        onClick={() => {
+                            console.log('Navigating to home page');
+                            router.visit('/');
+                        }}
+                        className="group flex items-center space-x-2 rounded-full bg-white/80 px-3 py-1.5 text-sm font-medium text-green-700 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:shadow-lg cursor-pointer"
                     >
                         <ArrowLeft className="h-3 w-3 transition-transform duration-300 group-hover:-translate-x-1" />
                         <span>Back to Home</span>
-                    </Link>
+                    </button>
                 </div>
 
                 {/* Main Content */}
@@ -190,7 +193,7 @@ export default function Register() {
                                     <p className="text-sm text-gray-600">
                                         Already have an account?{' '}
                                         <Link
-                                            href={route('login')}
+                                            href="/login"
                                             tabIndex={6}
                                             className="font-medium text-green-600 transition-colors duration-300 hover:text-green-700"
                                         >
