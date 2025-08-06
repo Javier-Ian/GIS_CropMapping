@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -41,12 +42,14 @@ export default function MapEdit({ map, errors }: Props) {
     const [previewImage, setPreviewImage] = useState<string | null>(map.map_image_url || null);
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [filesToDelete, setFilesToDelete] = useState<number[]>([]);
 
     const { data, setData, post, processing } = useForm({
         title: map.title,
         description: map.description,
         map_image: null as File | null,
         gis_files: null as File[] | null,
+        remove_gis_files: [] as number[],
         _method: 'PUT',
     });
 
@@ -138,6 +141,30 @@ export default function MapEdit({ map, errors }: Props) {
         const target = e.target as HTMLElement;
         if (!target.closest('button')) {
             handleBrowseClick();
+        }
+    };
+
+    const handleFileDeleteToggle = (index: number) => {
+        const newFilesToDelete = filesToDelete.includes(index)
+            ? filesToDelete.filter(i => i !== index)
+            : [...filesToDelete, index];
+        
+        setFilesToDelete(newFilesToDelete);
+        setData('remove_gis_files', newFilesToDelete);
+    };
+
+    const handleSelectAllFiles = () => {
+        if (!map.gis_file_paths || map.gis_file_paths.length === 0) return;
+        
+        if (filesToDelete.length === map.gis_file_paths.length) {
+            // If all are selected, deselect all
+            setFilesToDelete([]);
+            setData('remove_gis_files', []);
+        } else {
+            // Select all files
+            const allIndices = map.gis_file_paths.map((_, index) => index);
+            setFilesToDelete(allIndices);
+            setData('remove_gis_files', allIndices);
         }
     };
 
@@ -357,7 +384,7 @@ export default function MapEdit({ map, errors }: Props) {
                                     <Alert>
                                         <AlertCircle className="h-4 w-4" />
                                         <AlertDescription>
-                                            Note: Uploading new GIS files will replace all existing GIS files.
+                                            Note: You can select files to delete in the Current GIS Files section. Uploading new files will add to existing ones (unless selected for deletion).
                                         </AlertDescription>
                                     </Alert>
                                 </div>
@@ -385,15 +412,34 @@ export default function MapEdit({ map, errors }: Props) {
                         {map.gis_file_paths && map.gis_file_paths.length > 0 && (
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Current GIS Files</CardTitle>
-                                    <CardDescription>
-                                        {map.gis_file_paths.length} file{map.gis_file_paths.length !== 1 ? 's' : ''} currently attached
-                                    </CardDescription>
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <CardTitle>Current GIS Files</CardTitle>
+                                            <CardDescription>
+                                                {map.gis_file_paths.length} file{map.gis_file_paths.length !== 1 ? 's' : ''} currently attached
+                                            </CardDescription>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Checkbox
+                                                id="select-all-files"
+                                                checked={filesToDelete.length === map.gis_file_paths.length && map.gis_file_paths.length > 0}
+                                                onCheckedChange={handleSelectAllFiles}
+                                            />
+                                            <Label htmlFor="select-all-files" className="text-sm font-medium cursor-pointer">
+                                                Select All
+                                            </Label>
+                                        </div>
+                                    </div>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-2">
                                         {map.gis_file_paths.map((file, index) => (
-                                            <div key={index} className="flex items-center gap-2 p-2 border rounded text-sm">
+                                            <div key={index} className="flex items-center gap-3 p-2 border rounded text-sm">
+                                                <Checkbox
+                                                    id={`file-${index}`}
+                                                    checked={filesToDelete.includes(index)}
+                                                    onCheckedChange={() => handleFileDeleteToggle(index)}
+                                                />
                                                 <FileText className="h-4 w-4 text-muted-foreground" />
                                                 <div className="flex-1 min-w-0">
                                                     <p className="truncate" title={file.original_name}>
@@ -406,11 +452,24 @@ export default function MapEdit({ map, errors }: Props) {
                                                         <span className="text-xs text-muted-foreground">
                                                             {formatFileSize(file.size)}
                                                         </span>
+                                                        {filesToDelete.includes(index) && (
+                                                            <Badge variant="destructive" className="text-xs">
+                                                                Will be deleted
+                                                            </Badge>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
+                                    {filesToDelete.length > 0 && (
+                                        <Alert className="mt-4">
+                                            <AlertCircle className="h-4 w-4" />
+                                            <AlertDescription>
+                                                {filesToDelete.length} file{filesToDelete.length !== 1 ? 's' : ''} selected for deletion. They will be removed when you save changes.
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
                                 </CardContent>
                             </Card>
                         )}
