@@ -175,7 +175,7 @@ export default function Welcome() {
                 `}</style>
             </Head>
 
-            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative">
+            <div className="h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative overflow-hidden flex flex-col">
                 {/* Animated Background Elements */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-green-200/30 rounded-full mix-blend-multiply filter blur-xl animate-float"></div>
@@ -234,8 +234,8 @@ export default function Welcome() {
                 </nav>
 
                 {/* Hero Section */}
-                <div className="relative z-10 max-w-7xl mx-auto px-6 pt-16 pb-24">
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                <div className="relative z-10 max-w-7xl mx-auto px-6 flex-1 flex items-center">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
                         {/* Left Content */}
                         <div className={`space-y-8 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                             <div className="space-y-4">
@@ -267,7 +267,7 @@ export default function Welcome() {
                             {/* Minimalist Cinematic Animation */}
                             <div className="relative py-12 max-w-full">
                                 {/* Main Moving Line */}
-                                <div className="relative h-20 overflow-hidden">
+                                <div className="relative h-24 overflow-hidden">
                                     <div className="absolute inset-0">
                                         {/* Horizontal line that extends */}
                                         <div className="absolute top-10 left-0 h-0.5 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 animate-extend-line max-w-md"></div>
