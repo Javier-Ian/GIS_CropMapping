@@ -282,4 +282,65 @@ class MapController extends Controller
             return back()->withErrors(['general' => 'Failed to delete map: ' . $e->getMessage()]);
         }
     }
+
+    public function download(Map $map)
+    {
+        // Ensure the user owns this map
+        if ($map->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized access to this map.');
+        }
+
+        try {
+            $zip = new \ZipArchive();
+            $zipFileName = storage_path('app/temp/') . 'map_' . $map->id . '_' . time() . '.zip';
+            
+            // Create temp directory if it doesn't exist
+            if (!file_exists(storage_path('app/temp'))) {
+                mkdir(storage_path('app/temp'), 0755, true);
+            }
+
+            if ($zip->open($zipFileName, \ZipArchive::CREATE) !== TRUE) {
+                throw new \Exception('Could not create ZIP file');
+            }
+
+            $fileCount = 0;
+
+            // Add map image if exists
+            if ($map->map_image_path) {
+                $imagePath = Storage::disk('public')->path($map->map_image_path);
+                if (file_exists($imagePath)) {
+                    $imageExtension = pathinfo($map->map_image_path, PATHINFO_EXTENSION);
+                    $zip->addFile($imagePath, 'map_image.' . $imageExtension);
+                    $fileCount++;
+                }
+            }
+
+            // Add GIS files if exist
+            if ($map->gis_file_paths) {
+                foreach ($map->gis_file_paths as $file) {
+                    $filePath = Storage::disk('public')->path($file['path']);
+                    if (file_exists($filePath)) {
+                        $zip->addFile($filePath, $file['original_name']);
+                        $fileCount++;
+                    }
+                }
+            }
+
+            if ($fileCount === 0) {
+                $zip->close();
+                unlink($zipFileName);
+                return back()->withErrors(['general' => 'No files available for download.']);
+            }
+
+            $zip->close();
+
+            \Log::info('Map files downloaded', ['map_id' => $map->id, 'files_count' => $fileCount]);
+
+            return response()->download($zipFileName, $map->title . '_files.zip')->deleteFileAfterSend(true);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to download map files', ['map_id' => $map->id, 'error' => $e->getMessage()]);
+            return back()->withErrors(['general' => 'Failed to create download: ' . $e->getMessage()]);
+        }
+    }
 }

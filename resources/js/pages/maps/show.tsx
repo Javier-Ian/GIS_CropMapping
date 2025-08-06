@@ -7,6 +7,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Calendar, Download, Edit3, FileText, MapPin, Trash2, ZoomIn } from 'lucide-react';
+import { useState } from 'react';
 
 interface Map {
     id: number;
@@ -30,6 +31,8 @@ interface Props {
 }
 
 export default function MapShow({ map }: Props) {
+    const [isDownloading, setIsDownloading] = useState(false);
+    
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Dashboard',
@@ -65,6 +68,38 @@ export default function MapShow({ map }: Props) {
         }
     };
 
+    const handleDownload = () => {
+        // Check if there are files to download
+        const totalFiles = (map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0);
+        if (totalFiles === 0) {
+            alert('No files available for download.');
+            return;
+        }
+        
+        setIsDownloading(true);
+        
+        // Show a brief message about what's being downloaded
+        const fileTypes = [];
+        if (map.map_image_path) fileTypes.push('map image');
+        if (map.gis_file_paths?.length) fileTypes.push(`${map.gis_file_paths.length} GIS file${map.gis_file_paths.length !== 1 ? 's' : ''}`);
+        
+        const message = `Preparing download with ${fileTypes.join(' and ')}...`;
+        console.log(message);
+        
+        // Create a temporary link to trigger download
+        const link = document.createElement('a');
+        link.href = route('maps.download', map.id);
+        link.download = `${map.title}_files.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Reset downloading state after a short delay
+        setTimeout(() => {
+            setIsDownloading(false);
+        }, 2000);
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={map.title} />
@@ -90,6 +125,15 @@ export default function MapShow({ map }: Props) {
                                 Edit Map
                             </Button>
                         </Link>
+                        <Button 
+                            variant="outline" 
+                            onClick={handleDownload}
+                            className="flex items-center gap-2"
+                            disabled={((map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0)) === 0 || isDownloading}
+                        >
+                            <Download className="h-4 w-4" />
+                            {isDownloading ? 'Preparing...' : 'Download ZIP'}
+                        </Button>
                         <Button 
                             variant="destructive" 
                             onClick={handleDelete}
@@ -256,6 +300,13 @@ export default function MapShow({ map }: Props) {
                                         )}
                                     </span>
                                 </div>
+                                {((map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0)) > 0 && (
+                                    <div className="pt-2 border-t">
+                                        <p className="text-xs text-muted-foreground">
+                                            All files can be downloaded as a ZIP archive using the "Download ZIP" button.
+                                        </p>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </div>

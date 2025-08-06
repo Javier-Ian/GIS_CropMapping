@@ -33,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('maps/{map}/edit', [MapController::class, 'edit'])->name('maps.edit');
     Route::put('maps/{map}', [MapController::class, 'update'])->name('maps.update');
     Route::delete('maps/{map}', [MapController::class, 'destroy'])->name('maps.destroy');
+    Route::get('maps/{map}/download', [MapController::class, 'download'])->name('maps.download');
     
     // Ultra-Unique Notification Test Route
     Route::get('notification-test', function () {
