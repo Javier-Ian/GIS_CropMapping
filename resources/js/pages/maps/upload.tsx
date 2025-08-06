@@ -7,8 +7,8 @@ import { useFlashNotifications } from '@/hooks/use-flash-notifications';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { FileType, MapPin, Upload } from 'lucide-react';
-import { useState } from 'react';
+import { FileType, MapPin, Upload, Sparkles, CheckCircle, AlertCircle, Camera, Database, Layers } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,6 +32,11 @@ export default function MapUpload() {
     const [dragActive, setDragActive] = useState(false);
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        setIsLoaded(true);
+    }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -213,100 +218,171 @@ export default function MapUpload() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Upload Map" />
 
-            <div className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6">
-                <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                        <MapPin className="h-5 w-5" />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-semibold tracking-tight">Upload New Map</h1>
-                        <p className="text-muted-foreground">Add a new GIS map to your collection</p>
+            <div className={`flex h-full flex-1 flex-col gap-8 rounded-xl p-6 bg-gradient-to-br from-emerald-50/30 to-teal-50/30 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                {/* Animated Header */}
+                <div className={`transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+                    <div className="flex items-center gap-4 mb-2">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-green-600 text-white shadow-lg shadow-emerald-200/50 transform transition-all duration-300 hover:scale-110 hover:rotate-3">
+                            <MapPin className="h-7 w-7 animate-pulse" />
+                        </div>
+                        <div>
+                            <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-emerald-700 via-teal-600 to-green-700 bg-clip-text text-transparent flex items-center gap-3">
+                                <Sparkles className="h-8 w-8 text-emerald-600 transform transition-all duration-300 hover:rotate-12 hover:scale-110 drop-shadow-sm" />
+                                Upload New Map
+                            </h1>
+                            <p className="text-slate-600 mt-2 flex items-center gap-2 font-medium text-lg">
+                                <Upload className="h-5 w-5 text-emerald-500 transform transition-all duration-700 hover:translate-y-1" />
+                                Add a new GIS map to your agricultural data collection
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
+                <form onSubmit={handleSubmit} className={`max-w-4xl mx-auto w-full space-y-8 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                     {/* Basic Information */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Map Information</CardTitle>
-                            <CardDescription>Provide basic details about your map</CardDescription>
+                    <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
+                        <CardHeader className="bg-gradient-to-r from-emerald-100/50 to-teal-100/50 border-b border-emerald-100">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-xl bg-emerald-100">
+                                    <Database className="h-5 w-5 text-emerald-700" />
+                                </div>
+                                <div>
+                                    <CardTitle className="text-emerald-800 font-bold text-xl">Map Information</CardTitle>
+                                    <CardDescription className="text-emerald-600 font-medium">Provide basic details about your agricultural map</CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="title">Map Title</Label>
+                        <CardContent className="p-6 space-y-6">
+                            <div className="space-y-3">
+                                <Label htmlFor="title" className="text-emerald-800 font-semibold flex items-center gap-2">
+                                    <MapPin className="h-4 w-4 text-emerald-600" />
+                                    Map Title
+                                </Label>
                                 <Input
                                     id="title"
                                     type="text"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     placeholder="Enter map title..."
-                                    className={errors.title ? 'border-destructive' : ''}
+                                    className={`border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.title ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}
                                 />
-                                {errors.title && <p className="text-sm text-destructive">{errors.title}</p>}
+                                {errors.title && (
+                                    <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                        <AlertCircle className="h-4 w-4" />
+                                        {errors.title}
+                                    </div>
+                                )}
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
+                            <div className="space-y-3">
+                                <Label htmlFor="description" className="text-emerald-800 font-semibold flex items-center gap-2">
+                                    <Layers className="h-4 w-4 text-emerald-600" />
+                                    Description
+                                </Label>
                                 <Textarea
                                     id="description"
                                     value={description}
                                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
-                                    placeholder="Describe your map, its purpose, data sources, etc..."
+                                    placeholder="Describe your map, its purpose, data sources, agricultural insights, etc..."
                                     rows={4}
-                                    className={errors.description ? 'border-destructive' : ''}
+                                    className={`border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.description ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}
                                 />
-                                {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
+                                {errors.description && (
+                                    <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                        <AlertCircle className="h-4 w-4" />
+                                        {errors.description}
+                                    </div>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Map Image Upload */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Map Preview Image</CardTitle>
-                            <CardDescription>Upload a preview image of your map (PNG, JPG, JPEG)</CardDescription>
+                    <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-teal-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-teal-200/30">
+                        <CardHeader className="bg-gradient-to-r from-teal-100/50 to-green-100/50 border-b border-teal-100">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-xl bg-teal-100">
+                                    <Camera className="h-5 w-5 text-teal-700" />
+                                </div>
+                                <div>
+                                    <CardTitle className="text-teal-800 font-bold text-xl">Map Preview Image</CardTitle>
+                                    <CardDescription className="text-teal-600 font-medium">Upload a preview image of your map (PNG, JPG, JPEG)</CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="space-y-2">
-                                <Label htmlFor="map_image">Preview Image</Label>
-                                <Input
-                                    id="map_image"
-                                    type="file"
-                                    accept="image/png,image/jpg,image/jpeg"
-                                    onChange={(e) => setMapImage(e.target.files?.[0] || null)}
-                                    className={errors.map_image ? 'border-destructive' : ''}
-                                />
-                                {errors.map_image && <p className="text-sm text-destructive">{errors.map_image}</p>}
+                        <CardContent className="p-6">
+                            <div className="space-y-3">
+                                <Label htmlFor="map_image" className="text-teal-800 font-semibold flex items-center gap-2">
+                                    <Camera className="h-4 w-4 text-teal-600" />
+                                    Preview Image
+                                </Label>
+                                <div className="relative">
+                                    <Input
+                                        id="map_image"
+                                        type="file"
+                                        accept="image/png,image/jpg,image/jpeg"
+                                        onChange={(e) => setMapImage(e.target.files?.[0] || null)}
+                                        className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl file:bg-gradient-to-r file:from-teal-600 file:to-green-600 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:from-teal-700 hover:file:to-green-700 ${errors.map_image ? 'border-red-400 focus:border-red-400' : 'border-teal-200 hover:border-teal-300'}`}
+                                    />
+                                </div>
+                                {mapImage && (
+                                    <div className="flex items-center gap-2 text-sm text-teal-700 bg-teal-50 p-3 rounded-xl border border-teal-200">
+                                        <CheckCircle className="h-4 w-4 text-teal-600" />
+                                        <span className="font-medium">{mapImage.name}</span>
+                                        <span className="text-teal-600">({(mapImage.size / 1024 / 1024).toFixed(2)} MB)</span>
+                                    </div>
+                                )}
+                                {errors.map_image && (
+                                    <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                        <AlertCircle className="h-4 w-4" />
+                                        {errors.map_image}
+                                    </div>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* GIS Files Upload */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>GIS Files</CardTitle>
-                            <CardDescription>
-                                Upload your GIS data files. Supports QGIS projects (.qgz, .qgs), layer definitions (.qlr, .qmd), Shapefile, GeoJSON,
-                                KML, and many other formats.
-                            </CardDescription>
+                    <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-green-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-green-200/30">
+                        <CardHeader className="bg-gradient-to-r from-green-100/50 to-emerald-100/50 border-b border-green-100">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-xl bg-green-100">
+                                    <Upload className="h-5 w-5 text-green-700" />
+                                </div>
+                                <div>
+                                    <CardTitle className="text-green-800 font-bold text-xl">GIS Files</CardTitle>
+                                    <CardDescription className="text-green-600 font-medium">
+                                        Upload your GIS data files. Supports QGIS projects (.qgz, .qgs), layer definitions (.qlr, .qmd), Shapefile, GeoJSON,
+                                        KML, and many other formats.
+                                    </CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4">
+                        <CardContent className="p-6">
+                            <div className="space-y-6">
                                 <div
-                                    className={`relative rounded-lg border-2 border-dashed p-6 transition-colors ${
-                                        dragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25 hover:border-muted-foreground/50'
-                                    } ${errors.gis_files ? 'border-destructive' : ''}`}
+                                    className={`relative rounded-2xl border-3 border-dashed p-8 transition-all duration-300 ${
+                                        dragActive 
+                                            ? 'border-green-400 bg-green-50 scale-[1.02] shadow-lg shadow-green-200/30' 
+                                            : 'border-green-300 hover:border-green-400 hover:bg-green-50/50'
+                                    } ${errors.gis_files ? 'border-red-400 bg-red-50' : ''}`}
                                     onDragEnter={handleDrag}
                                     onDragLeave={handleDrag}
                                     onDragOver={handleDrag}
                                     onDrop={handleDrop}
                                 >
                                     <div className="text-center">
-                                        <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
+                                        <div className="relative mb-4">
+                                            <Upload className={`mx-auto h-16 w-16 transition-all duration-300 ${dragActive ? 'text-green-600 scale-110 animate-bounce' : 'text-green-500'}`} />
+                                            <div className="absolute -inset-2 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-full blur-xl opacity-20 animate-pulse"></div>
+                                        </div>
                                         <div className="mt-4">
                                             <Label htmlFor="gis_files" className="cursor-pointer">
-                                                <span className="mt-2 block text-sm font-medium text-foreground">
+                                                <span className="mt-2 block text-lg font-bold text-green-800 hover:text-green-900 transition-colors">
                                                     Drop files here or click to browse
+                                                </span>
+                                                <span className="mt-1 block text-sm text-green-600 font-medium">
+                                                    Supports multiple file selection
                                                 </span>
                                             </Label>
                                             <Input
@@ -318,66 +394,102 @@ export default function MapUpload() {
                                                 className="sr-only"
                                             />
                                         </div>
-                                        <p className="mt-2 text-xs text-muted-foreground">Maximum file size: 50MB per file</p>
+                                        <p className="mt-3 text-sm text-green-600 font-medium bg-green-100 rounded-full px-4 py-2 inline-block">
+                                            Maximum file size: 50MB per file
+                                        </p>
                                     </div>
                                 </div>
 
                                 {gisFiles && gisFiles.length > 0 && (
-                                    <div className="space-y-2">
-                                        <Label>Selected Files:</Label>
-                                        <div className="space-y-1 rounded-md border p-3">
+                                    <div className="space-y-3">
+                                        <Label className="text-green-800 font-semibold flex items-center gap-2">
+                                            <CheckCircle className="h-4 w-4 text-green-600" />
+                                            Selected Files: ({gisFiles.length})
+                                        </Label>
+                                        <div className="space-y-2 rounded-2xl border-2 border-green-200 bg-green-50/50 p-4 backdrop-blur-sm">
                                             {Array.from(gisFiles).map((file, index) => (
-                                                <div key={index} className="flex items-center gap-2 text-sm">
-                                                    <FileType className="h-4 w-4 text-muted-foreground" />
-                                                    <span>{file.name}</span>
-                                                    <span className="text-muted-foreground">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                                                <div key={index} className="flex items-center gap-3 text-sm bg-white/80 rounded-xl p-3 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01]">
+                                                    <div className="p-1 rounded-lg bg-green-100">
+                                                        <FileType className="h-4 w-4 text-green-700" />
+                                                    </div>
+                                                    <span className="font-semibold text-green-800 flex-1">{file.name}</span>
+                                                    <span className="text-green-600 font-medium bg-green-100 px-2 py-1 rounded-lg">
+                                                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                                                    </span>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
                                 )}
 
-                                {errors.gis_files && <p className="text-sm text-destructive">{errors.gis_files}</p>}
+                                {errors.gis_files && (
+                                    <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">
+                                        <AlertCircle className="h-4 w-4" />
+                                        {errors.gis_files}
+                                    </div>
+                                )}
 
                                 {/* Show general errors */}
                                 {Object.keys(errors).length > 0 && !errors.title && !errors.description && !errors.map_image && !errors.gis_files && (
-                                    <div className="rounded-md bg-destructive/10 p-3">
-                                        <p className="text-sm font-medium text-destructive">Upload failed:</p>
+                                    <div className="rounded-2xl bg-red-50 border-2 border-red-200 p-4 shadow-lg">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <AlertCircle className="h-5 w-5 text-red-600" />
+                                            <p className="text-sm font-bold text-red-800">Upload failed:</p>
+                                        </div>
                                         {Object.entries(errors).map(([key, value]) => (
-                                            <p key={key} className="text-sm text-destructive">
+                                            <p key={key} className="text-sm text-red-700 ml-7">
                                                 {key}: {String(value)}
                                             </p>
                                         ))}
                                     </div>
                                 )}
 
-                                <div className="text-xs text-muted-foreground">
-                                    <p className="mb-1 font-medium">Supported GIS formats:</p>
-                                    <p>
-                                        <strong>QGIS:</strong> Project files (.qgz, .qgs), Layer files (.qlr, .qmd, .qml)
+                                <div className="text-sm text-slate-600 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-6 border border-emerald-200">
+                                    <p className="mb-4 font-bold text-emerald-800 text-base flex items-center gap-2">
+                                        <Layers className="h-5 w-5" />
+                                        Supported GIS formats:
                                     </p>
-                                    <p>
-                                        <strong>Vector:</strong> Shapefile (.shp + components), GeoJSON, KML/KMZ, GML, GPX, DXF, AutoCAD (.dwg)
-                                    </p>
-                                    <p>
-                                        <strong>Raster:</strong> GeoTIFF (.tif), IMG, ECW, JPEG2000, DEM formats
-                                    </p>
-                                    <p>
-                                        <strong>Point Cloud:</strong> LAS/LAZ, PLY, PCD
-                                    </p>
-                                    <p>
-                                        <strong>Database:</strong> GeoDatabase (.gdb), SQLite, Access (.mdb)
-                                    </p>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <p className="font-semibold text-emerald-700">
+                                                <strong>QGIS:</strong> Project files (.qgz, .qgs), Layer files (.qlr, .qmd, .qml)
+                                            </p>
+                                            <p className="font-semibold text-teal-700">
+                                                <strong>Vector:</strong> Shapefile (.shp + components), GeoJSON, KML/KMZ, GML, GPX, DXF, AutoCAD (.dwg)
+                                            </p>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p className="font-semibold text-green-700">
+                                                <strong>Raster:</strong> GeoTIFF (.tif), IMG, ECW, JPEG2000, DEM formats
+                                            </p>
+                                            <p className="font-semibold text-emerald-700">
+                                                <strong>Database:</strong> GeoDatabase (.gdb), SQLite, Access (.mdb)
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Submit Button */}
-                    <div className="flex gap-4">
-                        <Button type="submit" disabled={processing} className="flex items-center gap-2">
-                            <Upload className="h-4 w-4" />
-                            {processing ? 'Uploading...' : 'Upload Map'}
+                    <div className="flex gap-6 justify-center pt-4">
+                        <Button 
+                            type="submit" 
+                            disabled={processing} 
+                            className="flex items-center gap-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-700 hover:via-teal-700 hover:to-green-700 text-white transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-emerald-200/50 px-8 py-4 rounded-2xl font-bold text-lg min-w-[200px] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        >
+                            {processing ? (
+                                <>
+                                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                                    Uploading...
+                                </>
+                            ) : (
+                                <>
+                                    <Upload className="h-5 w-5 animate-pulse" />
+                                    Upload Map
+                                </>
+                            )}
                         </Button>
                         <Button
                             type="button"
@@ -388,7 +500,9 @@ export default function MapUpload() {
                                 setMapImage(null);
                                 setGisFiles(null);
                             }}
+                            className="flex items-center gap-3 border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-400 hover:text-emerald-800 transform hover:scale-105 transition-all duration-300 px-8 py-4 rounded-2xl font-bold text-lg min-w-[150px]"
                         >
+                            <Sparkles className="h-5 w-5" />
                             Clear
                         </Button>
                     </div>
