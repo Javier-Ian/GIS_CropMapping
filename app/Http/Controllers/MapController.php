@@ -23,7 +23,7 @@ class MapController extends Controller
             'has_map_image' => $request->hasFile('map_image'),
             'has_gis_files' => $request->hasFile('gis_files'),
             'gis_files_count' => $request->hasFile('gis_files') ? count($request->file('gis_files')) : 0,
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
 
         $gisExtensions = [
@@ -40,7 +40,7 @@ class MapController extends Controller
             // Point cloud formats
             'las', 'laz', 'ply', 'pcd', 'e57',
             // Other formats
-            'csv', 'txt', 'nc', 'hdf', 'he5', 'fits', 'rst', 'grd', 'flt', 'hdr', 'xml'
+            'csv', 'txt', 'nc', 'hdf', 'he5', 'fits', 'rst', 'grd', 'flt', 'hdr', 'xml',
         ];
 
         try {
@@ -67,7 +67,8 @@ class MapController extends Controller
                 \Log::info('Map image uploaded', ['path' => $mapImagePath]);
             } catch (\Exception $e) {
                 \Log::error('Failed to upload map image', ['error' => $e->getMessage()]);
-                return back()->withErrors(['map_image' => 'Failed to upload map image: ' . $e->getMessage()]);
+
+                return back()->withErrors(['map_image' => 'Failed to upload map image: '.$e->getMessage()]);
             }
         }
 
@@ -76,7 +77,7 @@ class MapController extends Controller
             try {
                 foreach ($request->file('gis_files') as $index => $file) {
                     $filename = $file->getClientOriginalName();
-                    $path = $file->storeAs('maps/gis', time() . '_' . $index . '_' . $filename, 'public');
+                    $path = $file->storeAs('maps/gis', time().'_'.$index.'_'.$filename, 'public');
                     $gisFilePaths[] = [
                         'original_name' => $filename,
                         'path' => $path,
@@ -87,7 +88,8 @@ class MapController extends Controller
                 \Log::info('GIS files uploaded', ['count' => count($gisFilePaths), 'files' => $gisFilePaths]);
             } catch (\Exception $e) {
                 \Log::error('Failed to upload GIS files', ['error' => $e->getMessage()]);
-                return back()->withErrors(['gis_files' => 'Failed to upload GIS files: ' . $e->getMessage()]);
+
+                return back()->withErrors(['gis_files' => 'Failed to upload GIS files: '.$e->getMessage()]);
             }
         }
 
@@ -108,7 +110,8 @@ class MapController extends Controller
                 ->with('success', 'Map uploaded successfully!');
         } catch (\Exception $e) {
             \Log::error('Failed to create map record', ['error' => $e->getMessage()]);
-            return back()->withErrors(['general' => 'Failed to save map: ' . $e->getMessage()]);
+
+            return back()->withErrors(['general' => 'Failed to save map: '.$e->getMessage()]);
         }
     }
 
@@ -135,13 +138,14 @@ class MapController extends Controller
         if ($map->gis_file_paths) {
             $map->gis_file_paths = collect($map->gis_file_paths)->map(function ($file) {
                 $file['url'] = Storage::url($file['path']);
+
                 return $file;
             })->toArray();
         }
 
         return Inertia::render('maps/show', [
             'map' => $map,
-            'isOwner' => $isOwner
+            'isOwner' => $isOwner,
         ]);
     }
 
@@ -153,7 +157,7 @@ class MapController extends Controller
         }
 
         return Inertia::render('maps/edit', [
-            'map' => $map
+            'map' => $map,
         ]);
     }
 
@@ -217,7 +221,7 @@ class MapController extends Controller
             if ($request->hasFile('gis_files')) {
                 foreach ($request->file('gis_files') as $index => $file) {
                     $filename = $file->getClientOriginalName();
-                    $path = $file->storeAs('maps/gis', time() . '_' . $filename, 'public');
+                    $path = $file->storeAs('maps/gis', time().'_'.$filename, 'public');
                     $gisFilePaths[] = [
                         'original_name' => $filename,
                         'path' => $path,
@@ -244,7 +248,8 @@ class MapController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Failed to update map', ['error' => $e->getMessage()]);
-            return back()->withErrors(['general' => 'Failed to update map: ' . $e->getMessage()]);
+
+            return back()->withErrors(['general' => 'Failed to update map: '.$e->getMessage()]);
         }
     }
 
@@ -278,7 +283,8 @@ class MapController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Failed to delete map', ['error' => $e->getMessage()]);
-            return back()->withErrors(['general' => 'Failed to delete map: ' . $e->getMessage()]);
+
+            return back()->withErrors(['general' => 'Failed to delete map: '.$e->getMessage()]);
         }
     }
 
@@ -290,15 +296,15 @@ class MapController extends Controller
         }
 
         try {
-            $zip = new \ZipArchive();
-            $zipFileName = storage_path('app/temp/') . 'map_' . $map->id . '_' . time() . '.zip';
-            
+            $zip = new \ZipArchive;
+            $zipFileName = storage_path('app/temp/').'map_'.$map->id.'_'.time().'.zip';
+
             // Create temp directory if it doesn't exist
-            if (!file_exists(storage_path('app/temp'))) {
+            if (! file_exists(storage_path('app/temp'))) {
                 mkdir(storage_path('app/temp'), 0755, true);
             }
 
-            if ($zip->open($zipFileName, \ZipArchive::CREATE) !== TRUE) {
+            if ($zip->open($zipFileName, \ZipArchive::CREATE) !== true) {
                 throw new \Exception('Could not create ZIP file');
             }
 
@@ -309,7 +315,7 @@ class MapController extends Controller
                 $imagePath = Storage::disk('public')->path($map->map_image_path);
                 if (file_exists($imagePath)) {
                     $imageExtension = pathinfo($map->map_image_path, PATHINFO_EXTENSION);
-                    $zip->addFile($imagePath, 'map_image.' . $imageExtension);
+                    $zip->addFile($imagePath, 'map_image.'.$imageExtension);
                     $fileCount++;
                 }
             }
@@ -328,6 +334,7 @@ class MapController extends Controller
             if ($fileCount === 0) {
                 $zip->close();
                 unlink($zipFileName);
+
                 return back()->withErrors(['general' => 'No files available for download.']);
             }
 
@@ -335,11 +342,12 @@ class MapController extends Controller
 
             \Log::info('Map files downloaded', ['map_id' => $map->id, 'files_count' => $fileCount]);
 
-            return response()->download($zipFileName, $map->title . '_files.zip')->deleteFileAfterSend(true);
+            return response()->download($zipFileName, $map->title.'_files.zip')->deleteFileAfterSend(true);
 
         } catch (\Exception $e) {
             \Log::error('Failed to download map files', ['map_id' => $map->id, 'error' => $e->getMessage()]);
-            return back()->withErrors(['general' => 'Failed to create download: ' . $e->getMessage()]);
+
+            return back()->withErrors(['general' => 'Failed to create download: '.$e->getMessage()]);
         }
     }
 }

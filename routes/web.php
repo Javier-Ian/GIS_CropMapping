@@ -17,11 +17,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 if ($map->map_image_path) {
                     $map->map_image_url = \Illuminate\Support\Facades\Storage::url($map->map_image_path);
                 }
+
                 return $map;
             });
 
         return Inertia::render('dashboard', [
-            'maps' => $maps
+            'maps' => $maps,
         ]);
     })->name('dashboard');
 
@@ -34,7 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('maps/{map}', [MapController::class, 'update'])->name('maps.update');
     Route::delete('maps/{map}', [MapController::class, 'destroy'])->name('maps.destroy');
     Route::get('maps/{map}/download', [MapController::class, 'download'])->name('maps.download');
-    
+
     // Ultra-Unique Notification Test Route
     Route::get('notification-test', function () {
         return Inertia::render('notification-test');

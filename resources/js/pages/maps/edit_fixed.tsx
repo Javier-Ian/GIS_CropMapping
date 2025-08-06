@@ -1,3 +1,4 @@
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -5,11 +6,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import { AlertCircle, Eye, FileText, MapPin, Save, Trash2, Upload, X } from 'lucide-react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { AlertCircle, Eye, FileText, MapPin, Save, Upload, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface Map {
@@ -103,7 +103,7 @@ export default function MapEdit({ map, errors }: Props) {
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         setIsDragging(false);
-        
+
         const files = e.dataTransfer.files;
         if (files.length > 0) {
             setData('gis_files', Array.from(files));
@@ -141,17 +141,15 @@ export default function MapEdit({ map, errors }: Props) {
     };
 
     const handleFileDeleteToggle = (index: number) => {
-        const newFilesToDelete = filesToDelete.includes(index)
-            ? filesToDelete.filter(i => i !== index)
-            : [...filesToDelete, index];
-        
+        const newFilesToDelete = filesToDelete.includes(index) ? filesToDelete.filter((i) => i !== index) : [...filesToDelete, index];
+
         setFilesToDelete(newFilesToDelete);
         setData('remove_gis_files', newFilesToDelete);
     };
 
     const handleSelectAllFiles = () => {
         if (!map.gis_file_paths || map.gis_file_paths.length === 0) return;
-        
+
         if (filesToDelete.length === map.gis_file_paths.length) {
             // If all are selected, deselect all
             setFilesToDelete([]);
@@ -172,19 +170,75 @@ export default function MapEdit({ map, errors }: Props) {
     };
 
     const supportedGisFormats = [
-        '.qgz', '.qgs', '.qlr', '.qml', '.qmd', '.shp', '.shx', '.dbf', '.prj', '.cpg',
-        '.kml', '.kmz', '.gpx', '.geojson', '.json', '.gml', '.geopackage', '.gpkg',
-        '.mxd', '.lyr', '.style', '.qml', '.sld', '.se', '.fgb', '.parquet', '.csv',
-        '.tab', '.mif', '.mid', '.dgn', '.dwg', '.dxf', '.e00', '.gen', '.gmt',
-        '.bna', '.kml', '.kmz', '.osm', '.pbf', '.xlsx', '.xls', '.ods', '.sqlite',
-        '.db', '.mdb', '.accdb', '.nc', '.hdf', '.hdf4', '.hdf5', '.tif', '.tiff',
-        '.asc', '.xyz', '.las', '.laz', '.ply', '.obj', '.dae', '.fbx', '.3ds'
+        '.qgz',
+        '.qgs',
+        '.qlr',
+        '.qml',
+        '.qmd',
+        '.shp',
+        '.shx',
+        '.dbf',
+        '.prj',
+        '.cpg',
+        '.kml',
+        '.kmz',
+        '.gpx',
+        '.geojson',
+        '.json',
+        '.gml',
+        '.geopackage',
+        '.gpkg',
+        '.mxd',
+        '.lyr',
+        '.style',
+        '.qml',
+        '.sld',
+        '.se',
+        '.fgb',
+        '.parquet',
+        '.csv',
+        '.tab',
+        '.mif',
+        '.mid',
+        '.dgn',
+        '.dwg',
+        '.dxf',
+        '.e00',
+        '.gen',
+        '.gmt',
+        '.bna',
+        '.kml',
+        '.kmz',
+        '.osm',
+        '.pbf',
+        '.xlsx',
+        '.xls',
+        '.ods',
+        '.sqlite',
+        '.db',
+        '.mdb',
+        '.accdb',
+        '.nc',
+        '.hdf',
+        '.hdf4',
+        '.hdf5',
+        '.tif',
+        '.tiff',
+        '.asc',
+        '.xyz',
+        '.las',
+        '.laz',
+        '.ply',
+        '.obj',
+        '.dae',
+        '.fbx',
+        '.3ds',
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit ${map.title}`} />
-            
+
             <div className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between">
@@ -212,14 +266,12 @@ export default function MapEdit({ map, errors }: Props) {
 
                 <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-3">
                     {/* Form Section */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="space-y-6 lg:col-span-2">
                         {/* Basic Information */}
                         <Card>
                             <CardHeader>
                                 <CardTitle>Map Information</CardTitle>
-                                <CardDescription>
-                                    Update the basic details of your map
-                                </CardDescription>
+                                <CardDescription>Update the basic details of your map</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
@@ -231,9 +283,7 @@ export default function MapEdit({ map, errors }: Props) {
                                         placeholder="Enter map title"
                                         required
                                     />
-                                    {errors.title && (
-                                        <p className="text-sm text-destructive">{errors.title}</p>
-                                    )}
+                                    {errors.title && <p className="text-sm text-destructive">{errors.title}</p>}
                                 </div>
 
                                 <div className="space-y-2">
@@ -245,9 +295,7 @@ export default function MapEdit({ map, errors }: Props) {
                                         placeholder="Describe your map"
                                         className="min-h-[100px]"
                                     />
-                                    {errors.description && (
-                                        <p className="text-sm text-destructive">{errors.description}</p>
-                                    )}
+                                    {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
                                 </div>
                             </CardContent>
                         </Card>
@@ -256,19 +304,13 @@ export default function MapEdit({ map, errors }: Props) {
                         <Card>
                             <CardHeader>
                                 <CardTitle>Map Preview Image</CardTitle>
-                                <CardDescription>
-                                    Upload a new preview image for your map (optional)
-                                </CardDescription>
+                                <CardDescription>Upload a new preview image for your map (optional)</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
                                     {previewImage && (
                                         <div className="relative">
-                                            <img
-                                                src={previewImage}
-                                                alt="Map preview"
-                                                className="w-full h-48 object-cover rounded-lg border"
-                                            />
+                                            <img src={previewImage} alt="Map preview" className="h-48 w-full rounded-lg border object-cover" />
                                             <Button
                                                 type="button"
                                                 variant="secondary"
@@ -283,19 +325,12 @@ export default function MapEdit({ map, errors }: Props) {
                                             </Button>
                                         </div>
                                     )}
-                                    
+
                                     <div className="grid w-full max-w-sm items-center gap-1.5">
                                         <Label htmlFor="map_image">Choose new image</Label>
-                                        <Input
-                                            id="map_image"
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleImageChange}
-                                        />
+                                        <Input id="map_image" type="file" accept="image/*" onChange={handleImageChange} />
                                     </div>
-                                    {errors.map_image && (
-                                        <p className="text-sm text-destructive">{errors.map_image}</p>
-                                    )}
+                                    {errors.map_image && <p className="text-sm text-destructive">{errors.map_image}</p>}
                                 </div>
                             </CardContent>
                         </Card>
@@ -304,14 +339,12 @@ export default function MapEdit({ map, errors }: Props) {
                         <Card>
                             <CardHeader>
                                 <CardTitle>GIS Files</CardTitle>
-                                <CardDescription>
-                                    Upload new GIS files to replace existing ones (optional)
-                                </CardDescription>
+                                <CardDescription>Upload new GIS files to replace existing ones (optional)</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
                                     <div
-                                        className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
+                                        className={`cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
                                             isDragging
                                                 ? 'border-primary bg-primary/10'
                                                 : 'border-muted-foreground/25 hover:border-muted-foreground/50'
@@ -321,10 +354,8 @@ export default function MapEdit({ map, errors }: Props) {
                                         onDrop={handleDrop}
                                         onClick={handleDropAreaClick}
                                     >
-                                        <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-                                        <p className="text-sm text-muted-foreground mb-2">
-                                            Drag and drop GIS files here, or click to browse
-                                        </p>
+                                        <Upload className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
+                                        <p className="mb-2 text-sm text-muted-foreground">Drag and drop GIS files here, or click to browse</p>
                                         <input
                                             type="file"
                                             multiple
@@ -333,11 +364,7 @@ export default function MapEdit({ map, errors }: Props) {
                                             className="hidden"
                                             id="gis-files"
                                         />
-                                        <Button 
-                                            type="button" 
-                                            variant="outline"
-                                            onClick={handleBrowseClick}
-                                        >
+                                        <Button type="button" variant="outline" onClick={handleBrowseClick}>
                                             Browse Files
                                         </Button>
                                     </div>
@@ -346,23 +373,16 @@ export default function MapEdit({ map, errors }: Props) {
                                         <div className="space-y-2">
                                             <h4 className="text-sm font-medium">New files to upload:</h4>
                                             {Array.from(selectedFiles).map((file, index) => (
-                                                <div key={index} className="flex items-center justify-between p-2 border rounded">
+                                                <div key={index} className="flex items-center justify-between rounded border p-2">
                                                     <div className="flex items-center gap-2">
                                                         <FileText className="h-4 w-4" />
                                                         <span className="text-sm">{file.name}</span>
                                                         <Badge variant="secondary" className="text-xs">
                                                             {file.name.split('.').pop()?.toUpperCase()}
                                                         </Badge>
-                                                        <span className="text-xs text-muted-foreground">
-                                                            {formatFileSize(file.size)}
-                                                        </span>
+                                                        <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
                                                     </div>
-                                                    <Button
-                                                        type="button"
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => removeSelectedFile(index)}
-                                                    >
+                                                    <Button type="button" variant="ghost" size="sm" onClick={() => removeSelectedFile(index)}>
                                                         <X className="h-4 w-4" />
                                                     </Button>
                                                 </div>
@@ -380,7 +400,8 @@ export default function MapEdit({ map, errors }: Props) {
                                     <Alert>
                                         <AlertCircle className="h-4 w-4" />
                                         <AlertDescription>
-                                            Note: You can select files to delete in the Current GIS Files section. Uploading new files will add to existing ones (unless selected for deletion).
+                                            Note: You can select files to delete in the Current GIS Files section. Uploading new files will add to
+                                            existing ones (unless selected for deletion).
                                         </AlertDescription>
                                     </Alert>
                                 </div>
@@ -393,12 +414,8 @@ export default function MapEdit({ map, errors }: Props) {
                         {/* Submit Button */}
                         <Card>
                             <CardContent className="pt-6">
-                                <Button 
-                                    type="submit" 
-                                    className="w-full"
-                                    disabled={processing}
-                                >
-                                    <Save className="h-4 w-4 mr-2" />
+                                <Button type="submit" className="w-full" disabled={processing}>
+                                    <Save className="mr-2 h-4 w-4" />
                                     {processing ? 'Saving...' : 'Save Changes'}
                                 </Button>
                             </CardContent>
@@ -421,7 +438,7 @@ export default function MapEdit({ map, errors }: Props) {
                                                 checked={filesToDelete.length === map.gis_file_paths.length && map.gis_file_paths.length > 0}
                                                 onCheckedChange={handleSelectAllFiles}
                                             />
-                                            <Label htmlFor="select-all-files" className="text-sm font-medium cursor-pointer">
+                                            <Label htmlFor="select-all-files" className="cursor-pointer text-sm font-medium">
                                                 Select All
                                             </Label>
                                         </div>
@@ -430,24 +447,22 @@ export default function MapEdit({ map, errors }: Props) {
                                 <CardContent>
                                     <div className="space-y-2">
                                         {map.gis_file_paths.map((file, index) => (
-                                            <div key={index} className="flex items-center gap-3 p-2 border rounded text-sm">
+                                            <div key={index} className="flex items-center gap-3 rounded border p-2 text-sm">
                                                 <Checkbox
                                                     id={`file-${index}`}
                                                     checked={filesToDelete.includes(index)}
                                                     onCheckedChange={() => handleFileDeleteToggle(index)}
                                                 />
                                                 <FileText className="h-4 w-4 text-muted-foreground" />
-                                                <div className="flex-1 min-w-0">
+                                                <div className="min-w-0 flex-1">
                                                     <p className="truncate" title={file.original_name}>
                                                         {file.original_name}
                                                     </p>
-                                                    <div className="flex items-center gap-2 mt-1">
+                                                    <div className="mt-1 flex items-center gap-2">
                                                         <Badge variant="secondary" className="text-xs">
                                                             {file.extension.toUpperCase()}
                                                         </Badge>
-                                                        <span className="text-xs text-muted-foreground">
-                                                            {formatFileSize(file.size)}
-                                                        </span>
+                                                        <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
                                                         {filesToDelete.includes(index) && (
                                                             <Badge variant="destructive" className="text-xs">
                                                                 Will be deleted
@@ -462,7 +477,8 @@ export default function MapEdit({ map, errors }: Props) {
                                         <Alert className="mt-4">
                                             <AlertCircle className="h-4 w-4" />
                                             <AlertDescription>
-                                                {filesToDelete.length} file{filesToDelete.length !== 1 ? 's' : ''} selected for deletion. They will be removed when you save changes.
+                                                {filesToDelete.length} file{filesToDelete.length !== 1 ? 's' : ''} selected for deletion. They will be
+                                                removed when you save changes.
                                             </AlertDescription>
                                         </Alert>
                                     )}

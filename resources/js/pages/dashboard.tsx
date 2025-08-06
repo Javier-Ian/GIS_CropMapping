@@ -1,14 +1,14 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
-import { notify } from '@/lib/notifications';
+import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { useFlashNotifications } from '@/hooks/use-flash-notifications';
+import AppLayout from '@/layouts/app-layout';
+import { notify } from '@/lib/notifications';
+import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Calendar, FileText, MapPin, Plus, Users, MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react';
+import { Eye, FileText, MapPin, MoreHorizontal, Pencil, Plus, Trash2, Users } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -72,7 +72,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
     const getUserInitials = (name: string) => {
         return name
             .split(' ')
-            .map(word => word.charAt(0).toUpperCase())
+            .map((word) => word.charAt(0).toUpperCase())
             .slice(0, 2)
             .join('');
     };
@@ -98,23 +98,17 @@ export default function Dashboard({ maps = [], auth }: Props) {
             notify.permissionDenied(map.user.name.toUpperCase(), 'delete');
             return;
         }
-        
+
         // Show themed confirmation dialog
         notify.mapDeleteConfirm(map.title).then((result) => {
             if (result.isConfirmed) {
                 router.delete(`/maps/${map.id}`, {
                     onSuccess: () => {
-                        notify.success(
-                            '🗑️ Map Deleted Successfully!',
-                            `Your map "${map.title}" has been permanently removed.`
-                        );
+                        notify.success('🗑️ Map Deleted Successfully!', `Your map "${map.title}" has been permanently removed.`);
                     },
                     onError: () => {
-                        notify.error(
-                            '❌ Deletion Failed!',
-                            'There was a problem deleting your map. Please try again.'
-                        );
-                    }
+                        notify.error('❌ Deletion Failed!', 'There was a problem deleting your map. Please try again.');
+                    },
                 });
             }
         });
@@ -128,9 +122,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-                        <p className="text-muted-foreground">
-                            Welcome to your GIS mapping workspace
-                        </p>
+                        <p className="text-muted-foreground">Welcome to your GIS mapping workspace</p>
                     </div>
                     <Link href="/maps/upload">
                         <Button className="flex items-center gap-2">
@@ -149,9 +141,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{maps.length}</div>
-                            <p className="text-xs text-muted-foreground">
-                                Maps in your collection
-                            </p>
+                            <p className="text-xs text-muted-foreground">Maps in your collection</p>
                         </CardContent>
                     </Card>
                     <Card>
@@ -160,12 +150,8 @@ export default function Dashboard({ maps = [], auth }: Props) {
                             <FileText className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">
-                                {maps.reduce((total, map) => total + (map.gis_file_paths?.length || 0), 0)}
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                Total uploaded files
-                            </p>
+                            <div className="text-2xl font-bold">{maps.reduce((total, map) => total + (map.gis_file_paths?.length || 0), 0)}</div>
+                            <p className="text-xs text-muted-foreground">Total uploaded files</p>
                         </CardContent>
                     </Card>
                     <Card>
@@ -176,14 +162,13 @@ export default function Dashboard({ maps = [], auth }: Props) {
                         <CardContent>
                             <div className="text-2xl font-bold">
                                 {formatFileSize(
-                                    maps.reduce((total, map) => 
-                                        total + (map.gis_file_paths?.reduce((fileTotal, file) => fileTotal + file.size, 0) || 0), 0
-                                    )
+                                    maps.reduce(
+                                        (total, map) => total + (map.gis_file_paths?.reduce((fileTotal, file) => fileTotal + file.size, 0) || 0),
+                                        0,
+                                    ),
                                 )}
                             </div>
-                            <p className="text-xs text-muted-foreground">
-                                Across all maps
-                            </p>
+                            <p className="text-xs text-muted-foreground">Across all maps</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -196,16 +181,16 @@ export default function Dashboard({ maps = [], auth }: Props) {
                             {maps.length} {maps.length === 1 ? 'map' : 'maps'} in your collection
                         </p>
                     </div>
-                    
+
                     {maps.length === 0 ? (
-                        <div className="max-w-2xl mx-auto">
-                            <Card className="border-dashed border-2 p-8">
+                        <div className="mx-auto max-w-2xl">
+                            <Card className="border-2 border-dashed p-8">
                                 <div className="text-center">
-                                    <div className="mx-auto h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center mb-3">
+                                    <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted/50">
                                         <MapPin className="h-6 w-6 text-muted-foreground" />
                                     </div>
-                                    <h3 className="text-lg font-semibold mb-2">No maps yet</h3>
-                                    <p className="text-muted-foreground mb-4 max-w-sm mx-auto">
+                                    <h3 className="mb-2 text-lg font-semibold">No maps yet</h3>
+                                    <p className="mx-auto mb-4 max-w-sm text-muted-foreground">
                                         Get started by uploading your first GIS map and begin exploring spatial data
                                     </p>
                                     <Link href="/maps/upload">
@@ -218,15 +203,18 @@ export default function Dashboard({ maps = [], auth }: Props) {
                             </Card>
                         </div>
                     ) : (
-                        <div className="max-w-2xl mx-auto space-y-4">
+                        <div className="mx-auto max-w-2xl space-y-4">
                             {maps.map((map) => (
-                                <Card key={map.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 border-0 bg-card/50 backdrop-blur-sm">
+                                <Card
+                                    key={map.id}
+                                    className="overflow-hidden border-0 bg-card/50 shadow-sm backdrop-blur-sm transition-shadow duration-200 hover:shadow-md"
+                                >
                                     {/* Map Header - Like a social media post header */}
                                     <CardHeader className="pb-2">
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-start gap-3">
                                                 {/* User Avatar */}
-                                                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
+                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
                                                     {getUserInitials(map.user.name)}
                                                 </div>
                                                 {/* Map Info */}
@@ -247,24 +235,24 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem 
+                                                        <DropdownMenuItem
                                                             onClick={() => handleViewMap(map)}
-                                                            className="flex items-center gap-2 cursor-pointer"
+                                                            className="flex cursor-pointer items-center gap-2"
                                                         >
                                                             <Eye className="h-3 w-3" />
                                                             View Details
                                                         </DropdownMenuItem>
                                                         <DropdownMenuSeparator />
-                                                        <DropdownMenuItem 
+                                                        <DropdownMenuItem
                                                             onClick={() => handleEditMap(map)}
-                                                            className="flex items-center gap-2 cursor-pointer"
+                                                            className="flex cursor-pointer items-center gap-2"
                                                         >
                                                             <Pencil className="h-3 w-3" />
                                                             Edit Map
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem 
+                                                        <DropdownMenuItem
                                                             onClick={() => handleDeleteMap(map)}
-                                                            className="flex items-center gap-2 text-destructive cursor-pointer"
+                                                            className="flex cursor-pointer items-center gap-2 text-destructive"
                                                         >
                                                             <Trash2 className="h-3 w-3" />
                                                             Delete Map
@@ -274,28 +262,26 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                             </div>
                                         </div>
                                         {map.description && (
-                                            <CardDescription className="text-sm leading-relaxed pt-2 ml-13">
-                                                {map.description}
-                                            </CardDescription>
+                                            <CardDescription className="ml-13 pt-2 text-sm leading-relaxed">{map.description}</CardDescription>
                                         )}
                                     </CardHeader>
 
                                     {/* Map Image - Full width like social media */}
                                     <div className="relative">
-                                        <div className="aspect-[16/9] relative bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-950/50 dark:to-green-950/50">
+                                        <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-950/50 dark:to-green-950/50">
                                             {map.map_image_url ? (
                                                 <img
                                                     src={map.map_image_url}
                                                     alt={map.title}
-                                                    className="absolute inset-0 h-full w-full object-cover rounded-none"
+                                                    className="absolute inset-0 h-full w-full rounded-none object-cover"
                                                 />
                                             ) : (
                                                 <div className="absolute inset-0 flex items-center justify-center">
                                                     <PlaceholderPattern className="size-full stroke-neutral-900/10 dark:stroke-neutral-100/10" />
                                                     <div className="absolute inset-0 flex items-center justify-center">
-                                                        <div className="text-center space-y-1">
-                                                            <MapPin className="h-8 w-8 text-muted-foreground/60 mx-auto" />
-                                                            <p className="text-xs text-muted-foreground/80 font-medium">Map Preview</p>
+                                                        <div className="space-y-1 text-center">
+                                                            <MapPin className="mx-auto h-8 w-8 text-muted-foreground/60" />
+                                                            <p className="text-xs font-medium text-muted-foreground/80">Map Preview</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -306,7 +292,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                     </div>
 
                                     {/* Map Details & Actions - Like social media engagement section */}
-                                    <CardContent className="p-3 space-y-3">
+                                    <CardContent className="space-y-3 p-3">
                                         {/* GIS Files Tags */}
                                         {map.gis_file_paths && map.gis_file_paths.length > 0 && (
                                             <div className="space-y-2">
@@ -320,10 +306,10 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                                 </div>
                                                 <div className="flex flex-wrap gap-1">
                                                     {map.gis_file_paths.slice(0, 4).map((file, index) => (
-                                                        <Badge 
-                                                            key={index} 
-                                                            variant="secondary" 
-                                                            className="text-xs font-medium px-2 py-0.5 bg-primary/10 text-primary hover:bg-primary/20"
+                                                        <Badge
+                                                            key={index}
+                                                            variant="secondary"
+                                                            className="bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary hover:bg-primary/20"
                                                         >
                                                             {file.extension.toUpperCase()}
                                                         </Badge>

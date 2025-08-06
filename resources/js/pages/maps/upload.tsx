@@ -3,11 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';  
 import { useFlashNotifications } from '@/hooks/use-flash-notifications';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { Upload, FileType, MapPin } from 'lucide-react';
+import { FileType, MapPin, Upload } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -31,30 +31,30 @@ export default function MapUpload() {
     const [gisFiles, setGisFiles] = useState<FileList | null>(null);
     const [dragActive, setDragActive] = useState(false);
     const [processing, setProcessing] = useState(false);
-    const [errors, setErrors] = useState<any>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Clear previous errors
         setErrors({});
-        
+
         // Basic validation
         if (!title.trim()) {
             setErrors({ title: 'Map title is required' });
             return;
         }
-        
+
         setProcessing(true);
-        
+
         const formData = new FormData();
         formData.append('title', title);
         formData.append('description', description);
-        
+
         if (mapImage) {
             formData.append('map_image', mapImage);
         }
-        
+
         if (gisFiles) {
             Array.from(gisFiles).forEach((file, index) => {
                 formData.append(`gis_files[${index}]`, file);
@@ -65,7 +65,7 @@ export default function MapUpload() {
             title,
             description,
             mapImage: mapImage?.name,
-            gisFilesCount: gisFiles?.length || 0
+            gisFilesCount: gisFiles?.length || 0,
         });
 
         router.post(route('maps.store'), formData, {
@@ -86,7 +86,7 @@ export default function MapUpload() {
             },
             onFinish: () => {
                 setProcessing(false);
-            }
+            },
         });
     };
 
@@ -104,7 +104,7 @@ export default function MapUpload() {
         e.preventDefault();
         e.stopPropagation();
         setDragActive(false);
-        
+
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             setGisFiles(e.dataTransfer.files);
         }
@@ -112,38 +112,107 @@ export default function MapUpload() {
 
     const acceptedGISExtensions = [
         // QGIS formats
-        '.qgz', '.qgs', '.qlr', '.qml', '.qmd', '.qlr', '.qpt',
-        
+        '.qgz',
+        '.qgs',
+        '.qlr',
+        '.qml',
+        '.qmd',
+        '.qlr',
+        '.qpt',
+
         // Shapefile components
-        '.shp', '.shx', '.dbf', '.prj', '.sbn', '.sbx', '.fbn', '.fbx',
-        '.ain', '.aih', '.ixs', '.mxs', '.atx', '.xml', '.cpg', '.qix',
-        
+        '.shp',
+        '.shx',
+        '.dbf',
+        '.prj',
+        '.sbn',
+        '.sbx',
+        '.fbn',
+        '.fbx',
+        '.ain',
+        '.aih',
+        '.ixs',
+        '.mxs',
+        '.atx',
+        '.xml',
+        '.cpg',
+        '.qix',
+
         // Common GIS vector formats
-        '.geojson', '.json', '.kml', '.kmz', '.gml', '.gpx', '.dxf',
-        '.dgn', '.dwg', '.tab', '.map', '.id', '.dat', '.ind',
-        
+        '.geojson',
+        '.json',
+        '.kml',
+        '.kmz',
+        '.gml',
+        '.gpx',
+        '.dxf',
+        '.dgn',
+        '.dwg',
+        '.tab',
+        '.map',
+        '.id',
+        '.dat',
+        '.ind',
+
         // Database formats
-        '.gdb', '.mdb', '.sqlite', '.db', '.accdb',
-        
+        '.gdb',
+        '.mdb',
+        '.sqlite',
+        '.db',
+        '.accdb',
+
         // Raster formats
-        '.tif', '.tiff', '.img', '.ecw', '.jp2', '.sid', '.bil', '.bip', '.bsq',
-        '.asc', '.dem', '.dt0', '.dt1', '.dt2', '.hgt', '.xyz', '.png', '.jpg', '.jpeg',
-        
+        '.tif',
+        '.tiff',
+        '.img',
+        '.ecw',
+        '.jp2',
+        '.sid',
+        '.bil',
+        '.bip',
+        '.bsq',
+        '.asc',
+        '.dem',
+        '.dt0',
+        '.dt1',
+        '.dt2',
+        '.hgt',
+        '.xyz',
+        '.png',
+        '.jpg',
+        '.jpeg',
+
         // Point cloud formats
-        '.las', '.laz', '.ply', '.pcd', '.e57',
-        
+        '.las',
+        '.laz',
+        '.ply',
+        '.pcd',
+        '.e57',
+
         // CAD formats
-        '.dwg', '.dxf', '.dgn',
-        
+        '.dwg',
+        '.dxf',
+        '.dgn',
+
         // Other GIS formats
-        '.csv', '.txt', '.xyz', '.gmt', '.nc', '.hdf', '.he5',
-        '.fits', '.rst', '.grd', '.flt', '.hdr'
+        '.csv',
+        '.txt',
+        '.xyz',
+        '.gmt',
+        '.nc',
+        '.hdf',
+        '.he5',
+        '.fits',
+        '.rst',
+        '.grd',
+        '.flt',
+        '.hdr',
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Upload Map" />
-            
+
             <div className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6">
                 <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -160,9 +229,7 @@ export default function MapUpload() {
                     <Card>
                         <CardHeader>
                             <CardTitle>Map Information</CardTitle>
-                            <CardDescription>
-                                Provide basic details about your map
-                            </CardDescription>
+                            <CardDescription>Provide basic details about your map</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
@@ -175,9 +242,7 @@ export default function MapUpload() {
                                     placeholder="Enter map title..."
                                     className={errors.title ? 'border-destructive' : ''}
                                 />
-                                {errors.title && (
-                                    <p className="text-sm text-destructive">{errors.title}</p>
-                                )}
+                                {errors.title && <p className="text-sm text-destructive">{errors.title}</p>}
                             </div>
 
                             <div className="space-y-2">
@@ -190,9 +255,7 @@ export default function MapUpload() {
                                     rows={4}
                                     className={errors.description ? 'border-destructive' : ''}
                                 />
-                                {errors.description && (
-                                    <p className="text-sm text-destructive">{errors.description}</p>
-                                )}
+                                {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
                             </div>
                         </CardContent>
                     </Card>
@@ -201,9 +264,7 @@ export default function MapUpload() {
                     <Card>
                         <CardHeader>
                             <CardTitle>Map Preview Image</CardTitle>
-                            <CardDescription>
-                                Upload a preview image of your map (PNG, JPG, JPEG)
-                            </CardDescription>
+                            <CardDescription>Upload a preview image of your map (PNG, JPG, JPEG)</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-2">
@@ -215,9 +276,7 @@ export default function MapUpload() {
                                     onChange={(e) => setMapImage(e.target.files?.[0] || null)}
                                     className={errors.map_image ? 'border-destructive' : ''}
                                 />
-                                {errors.map_image && (
-                                    <p className="text-sm text-destructive">{errors.map_image}</p>
-                                )}
+                                {errors.map_image && <p className="text-sm text-destructive">{errors.map_image}</p>}
                             </div>
                         </CardContent>
                     </Card>
@@ -227,16 +286,15 @@ export default function MapUpload() {
                         <CardHeader>
                             <CardTitle>GIS Files</CardTitle>
                             <CardDescription>
-                                Upload your GIS data files. Supports QGIS projects (.qgz, .qgs), layer definitions (.qlr, .qmd), Shapefile, GeoJSON, KML, and many other formats.
+                                Upload your GIS data files. Supports QGIS projects (.qgz, .qgs), layer definitions (.qlr, .qmd), Shapefile, GeoJSON,
+                                KML, and many other formats.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
                                 <div
-                                    className={`relative border-2 border-dashed rounded-lg p-6 transition-colors ${
-                                        dragActive
-                                            ? 'border-primary bg-primary/5'
-                                            : 'border-muted-foreground/25 hover:border-muted-foreground/50'
+                                    className={`relative rounded-lg border-2 border-dashed p-6 transition-colors ${
+                                        dragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25 hover:border-muted-foreground/50'
                                     } ${errors.gis_files ? 'border-destructive' : ''}`}
                                     onDragEnter={handleDrag}
                                     onDragLeave={handleDrag}
@@ -260,50 +318,56 @@ export default function MapUpload() {
                                                 className="sr-only"
                                             />
                                         </div>
-                                        <p className="mt-2 text-xs text-muted-foreground">
-                                            Maximum file size: 50MB per file
-                                        </p>
+                                        <p className="mt-2 text-xs text-muted-foreground">Maximum file size: 50MB per file</p>
                                     </div>
                                 </div>
 
                                 {gisFiles && gisFiles.length > 0 && (
                                     <div className="space-y-2">
                                         <Label>Selected Files:</Label>
-                                        <div className="rounded-md border p-3 space-y-1">
+                                        <div className="space-y-1 rounded-md border p-3">
                                             {Array.from(gisFiles).map((file, index) => (
                                                 <div key={index} className="flex items-center gap-2 text-sm">
                                                     <FileType className="h-4 w-4 text-muted-foreground" />
                                                     <span>{file.name}</span>
-                                                    <span className="text-muted-foreground">
-                                                        ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                                                    </span>
+                                                    <span className="text-muted-foreground">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
                                 )}
 
-                                {errors.gis_files && (
-                                    <p className="text-sm text-destructive">{errors.gis_files}</p>
-                                )}
+                                {errors.gis_files && <p className="text-sm text-destructive">{errors.gis_files}</p>}
 
                                 {/* Show general errors */}
                                 {Object.keys(errors).length > 0 && !errors.title && !errors.description && !errors.map_image && !errors.gis_files && (
                                     <div className="rounded-md bg-destructive/10 p-3">
-                                        <p className="text-sm text-destructive font-medium">Upload failed:</p>
+                                        <p className="text-sm font-medium text-destructive">Upload failed:</p>
                                         {Object.entries(errors).map(([key, value]) => (
-                                            <p key={key} className="text-sm text-destructive">{key}: {String(value)}</p>
+                                            <p key={key} className="text-sm text-destructive">
+                                                {key}: {String(value)}
+                                            </p>
                                         ))}
                                     </div>
                                 )}
 
                                 <div className="text-xs text-muted-foreground">
-                                    <p className="font-medium mb-1">Supported GIS formats:</p>
-                                    <p><strong>QGIS:</strong> Project files (.qgz, .qgs), Layer files (.qlr, .qmd, .qml)</p>
-                                    <p><strong>Vector:</strong> Shapefile (.shp + components), GeoJSON, KML/KMZ, GML, GPX, DXF, AutoCAD (.dwg)</p>
-                                    <p><strong>Raster:</strong> GeoTIFF (.tif), IMG, ECW, JPEG2000, DEM formats</p>
-                                    <p><strong>Point Cloud:</strong> LAS/LAZ, PLY, PCD</p>
-                                    <p><strong>Database:</strong> GeoDatabase (.gdb), SQLite, Access (.mdb)</p>
+                                    <p className="mb-1 font-medium">Supported GIS formats:</p>
+                                    <p>
+                                        <strong>QGIS:</strong> Project files (.qgz, .qgs), Layer files (.qlr, .qmd, .qml)
+                                    </p>
+                                    <p>
+                                        <strong>Vector:</strong> Shapefile (.shp + components), GeoJSON, KML/KMZ, GML, GPX, DXF, AutoCAD (.dwg)
+                                    </p>
+                                    <p>
+                                        <strong>Raster:</strong> GeoTIFF (.tif), IMG, ECW, JPEG2000, DEM formats
+                                    </p>
+                                    <p>
+                                        <strong>Point Cloud:</strong> LAS/LAZ, PLY, PCD
+                                    </p>
+                                    <p>
+                                        <strong>Database:</strong> GeoDatabase (.gdb), SQLite, Access (.mdb)
+                                    </p>
                                 </div>
                             </div>
                         </CardContent>
@@ -315,9 +379,9 @@ export default function MapUpload() {
                             <Upload className="h-4 w-4" />
                             {processing ? 'Uploading...' : 'Upload Map'}
                         </Button>
-                        <Button 
-                            type="button" 
-                            variant="outline" 
+                        <Button
+                            type="button"
+                            variant="outline"
                             onClick={() => {
                                 setTitle('');
                                 setDescription('');

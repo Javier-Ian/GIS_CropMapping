@@ -33,7 +33,7 @@ interface Props {
 
 export default function MapShow({ map, isOwner }: Props) {
     const [isDownloading, setIsDownloading] = useState(false);
-    
+
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Dashboard',
@@ -76,17 +76,17 @@ export default function MapShow({ map, isOwner }: Props) {
             alert('No files available for download.');
             return;
         }
-        
+
         setIsDownloading(true);
-        
+
         // Show a brief message about what's being downloaded
         const fileTypes = [];
         if (map.map_image_path) fileTypes.push('map image');
         if (map.gis_file_paths?.length) fileTypes.push(`${map.gis_file_paths.length} GIS file${map.gis_file_paths.length !== 1 ? 's' : ''}`);
-        
+
         const message = `Preparing download with ${fileTypes.join(' and ')}...`;
         console.log(message);
-        
+
         // Create a temporary link to trigger download
         const link = document.createElement('a');
         link.href = route('maps.download', map.id);
@@ -94,7 +94,7 @@ export default function MapShow({ map, isOwner }: Props) {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         // Reset downloading state after a short delay
         setTimeout(() => {
             setIsDownloading(false);
@@ -104,7 +104,7 @@ export default function MapShow({ map, isOwner }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={map.title} />
-            
+
             <div className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between">
@@ -114,9 +114,7 @@ export default function MapShow({ map, isOwner }: Props) {
                         </div>
                         <div>
                             <h1 className="text-3xl font-bold tracking-tight">{map.title}</h1>
-                            <p className="text-muted-foreground">
-                                Created on {formatDate(map.created_at)}
-                            </p>
+                            <p className="text-muted-foreground">Created on {formatDate(map.created_at)}</p>
                         </div>
                     </div>
                     <div className="flex gap-2">
@@ -128,21 +126,17 @@ export default function MapShow({ map, isOwner }: Props) {
                                 </Button>
                             </Link>
                         )}
-                        <Button 
-                            variant="outline" 
+                        <Button
+                            variant="outline"
                             onClick={handleDownload}
                             className="flex items-center gap-2"
-                            disabled={((map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0)) === 0 || isDownloading}
+                            disabled={(map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0) === 0 || isDownloading}
                         >
                             <Download className="h-4 w-4" />
                             {isDownloading ? 'Preparing...' : 'Download ZIP'}
                         </Button>
                         {isOwner && (
-                            <Button 
-                                variant="destructive" 
-                                onClick={handleDelete}
-                                className="flex items-center gap-2"
-                            >
+                            <Button variant="destructive" onClick={handleDelete} className="flex items-center gap-2">
                                 <Trash2 className="h-4 w-4" />
                                 Delete
                             </Button>
@@ -156,39 +150,33 @@ export default function MapShow({ map, isOwner }: Props) {
                         <Card>
                             <CardHeader>
                                 <CardTitle>Map View</CardTitle>
-                                <CardDescription>
-                                    Click to view in full size
-                                </CardDescription>
+                                <CardDescription>Click to view in full size</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 {map.map_image_url ? (
                                     <Dialog>
                                         <DialogTrigger asChild>
-                                            <div className="relative group cursor-pointer">
+                                            <div className="group relative cursor-pointer">
                                                 <img
                                                     src={map.map_image_url}
                                                     alt={map.title}
-                                                    className="w-full h-auto rounded-lg border hover:shadow-lg transition-shadow"
+                                                    className="h-auto w-full rounded-lg border transition-shadow hover:shadow-lg"
                                                 />
-                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                                    <div className="bg-white/90 rounded-full p-3">
+                                                <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/0 opacity-0 transition-colors group-hover:bg-black/10 group-hover:opacity-100">
+                                                    <div className="rounded-full bg-white/90 p-3">
                                                         <ZoomIn className="h-6 w-6 text-gray-700" />
                                                     </div>
                                                 </div>
                                             </div>
                                         </DialogTrigger>
-                                        <DialogContent className="max-w-7xl max-h-[90vh] p-0">
+                                        <DialogContent className="max-h-[90vh] max-w-7xl p-0">
                                             <div className="relative">
-                                                <img
-                                                    src={map.map_image_url}
-                                                    alt={map.title}
-                                                    className="w-full h-auto max-h-[90vh] object-contain"
-                                                />
+                                                <img src={map.map_image_url} alt={map.title} className="h-auto max-h-[90vh] w-full object-contain" />
                                             </div>
                                         </DialogContent>
                                     </Dialog>
                                 ) : (
-                                    <div className="h-64 border-2 border-dashed border-muted-foreground/25 rounded-lg flex items-center justify-center">
+                                    <div className="flex h-64 items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25">
                                         <div className="text-center">
                                             <MapPin className="mx-auto h-12 w-12 text-muted-foreground" />
                                             <p className="mt-2 text-muted-foreground">No preview image available</p>
@@ -209,13 +197,11 @@ export default function MapShow({ map, isOwner }: Props) {
                             <CardContent className="space-y-4">
                                 <div>
                                     <label className="text-sm font-medium text-muted-foreground">Description</label>
-                                    <p className="mt-1 text-sm">
-                                        {map.description || 'No description provided'}
-                                    </p>
+                                    <p className="mt-1 text-sm">{map.description || 'No description provided'}</p>
                                 </div>
-                                
+
                                 <Separator />
-                                
+
                                 <div className="grid grid-cols-1 gap-3 text-sm">
                                     <div className="flex items-center gap-2">
                                         <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -245,31 +231,25 @@ export default function MapShow({ map, isOwner }: Props) {
                                 <CardContent>
                                     <div className="space-y-3">
                                         {map.gis_file_paths.map((file, index) => (
-                                            <div 
-                                                key={index} 
-                                                className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                                            <div
+                                                key={index}
+                                                className="flex items-center justify-between rounded-lg border p-3 transition-colors hover:bg-muted/50"
                                             >
-                                                <div className="flex items-center gap-3 min-w-0 flex-1">
-                                                    <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                                <div className="flex min-w-0 flex-1 items-center gap-3">
+                                                    <FileText className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
                                                     <div className="min-w-0 flex-1">
-                                                        <p className="text-sm font-medium truncate" title={file.original_name}>
+                                                        <p className="truncate text-sm font-medium" title={file.original_name}>
                                                             {file.original_name}
                                                         </p>
-                                                        <div className="flex items-center gap-2 mt-1">
+                                                        <div className="mt-1 flex items-center gap-2">
                                                             <Badge variant="secondary" className="text-xs">
                                                                 {file.extension.toUpperCase()}
                                                             </Badge>
-                                                            <span className="text-xs text-muted-foreground">
-                                                                {formatFileSize(file.size)}
-                                                            </span>
+                                                            <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <a
-                                                    href={file.url}
-                                                    download={file.original_name}
-                                                    className="flex-shrink-0 ml-2"
-                                                >
+                                                <a href={file.url} download={file.original_name} className="ml-2 flex-shrink-0">
                                                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                                                         <Download className="h-4 w-4" />
                                                     </Button>
@@ -289,9 +269,7 @@ export default function MapShow({ map, isOwner }: Props) {
                             <CardContent className="space-y-3">
                                 <div className="flex justify-between">
                                     <span className="text-sm text-muted-foreground">Total Files:</span>
-                                    <span className="text-sm font-medium">
-                                        {(map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0)}
-                                    </span>
+                                    <span className="text-sm font-medium">{(map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-sm text-muted-foreground">GIS Files:</span>
@@ -300,13 +278,11 @@ export default function MapShow({ map, isOwner }: Props) {
                                 <div className="flex justify-between">
                                     <span className="text-sm text-muted-foreground">Total Size:</span>
                                     <span className="text-sm font-medium">
-                                        {formatFileSize(
-                                            (map.gis_file_paths?.reduce((total, file) => total + file.size, 0) || 0)
-                                        )}
+                                        {formatFileSize(map.gis_file_paths?.reduce((total, file) => total + file.size, 0) || 0)}
                                     </span>
                                 </div>
-                                {((map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0)) > 0 && (
-                                    <div className="pt-2 border-t">
+                                {(map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0) > 0 && (
+                                    <div className="border-t pt-2">
                                         <p className="text-xs text-muted-foreground">
                                             All files can be downloaded as a ZIP archive using the "Download ZIP" button.
                                         </p>
