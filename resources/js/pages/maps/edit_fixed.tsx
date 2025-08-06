@@ -122,6 +122,21 @@ export default function MapEdit({ map, errors }: Props) {
         }
     };
 
+    const handleBrowseClick = () => {
+        const fileInput = document.getElementById('gis-files') as HTMLInputElement;
+        if (fileInput) {
+            fileInput.click();
+        }
+    };
+
+    const handleDropAreaClick = (e: React.MouseEvent) => {
+        // Only trigger file input if clicked area is not the button
+        const target = e.target as HTMLElement;
+        if (!target.closest('button')) {
+            handleBrowseClick();
+        }
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post(`/maps/${map.id}`, {
@@ -269,7 +284,7 @@ export default function MapEdit({ map, errors }: Props) {
                             <CardContent>
                                 <div className="space-y-4">
                                     <div
-                                        className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                                        className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
                                             isDragging
                                                 ? 'border-primary bg-primary/10'
                                                 : 'border-muted-foreground/25 hover:border-muted-foreground/50'
@@ -277,6 +292,7 @@ export default function MapEdit({ map, errors }: Props) {
                                         onDragOver={handleDragOver}
                                         onDragLeave={handleDragLeave}
                                         onDrop={handleDrop}
+                                        onClick={handleDropAreaClick}
                                     >
                                         <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
                                         <p className="text-sm text-muted-foreground mb-2">
@@ -290,11 +306,13 @@ export default function MapEdit({ map, errors }: Props) {
                                             className="hidden"
                                             id="gis-files"
                                         />
-                                        <Label htmlFor="gis-files" className="cursor-pointer">
-                                            <Button type="button" variant="outline">
-                                                Browse Files
-                                            </Button>
-                                        </Label>
+                                        <Button 
+                                            type="button" 
+                                            variant="outline"
+                                            onClick={handleBrowseClick}
+                                        >
+                                            Browse Files
+                                        </Button>
                                     </div>
 
                                     {selectedFiles && selectedFiles.length > 0 && (
