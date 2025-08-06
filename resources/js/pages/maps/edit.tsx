@@ -10,8 +10,8 @@ import { useFlashNotifications } from '@/hooks/use-flash-notifications';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { AlertCircle, Eye, FileText, MapPin, Save, Upload, X } from 'lucide-react';
-import { useState } from 'react';
+import { AlertCircle, Eye, FileText, MapPin, Save, Upload, X, Sparkles, Activity, Database, Layers, Camera, ArrowLeft, CheckCircle, FileUp, Download, FileCheck, Info } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface Map {
     id: number;
@@ -43,6 +43,11 @@ export default function MapEdit({ map, errors }: Props) {
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [filesToDelete, setFilesToDelete] = useState<number[]>([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        setIsLoaded(true);
+    }, []);
 
     const { data, setData, post, processing } = useForm({
         title: map.title,
@@ -133,6 +138,20 @@ export default function MapEdit({ map, errors }: Props) {
         const fileInput = document.getElementById('gis-files') as HTMLInputElement;
         if (fileInput) {
             fileInput.click();
+        }
+    };
+
+    const handleFileDownload = (file: any) => {
+        if (file.url) {
+            window.open(file.url, '_blank');
+        }
+    };
+
+    const removeNewFile = (index: number) => {
+        if (data.gis_files) {
+            const newFiles = [...data.gis_files];
+            newFiles.splice(index, 1);
+            setData('gis_files', newFiles.length > 0 ? newFiles : null);
         }
     };
 
@@ -243,83 +262,123 @@ export default function MapEdit({ map, errors }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit ${map.title}`} />
 
-            <div className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6">
-                {/* Header */}
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                            <MapPin className="h-6 w-6" />
+            <div className={`flex h-full flex-1 flex-col gap-8 rounded-xl p-6 bg-gradient-to-br from-emerald-50/30 to-teal-50/30 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                {/* Animated Header */}
+                <div className={`transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+                    <div className="flex items-start justify-between mb-6">
+                        <div className="flex items-center gap-4">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-green-600 text-white shadow-lg shadow-emerald-200/50 transform transition-all duration-300 hover:scale-110 hover:rotate-3">
+                                <MapPin className="h-8 w-8 animate-pulse" />
+                            </div>
+                            <div>
+                                <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-emerald-700 via-teal-600 to-green-700 bg-clip-text text-transparent flex items-center gap-3 mb-2">
+                                    <Sparkles className="h-8 w-8 text-emerald-600 transform transition-all duration-300 hover:rotate-12 hover:scale-110 drop-shadow-sm" />
+                                    Edit Map
+                                </h1>
+                                <p className="text-slate-600 flex items-center gap-2 font-medium text-lg">
+                                    <Activity className="h-5 w-5 text-emerald-500" />
+                                    Update your map details and files
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h1 className="text-3xl font-bold tracking-tight">Edit Map</h1>
-                            <p className="text-muted-foreground">Update your map details and files</p>
+                        <div className="flex gap-3">
+                            <Link href={`/maps/${map.id}`}>
+                                <Button className="flex items-center gap-2 bg-gradient-to-r from-teal-600 to-green-600 hover:from-teal-700 hover:to-green-700 text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-teal-200/50 rounded-xl font-semibold px-4 py-2">
+                                    <Eye className="h-4 w-4" />
+                                    View Details
+                                </Button>
+                            </Link>
+                            <Link href="/dashboard">
+                                <Button className="flex items-center gap-2 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white transform hover:scale-105 transition-all duration-300 rounded-xl font-semibold px-4 py-2">
+                                    <ArrowLeft className="h-4 w-4" />
+                                    Cancel
+                                </Button>
+                            </Link>
                         </div>
-                    </div>
-                    <div className="flex gap-2">
-                        <Link href={`/maps/${map.id}`}>
-                            <Button variant="secondary" className="flex items-center gap-2">
-                                <Eye className="h-4 w-4" />
-                                View Details
-                            </Button>
-                        </Link>
-                        <Link href="/dashboard">
-                            <Button variant="outline">Cancel</Button>
-                        </Link>
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-3">
+                <form onSubmit={handleSubmit} className={`grid gap-8 lg:grid-cols-3 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                     {/* Form Section */}
-                    <div className="space-y-6 lg:col-span-2">
+                    <div className="space-y-8 lg:col-span-2">
                         {/* Basic Information */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Map Information</CardTitle>
-                                <CardDescription>Update the basic details of your map</CardDescription>
+                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
+                            <CardHeader className="bg-gradient-to-r from-emerald-100/50 to-teal-100/50 border-b border-emerald-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-emerald-100">
+                                        <Database className="h-5 w-5 text-emerald-700" />
+                                    </div>
+                                    <div>
+                                        <CardTitle className="text-emerald-800 font-bold text-xl">Map Information</CardTitle>
+                                        <CardDescription className="text-emerald-600 font-medium">Update the basic details of your map</CardDescription>
+                                    </div>
+                                </div>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="title">Map Title</Label>
+                            <CardContent className="p-6 space-y-6">
+                                <div className="space-y-3">
+                                    <Label htmlFor="title" className="text-emerald-800 font-semibold flex items-center gap-2">
+                                        <MapPin className="h-4 w-4 text-emerald-600" />
+                                        Map Title
+                                    </Label>
                                     <Input
                                         id="title"
                                         value={data.title}
                                         onChange={(e) => setData('title', e.target.value)}
                                         placeholder="Enter map title"
                                         required
+                                        className={`border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.title ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}
                                     />
-                                    {errors.title && <p className="text-sm text-destructive">{errors.title}</p>}
+                                    {errors.title && (
+                                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                            <AlertCircle className="h-4 w-4" />
+                                            {errors.title}
+                                        </div>
+                                    )}
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="description">Description</Label>
+                                <div className="space-y-3">
+                                    <Label htmlFor="description" className="text-emerald-800 font-semibold flex items-center gap-2">
+                                        <Layers className="h-4 w-4 text-emerald-600" />
+                                        Description
+                                    </Label>
                                     <Textarea
                                         id="description"
                                         value={data.description}
                                         onChange={(e) => setData('description', e.target.value)}
                                         placeholder="Describe your map"
-                                        className="min-h-[100px]"
+                                        className={`min-h-[120px] border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.description ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}
                                     />
-                                    {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
+                                    {errors.description && (
+                                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                            <AlertCircle className="h-4 w-4" />
+                                            {errors.description}
+                                        </div>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>
 
                         {/* Map Image Upload */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Map Preview Image</CardTitle>
-                                <CardDescription>Upload a new preview image for your map (optional)</CardDescription>
+                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-teal-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-teal-200/30">
+                            <CardHeader className="bg-gradient-to-r from-teal-100/50 to-green-100/50 border-b border-teal-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-teal-100">
+                                        <Camera className="h-5 w-5 text-teal-700" />
+                                    </div>
+                                    <div>
+                                        <CardTitle className="text-teal-800 font-bold text-xl">Map Preview Image</CardTitle>
+                                        <CardDescription className="text-teal-600 font-medium">Upload a new preview image for your map (optional)</CardDescription>
+                                    </div>
+                                </div>
                             </CardHeader>
-                            <CardContent>
-                                <div className="space-y-4">
+                            <CardContent className="p-6">
+                                <div className="space-y-6">
                                     {previewImage && (
-                                        <div className="relative">
-                                            <img src={previewImage} alt="Map preview" className="h-48 w-full rounded-lg border object-cover" />
+                                        <div className="relative group">
+                                            <img src={previewImage} alt="Map preview" className="h-64 w-full rounded-2xl border-2 border-teal-200 object-cover transform group-hover:scale-[1.02] transition-all duration-300 shadow-lg" />
                                             <Button
                                                 type="button"
-                                                variant="secondary"
-                                                size="sm"
-                                                className="absolute top-2 right-2"
+                                                className="absolute top-3 right-3 h-8 w-8 p-0 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl transform hover:scale-110 transition-all duration-300 shadow-lg"
                                                 onClick={() => {
                                                     setPreviewImage(null);
                                                     setData('map_image', null);
@@ -330,143 +389,249 @@ export default function MapEdit({ map, errors }: Props) {
                                         </div>
                                     )}
 
-                                    <div className="grid w-full max-w-sm items-center gap-1.5">
-                                        <Label htmlFor="map_image">Choose new image</Label>
-                                        <Input id="map_image" type="file" accept="image/*" onChange={handleImageChange} />
+                                    <div className="space-y-3">
+                                        <Label htmlFor="map_image" className="text-teal-800 font-semibold flex items-center gap-2">
+                                            <Camera className="h-4 w-4 text-teal-600" />
+                                            Choose New Image
+                                        </Label>
+                                        <Input 
+                                            id="map_image" 
+                                            type="file" 
+                                            accept="image/*" 
+                                            onChange={handleImageChange}
+                                            className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl file:bg-gradient-to-r file:from-teal-600 file:to-green-600 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:from-teal-700 hover:file:to-green-700 ${errors.map_image ? 'border-red-400 focus:border-red-400' : 'border-teal-200 hover:border-teal-300'}`}
+                                        />
+                                        {errors.map_image && (
+                                            <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                                <AlertCircle className="h-4 w-4" />
+                                                {errors.map_image}
+                                            </div>
+                                        )}
                                     </div>
-                                    {errors.map_image && <p className="text-sm text-destructive">{errors.map_image}</p>}
                                 </div>
                             </CardContent>
                         </Card>
 
                         {/* GIS Files Upload */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>GIS Files</CardTitle>
-                                <CardDescription>Upload new GIS files to replace existing ones (optional)</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-4">
-                                    <div
-                                        className={`cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
-                                            isDragging
-                                                ? 'border-primary bg-primary/10'
-                                                : 'border-muted-foreground/25 hover:border-muted-foreground/50'
-                                        }`}
-                                        onDragOver={handleDragOver}
-                                        onDragLeave={handleDragLeave}
-                                        onDrop={handleDrop}
-                                        onClick={handleDropAreaClick}
-                                    >
-                                        <Upload className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-                                        <p className="mb-2 text-sm text-muted-foreground">Drag and drop GIS files here, or click to browse</p>
-                                        <input
-                                            type="file"
-                                            multiple
-                                            accept={supportedGisFormats.join(',')}
-                                            onChange={handleGisFilesChange}
-                                            className="hidden"
-                                            id="gis-files"
-                                        />
-                                        <Button type="button" variant="outline" onClick={handleBrowseClick}>
-                                            Browse Files
-                                        </Button>
+                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-green-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-green-200/30">
+                            <CardHeader className="bg-gradient-to-r from-green-100/50 to-emerald-100/50 border-b border-green-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-green-100">
+                                        <FileUp className="h-5 w-5 text-green-700" />
                                     </div>
-
-                                    {selectedFiles && selectedFiles.length > 0 && (
-                                        <div className="space-y-2">
-                                            <h4 className="text-sm font-medium">New files to upload:</h4>
-                                            {Array.from(selectedFiles).map((file, index) => (
-                                                <div key={index} className="flex items-center justify-between rounded border p-2">
-                                                    <div className="flex items-center gap-2">
-                                                        <FileText className="h-4 w-4" />
-                                                        <span className="text-sm">{file.name}</span>
-                                                        <Badge variant="secondary" className="text-xs">
-                                                            {file.name.split('.').pop()?.toUpperCase()}
-                                                        </Badge>
-                                                        <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
+                                    <div>
+                                        <CardTitle className="text-green-800 font-bold text-xl">GIS Files</CardTitle>
+                                        <CardDescription className="text-green-600 font-medium">Update your map's GIS data files (optional)</CardDescription>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-6">
+                                <div className="space-y-6">
+                                    {/* Current Files */}
+                                    {map.gis_file_paths && map.gis_file_paths.length > 0 && (
+                                        <div className="space-y-3">
+                                            <Label className="text-green-800 font-semibold flex items-center gap-2">
+                                                <FileText className="h-4 w-4 text-green-600" />
+                                                Current Files
+                                            </Label>
+                                            <div className="grid gap-3">
+                                                {map.gis_file_paths.map((file: any, index: number) => (
+                                                    <div key={index} className="flex items-center justify-between p-4 border border-green-200 rounded-xl bg-gradient-to-r from-green-50/50 to-emerald-50/50 hover:from-green-100/50 hover:to-emerald-100/50 transition-all duration-300">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="p-2 rounded-lg bg-green-100">
+                                                                <FileText className="h-4 w-4 text-green-700" />
+                                                            </div>
+                                                            <div>
+                                                                <p className="font-semibold text-green-800">{file.original_name || file.name}</p>
+                                                                <p className="text-sm text-green-600">{(file.size / 1024).toFixed(2)} KB</p>
+                                                            </div>
+                                                        </div>
+                                                        <Button
+                                                            type="button"
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() => handleFileDownload(file)}
+                                                            className="text-green-700 hover:text-green-800 hover:bg-green-100 rounded-lg"
+                                                        >
+                                                            <Download className="h-4 w-4" />
+                                                        </Button>
                                                     </div>
-                                                    <Button type="button" variant="ghost" size="sm" onClick={() => removeSelectedFile(index)}>
-                                                        <X className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
                                     )}
 
-                                    {errors.gis_files && (
-                                        <Alert variant="destructive">
-                                            <AlertCircle className="h-4 w-4" />
-                                            <AlertDescription>{errors.gis_files}</AlertDescription>
-                                        </Alert>
+                                    {/* File Upload */}
+                                    <div className="space-y-3">
+                                        <Label htmlFor="gis_files" className="text-green-800 font-semibold flex items-center gap-2">
+                                            <FileUp className="h-4 w-4 text-green-600" />
+                                            Upload New Files
+                                        </Label>
+                                        <Input
+                                            id="gis_files"
+                                            type="file"
+                                            multiple
+                                            accept=".shp,.kml,.kmz,.geojson,.gpx,.gdb,.tif,.tiff"
+                                            onChange={handleGisFilesChange}
+                                            className={`border-2 transition-all duration-300 focus:border-green-400 focus:ring-green-200 rounded-xl file:bg-gradient-to-r file:from-green-600 file:to-emerald-600 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:from-green-700 hover:file:to-emerald-700 ${errors.gis_files ? 'border-red-400 focus:border-red-400' : 'border-green-200 hover:border-green-300'}`}
+                                        />
+                                        {errors.gis_files && (
+                                            <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                                <AlertCircle className="h-4 w-4" />
+                                                {errors.gis_files}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* New Files Preview */}
+                                    {data.gis_files && data.gis_files.length > 0 && (
+                                        <div className="space-y-3">
+                                            <Label className="text-green-800 font-semibold flex items-center gap-2">
+                                                <FileCheck className="h-4 w-4 text-green-600" />
+                                                Files to Upload
+                                            </Label>
+                                            <div className="grid gap-3">
+                                                {Array.from(data.gis_files).map((file: File, index: number) => (
+                                                    <div key={index} className="flex items-center justify-between p-4 border-2 border-dashed border-green-300 rounded-xl bg-gradient-to-r from-green-50/80 to-emerald-50/80 hover:from-green-100/80 hover:to-emerald-100/80 transition-all duration-300">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="p-2 rounded-lg bg-green-100">
+                                                                <FileCheck className="h-4 w-4 text-green-700" />
+                                                            </div>
+                                                            <div>
+                                                                <p className="font-semibold text-green-800">{file.name}</p>
+                                                                <p className="text-sm text-green-600">{(file.size / 1024).toFixed(2)} KB</p>
+                                                            </div>
+                                                        </div>
+                                                        <Button
+                                                            type="button"
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() => removeNewFile(index)}
+                                                            className="text-red-600 hover:text-red-700 hover:bg-red-100 rounded-lg"
+                                                        >
+                                                            <X className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
                                     )}
 
-                                    <Alert>
-                                        <AlertCircle className="h-4 w-4" />
-                                        <AlertDescription>
-                                            Note: You can select files to delete in the Current GIS Files section. Uploading new files will add to
-                                            existing ones (unless selected for deletion).
-                                        </AlertDescription>
-                                    </Alert>
+                                    <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
+                                        <p className="text-sm text-green-700 font-medium flex items-center gap-2">
+                                            <Info className="h-4 w-4" />
+                                            Supported formats: SHP, KML, KMZ, GeoJSON, GPX, GDB, TIFF
+                                        </p>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
 
-                    {/* Current Files Sidebar */}
+                    {/* Enhanced Sidebar */}
                     <div className="space-y-6">
                         {/* Submit Button */}
-                        <Card>
-                            <CardContent className="pt-6">
-                                <Button type="submit" className="w-full" disabled={processing}>
-                                    <Save className="mr-2 h-4 w-4" />
-                                    {processing ? 'Saving...' : 'Save Changes'}
+                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
+                            <CardContent className="p-6">
+                                <Button 
+                                    type="submit" 
+                                    className="w-full h-12 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" 
+                                    disabled={processing}
+                                >
+                                    <Save className="mr-3 h-5 w-5" />
+                                    {processing ? 'Saving Changes...' : 'Save Changes'}
                                 </Button>
                             </CardContent>
                         </Card>
 
-                        {/* Current GIS Files */}
+                        {/* Map Statistics */}
+                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-green-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-green-200/30">
+                            <CardHeader className="bg-gradient-to-r from-green-100/50 to-emerald-100/50 border-b border-green-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-green-100">
+                                        <Activity className="h-5 w-5 text-green-700" />
+                                    </div>
+                                    <div>
+                                        <CardTitle className="text-green-800 font-bold">Map Statistics</CardTitle>
+                                        <CardDescription className="text-green-600 font-medium">Current map details</CardDescription>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-6">
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl">
+                                        <span className="text-green-700 font-medium">Total Files</span>
+                                        <Badge className="bg-green-600 hover:bg-green-700 text-white">
+                                            {map.gis_file_paths?.length || 0}
+                                        </Badge>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl">
+                                        <span className="text-emerald-700 font-medium">Created</span>
+                                        <span className="text-emerald-600 text-sm font-medium">
+                                            {new Date(map.created_at).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-teal-50 to-green-50 rounded-xl">
+                                        <span className="text-teal-700 font-medium">Last Updated</span>
+                                        <span className="text-teal-600 text-sm font-medium">
+                                            {new Date(map.updated_at).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Current GIS Files Management */}
                         {map.gis_file_paths && map.gis_file_paths.length > 0 && (
-                            <Card>
-                                <CardHeader>
+                            <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
+                                <CardHeader className="bg-gradient-to-r from-emerald-100/50 to-green-100/50 border-b border-emerald-100">
                                     <div className="flex items-center justify-between">
-                                        <div>
-                                            <CardTitle>Current GIS Files</CardTitle>
-                                            <CardDescription>
-                                                {map.gis_file_paths.length} file{map.gis_file_paths.length !== 1 ? 's' : ''} currently attached
-                                            </CardDescription>
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-xl bg-emerald-100">
+                                                <Database className="h-5 w-5 text-emerald-700" />
+                                            </div>
+                                            <div>
+                                                <CardTitle className="text-emerald-800 font-bold">File Management</CardTitle>
+                                                <CardDescription className="text-emerald-600 font-medium">
+                                                    {map.gis_file_paths.length} file{map.gis_file_paths.length !== 1 ? 's' : ''} attached
+                                                </CardDescription>
+                                            </div>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <Checkbox
                                                 id="select-all-files"
                                                 checked={filesToDelete.length === map.gis_file_paths.length && map.gis_file_paths.length > 0}
                                                 onCheckedChange={handleSelectAllFiles}
+                                                className="border-emerald-400 data-[state=checked]:bg-emerald-600"
                                             />
-                                            <Label htmlFor="select-all-files" className="cursor-pointer text-sm font-medium">
+                                            <Label htmlFor="select-all-files" className="cursor-pointer text-sm font-medium text-emerald-700 hover:text-emerald-800">
                                                 Select All
                                             </Label>
                                         </div>
                                     </div>
                                 </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-2">
+                                <CardContent className="p-6">
+                                    <div className="space-y-3">
                                         {map.gis_file_paths.map((file, index) => (
-                                            <div key={index} className="flex items-center gap-3 rounded border p-2 text-sm">
+                                            <div key={index} className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-300 ${filesToDelete.includes(index) ? 'border-red-300 bg-red-50/50' : 'border-emerald-200 bg-gradient-to-r from-emerald-50/50 to-green-50/50 hover:from-emerald-100/50 hover:to-green-100/50'}`}>
                                                 <Checkbox
                                                     id={`file-${index}`}
                                                     checked={filesToDelete.includes(index)}
                                                     onCheckedChange={() => handleFileDeleteToggle(index)}
+                                                    className="border-emerald-400 data-[state=checked]:bg-emerald-600"
                                                 />
-                                                <FileText className="h-4 w-4 text-muted-foreground" />
+                                                <div className="p-2 rounded-lg bg-emerald-100">
+                                                    <FileText className="h-4 w-4 text-emerald-700" />
+                                                </div>
                                                 <div className="min-w-0 flex-1">
-                                                    <p className="truncate" title={file.original_name}>
+                                                    <p className="truncate font-semibold text-emerald-800" title={file.original_name}>
                                                         {file.original_name}
                                                     </p>
-                                                    <div className="mt-1 flex items-center gap-2">
-                                                        <Badge variant="secondary" className="text-xs">
+                                                    <div className="mt-2 flex items-center gap-2 flex-wrap">
+                                                        <Badge className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
                                                             {file.extension.toUpperCase()}
                                                         </Badge>
-                                                        <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
+                                                        <span className="text-xs text-emerald-600 font-medium">{formatFileSize(file.size)}</span>
                                                         {filesToDelete.includes(index) && (
                                                             <Badge variant="destructive" className="text-xs">
                                                                 Will be deleted
@@ -478,9 +643,9 @@ export default function MapEdit({ map, errors }: Props) {
                                         ))}
                                     </div>
                                     {filesToDelete.length > 0 && (
-                                        <Alert className="mt-4">
-                                            <AlertCircle className="h-4 w-4" />
-                                            <AlertDescription>
+                                        <Alert className="mt-4 border-red-200 bg-red-50/50">
+                                            <AlertCircle className="h-4 w-4 text-red-600" />
+                                            <AlertDescription className="text-red-700 font-medium">
                                                 {filesToDelete.length} file{filesToDelete.length !== 1 ? 's' : ''} selected for deletion. They will be
                                                 removed when you save changes.
                                             </AlertDescription>
@@ -491,18 +656,26 @@ export default function MapEdit({ map, errors }: Props) {
                         )}
 
                         {/* Supported Formats */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Supported Formats</CardTitle>
+                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-teal-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-teal-200/30">
+                            <CardHeader className="bg-gradient-to-r from-teal-100/50 to-emerald-100/50 border-b border-teal-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-teal-100">
+                                        <Layers className="h-5 w-5 text-teal-700" />
+                                    </div>
+                                    <div>
+                                        <CardTitle className="text-teal-800 font-bold">Supported Formats</CardTitle>
+                                        <CardDescription className="text-teal-600 font-medium">Compatible file types</CardDescription>
+                                    </div>
+                                </div>
                             </CardHeader>
-                            <CardContent>
-                                <div className="flex flex-wrap gap-1">
+                            <CardContent className="p-6">
+                                <div className="flex flex-wrap gap-2">
                                     {supportedGisFormats.slice(0, 15).map((format) => (
-                                        <Badge key={format} variant="outline" className="text-xs">
+                                        <Badge key={format} className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white text-xs">
                                             {format}
                                         </Badge>
                                     ))}
-                                    <Badge variant="outline" className="text-xs">
+                                    <Badge className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white text-xs">
                                         +{supportedGisFormats.length - 15} more
                                     </Badge>
                                 </div>
