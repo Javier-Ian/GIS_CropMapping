@@ -6,8 +6,8 @@ import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Calendar, Download, Edit3, FileText, MapPin, Trash2, ZoomIn } from 'lucide-react';
-import { useState } from 'react';
+import { Calendar, Download, Edit3, FileText, MapPin, Trash2, ZoomIn, Sparkles, Activity, Database, Layers, Eye, ArrowLeft } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface Map {
     id: number;
@@ -33,6 +33,11 @@ interface Props {
 
 export default function MapShow({ map, isOwner }: Props) {
     const [isDownloading, setIsDownloading] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        setIsLoaded(true);
+    }, []);
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -105,81 +110,124 @@ export default function MapShow({ map, isOwner }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={map.title} />
 
-            <div className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6">
-                {/* Header */}
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                            <MapPin className="h-6 w-6" />
+            <div className={`flex h-full flex-1 flex-col gap-8 rounded-xl p-6 bg-gradient-to-br from-emerald-50/30 to-teal-50/30 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                {/* Animated Header */}
+                <div className={`transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+                    <div className="flex items-start justify-between mb-6">
+                        <div className="flex items-center gap-4">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-green-600 text-white shadow-lg shadow-emerald-200/50 transform transition-all duration-300 hover:scale-110 hover:rotate-3">
+                                <MapPin className="h-8 w-8 animate-pulse" />
+                            </div>
+                            <div>
+                                <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-emerald-700 via-teal-600 to-green-700 bg-clip-text text-transparent flex items-center gap-3 mb-2">
+                                    <Sparkles className="h-8 w-8 text-emerald-600 transform transition-all duration-300 hover:rotate-12 hover:scale-110 drop-shadow-sm" />
+                                    {map.title}
+                                </h1>
+                                <p className="text-slate-600 flex items-center gap-2 font-medium text-lg">
+                                    <Calendar className="h-5 w-5 text-emerald-500" />
+                                    Created on {formatDate(map.created_at)}
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h1 className="text-3xl font-bold tracking-tight">{map.title}</h1>
-                            <p className="text-muted-foreground">Created on {formatDate(map.created_at)}</p>
-                        </div>
-                    </div>
-                    <div className="flex gap-2">
-                        {isOwner && (
-                            <Link href={`/maps/${map.id}/edit`}>
-                                <Button variant="outline" className="flex items-center gap-2">
-                                    <Edit3 className="h-4 w-4" />
-                                    Edit Map
+                        <div className="flex gap-3">
+                            <Link href="/dashboard">
+                                <Button className="flex items-center gap-2 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white transform hover:scale-105 transition-all duration-300 rounded-xl font-semibold px-4 py-2">
+                                    <ArrowLeft className="h-4 w-4" />
+                                    Back to Dashboard
                                 </Button>
                             </Link>
-                        )}
-                        <Button
-                            variant="outline"
-                            onClick={handleDownload}
-                            className="flex items-center gap-2"
-                            disabled={(map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0) === 0 || isDownloading}
-                        >
-                            <Download className="h-4 w-4" />
-                            {isDownloading ? 'Preparing...' : 'Download ZIP'}
-                        </Button>
-                        {isOwner && (
-                            <Button variant="destructive" onClick={handleDelete} className="flex items-center gap-2">
-                                <Trash2 className="h-4 w-4" />
-                                Delete
+                            {isOwner && (
+                                <Link href={`/maps/${map.id}/edit`}>
+                                    <Button className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-emerald-200/50 rounded-xl font-semibold px-4 py-2">
+                                        <Edit3 className="h-4 w-4" />
+                                        Edit Map
+                                    </Button>
+                                </Link>
+                            )}
+                            <Button
+                                onClick={handleDownload}
+                                className="flex items-center gap-2 bg-gradient-to-r from-teal-600 to-green-600 hover:from-teal-700 hover:to-green-700 text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-teal-200/50 rounded-xl font-semibold px-4 py-2"
+                                disabled={(map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0) === 0 || isDownloading}
+                            >
+                                {isDownloading ? (
+                                    <>
+                                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                                        Preparing...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Download className="h-4 w-4" />
+                                        Download ZIP
+                                    </>
+                                )}
                             </Button>
-                        )}
+                            {isOwner && (
+                                <Button 
+                                    variant="destructive" 
+                                    onClick={handleDelete} 
+                                    className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transform hover:scale-105 transition-all duration-300 rounded-xl font-semibold px-4 py-2"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                    Delete
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                <div className="grid gap-6 lg:grid-cols-3">
+                <div className={`grid gap-8 lg:grid-cols-3 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                     {/* Map Image Section */}
                     <div className="lg:col-span-2">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Map View</CardTitle>
-                                <CardDescription>Click to view in full size</CardDescription>
+                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
+                            <CardHeader className="bg-gradient-to-r from-emerald-100/50 to-teal-100/50 border-b border-emerald-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-emerald-100">
+                                        <Eye className="h-5 w-5 text-emerald-700" />
+                                    </div>
+                                    <div>
+                                        <CardTitle className="text-emerald-800 font-bold text-xl">Map Preview</CardTitle>
+                                        <CardDescription className="text-emerald-600 font-medium">Click to view in full size</CardDescription>
+                                    </div>
+                                </div>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className="p-6">
                                 {map.map_image_url ? (
                                     <Dialog>
                                         <DialogTrigger asChild>
-                                            <div className="group relative cursor-pointer">
+                                            <div className="group relative cursor-pointer rounded-2xl overflow-hidden">
                                                 <img
                                                     src={map.map_image_url}
                                                     alt={map.title}
-                                                    className="h-auto w-full rounded-lg border transition-shadow hover:shadow-lg"
+                                                    className="h-auto w-full rounded-2xl border-2 border-emerald-200 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/50 transform group-hover:scale-[1.02]"
                                                 />
-                                                <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/0 opacity-0 transition-colors group-hover:bg-black/10 group-hover:opacity-100">
-                                                    <div className="rounded-full bg-white/90 p-3">
-                                                        <ZoomIn className="h-6 w-6 text-gray-700" />
+                                                <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/20 group-hover:opacity-100">
+                                                    <div className="rounded-full bg-white/95 p-4 shadow-lg transform scale-75 group-hover:scale-100 transition-all duration-300">
+                                                        <ZoomIn className="h-8 w-8 text-emerald-700" />
                                                     </div>
+                                                </div>
+                                                <div className="absolute top-3 right-3">
+                                                    <Badge className="bg-emerald-600 text-white backdrop-blur-sm font-semibold border-0 shadow-lg">
+                                                        <Eye className="w-3 h-3 mr-1" />
+                                                        Click to Zoom
+                                                    </Badge>
                                                 </div>
                                             </div>
                                         </DialogTrigger>
-                                        <DialogContent className="max-h-[90vh] max-w-7xl p-0">
-                                            <div className="relative">
-                                                <img src={map.map_image_url} alt={map.title} className="h-auto max-h-[90vh] w-full object-contain" />
+                                        <DialogContent className="max-h-[90vh] max-w-7xl p-4 bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-3xl">
+                                            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                                                <img src={map.map_image_url} alt={map.title} className="h-auto max-h-[90vh] w-full object-contain rounded-2xl" />
                                             </div>
                                         </DialogContent>
                                     </Dialog>
                                 ) : (
-                                    <div className="flex h-64 items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25">
+                                    <div className="flex h-96 items-center justify-center rounded-2xl border-3 border-dashed border-emerald-300 bg-gradient-to-br from-emerald-50 to-teal-50">
                                         <div className="text-center">
-                                            <MapPin className="mx-auto h-12 w-12 text-muted-foreground" />
-                                            <p className="mt-2 text-muted-foreground">No preview image available</p>
+                                            <div className="relative mb-4">
+                                                <MapPin className="mx-auto h-16 w-16 text-emerald-400 animate-bounce" />
+                                                <div className="absolute -inset-4 bg-gradient-to-r from-emerald-400 via-teal-400 to-green-400 rounded-full blur-xl opacity-20 animate-pulse"></div>
+                                            </div>
+                                            <p className="text-emerald-700 font-semibold text-lg">No preview image available</p>
+                                            <p className="text-emerald-600 font-medium text-sm mt-1">Upload an image to see your map preview here</p>
                                         </div>
                                     </div>
                                 )}
@@ -190,29 +238,47 @@ export default function MapShow({ map, isOwner }: Props) {
                     {/* Map Details Sidebar */}
                     <div className="space-y-6">
                         {/* Map Information */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Map Details</CardTitle>
+                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-teal-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-teal-200/30">
+                            <CardHeader className="bg-gradient-to-r from-teal-100/50 to-green-100/50 border-b border-teal-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-teal-100">
+                                        <Database className="h-5 w-5 text-teal-700" />
+                                    </div>
+                                    <CardTitle className="text-teal-800 font-bold text-xl">Map Details</CardTitle>
+                                </div>
                             </CardHeader>
-                            <CardContent className="space-y-4">
+                            <CardContent className="p-6 space-y-6">
                                 <div>
-                                    <label className="text-sm font-medium text-muted-foreground">Description</label>
-                                    <p className="mt-1 text-sm">{map.description || 'No description provided'}</p>
+                                    <label className="text-sm font-bold text-teal-800 flex items-center gap-2 mb-2">
+                                        <Layers className="h-4 w-4" />
+                                        Description
+                                    </label>
+                                    <p className="text-slate-700 font-medium bg-gradient-to-r from-teal-50 to-green-50 p-4 rounded-xl border border-teal-200">
+                                        {map.description || 'No description provided'}
+                                    </p>
                                 </div>
 
-                                <Separator />
+                                <Separator className="bg-teal-200" />
 
-                                <div className="grid grid-cols-1 gap-3 text-sm">
-                                    <div className="flex items-center gap-2">
-                                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                                        <span className="text-muted-foreground">Created:</span>
-                                        <span>{formatDate(map.created_at)}</span>
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-teal-50 to-green-50 rounded-xl border border-teal-200">
+                                        <div className="p-2 rounded-lg bg-teal-100">
+                                            <Calendar className="h-4 w-4 text-teal-700" />
+                                        </div>
+                                        <div>
+                                            <span className="text-sm font-semibold text-teal-800">Created:</span>
+                                            <p className="text-sm text-teal-700 font-medium">{formatDate(map.created_at)}</p>
+                                        </div>
                                     </div>
                                     {map.updated_at !== map.created_at && (
-                                        <div className="flex items-center gap-2">
-                                            <Calendar className="h-4 w-4 text-muted-foreground" />
-                                            <span className="text-muted-foreground">Updated:</span>
-                                            <span>{formatDate(map.updated_at)}</span>
+                                        <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-teal-50 to-green-50 rounded-xl border border-teal-200">
+                                            <div className="p-2 rounded-lg bg-teal-100">
+                                                <Calendar className="h-4 w-4 text-teal-700" />
+                                            </div>
+                                            <div>
+                                                <span className="text-sm font-semibold text-teal-800">Updated:</span>
+                                                <p className="text-sm text-teal-700 font-medium">{formatDate(map.updated_at)}</p>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -221,36 +287,47 @@ export default function MapShow({ map, isOwner }: Props) {
 
                         {/* GIS Files */}
                         {map.gis_file_paths && map.gis_file_paths.length > 0 && (
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>GIS Files</CardTitle>
-                                    <CardDescription>
-                                        {map.gis_file_paths.length} file{map.gis_file_paths.length !== 1 ? 's' : ''} attached
-                                    </CardDescription>
+                            <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-green-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-green-200/30">
+                                <CardHeader className="bg-gradient-to-r from-green-100/50 to-emerald-100/50 border-b border-green-100">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 rounded-xl bg-green-100">
+                                            <FileText className="h-5 w-5 text-green-700" />
+                                        </div>
+                                        <div>
+                                            <CardTitle className="text-green-800 font-bold text-xl">GIS Files</CardTitle>
+                                            <CardDescription className="text-green-600 font-medium">
+                                                {map.gis_file_paths.length} file{map.gis_file_paths.length !== 1 ? 's' : ''} attached
+                                            </CardDescription>
+                                        </div>
+                                    </div>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="p-6">
                                     <div className="space-y-3">
                                         {map.gis_file_paths.map((file, index) => (
                                             <div
                                                 key={index}
-                                                className="flex items-center justify-between rounded-lg border p-3 transition-colors hover:bg-muted/50"
+                                                className="flex items-center justify-between rounded-2xl border-2 border-green-200 p-4 transition-all duration-300 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:shadow-lg hover:shadow-green-200/30 hover:scale-[1.02] group"
                                             >
-                                                <div className="flex min-w-0 flex-1 items-center gap-3">
-                                                    <FileText className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                                                <div className="flex min-w-0 flex-1 items-center gap-4">
+                                                    <div className="p-2 rounded-xl bg-green-100 group-hover:bg-green-200 transition-colors">
+                                                        <FileText className="h-5 w-5 flex-shrink-0 text-green-700" />
+                                                    </div>
                                                     <div className="min-w-0 flex-1">
-                                                        <p className="truncate text-sm font-medium" title={file.original_name}>
+                                                        <p className="truncate text-sm font-bold text-green-800 group-hover:text-green-900 transition-colors" title={file.original_name}>
                                                             {file.original_name}
                                                         </p>
-                                                        <div className="mt-1 flex items-center gap-2">
-                                                            <Badge variant="secondary" className="text-xs">
+                                                        <div className="mt-2 flex items-center gap-3">
+                                                            <Badge className="bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs font-semibold border-0">
                                                                 {file.extension.toUpperCase()}
                                                             </Badge>
-                                                            <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
+                                                            <span className="text-xs text-green-600 font-semibold bg-green-100 px-2 py-1 rounded-lg">
+                                                                {formatFileSize(file.size)}
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <a href={file.url} download={file.original_name} className="ml-2 flex-shrink-0">
-                                                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                                <a href={file.url} download={file.original_name} className="ml-3 flex-shrink-0">
+                                                    <Button className="h-10 w-10 p-0 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl transform hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-green-200/50">
                                                         <Download className="h-4 w-4" />
                                                     </Button>
                                                 </a>
@@ -262,30 +339,51 @@ export default function MapShow({ map, isOwner }: Props) {
                         )}
 
                         {/* Statistics */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Statistics</CardTitle>
+                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
+                            <CardHeader className="bg-gradient-to-r from-emerald-100/50 via-teal-100/50 to-green-100/50 border-b border-emerald-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-emerald-100">
+                                        <Activity className="h-5 w-5 text-emerald-700" />
+                                    </div>
+                                    <CardTitle className="text-emerald-800 font-bold text-xl">Statistics</CardTitle>
+                                </div>
                             </CardHeader>
-                            <CardContent className="space-y-3">
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-muted-foreground">Total Files:</span>
-                                    <span className="text-sm font-medium">{(map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0)}</span>
+                            <CardContent className="p-6 space-y-4">
+                                <div className="flex justify-between items-center p-3 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-emerald-200">
+                                    <span className="text-sm font-semibold text-emerald-800 flex items-center gap-2">
+                                        <Database className="h-4 w-4" />
+                                        Total Files:
+                                    </span>
+                                    <span className="text-lg font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-lg">
+                                        {(map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0)}
+                                    </span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-muted-foreground">GIS Files:</span>
-                                    <span className="text-sm font-medium">{map.gis_file_paths?.length || 0}</span>
+                                <div className="flex justify-between items-center p-3 bg-gradient-to-r from-teal-50 to-green-50 rounded-xl border border-teal-200">
+                                    <span className="text-sm font-semibold text-teal-800 flex items-center gap-2">
+                                        <FileText className="h-4 w-4" />
+                                        GIS Files:
+                                    </span>
+                                    <span className="text-lg font-bold text-teal-700 bg-teal-100 px-3 py-1 rounded-lg">
+                                        {map.gis_file_paths?.length || 0}
+                                    </span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-muted-foreground">Total Size:</span>
-                                    <span className="text-sm font-medium">
+                                <div className="flex justify-between items-center p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                                    <span className="text-sm font-semibold text-green-800 flex items-center gap-2">
+                                        <Sparkles className="h-4 w-4" />
+                                        Total Size:
+                                    </span>
+                                    <span className="text-lg font-bold text-green-700 bg-green-100 px-3 py-1 rounded-lg">
                                         {formatFileSize(map.gis_file_paths?.reduce((total, file) => total + file.size, 0) || 0)}
                                     </span>
                                 </div>
                                 {(map.gis_file_paths?.length || 0) + (map.map_image_path ? 1 : 0) > 0 && (
-                                    <div className="border-t pt-2">
-                                        <p className="text-xs text-muted-foreground">
-                                            All files can be downloaded as a ZIP archive using the "Download ZIP" button.
-                                        </p>
+                                    <div className="border-t border-emerald-200 pt-4">
+                                        <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-green-50 p-4 rounded-xl border border-emerald-200">
+                                            <p className="text-sm text-emerald-700 font-semibold flex items-center gap-2">
+                                                <Download className="h-4 w-4" />
+                                                All files can be downloaded as a ZIP archive using the "Download ZIP" button.
+                                            </p>
+                                        </div>
                                     </div>
                                 )}
                             </CardContent>
