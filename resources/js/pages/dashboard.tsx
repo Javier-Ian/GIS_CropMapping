@@ -2,13 +2,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { notify } from '@/lib/notifications';
 import { useFlashNotifications } from '@/hooks/use-flash-notifications';
 import { Head, Link, router } from '@inertiajs/react';
-import { Calendar, FileText, MapPin, Plus, Users, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { Calendar, FileText, MapPin, Plus, Users, MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -85,6 +85,11 @@ export default function Dashboard({ maps = [], auth }: Props) {
         }
         // If user owns the map, navigate to edit page
         window.location.href = `/maps/${map.id}/edit`;
+    };
+
+    const handleViewMap = (map: Map) => {
+        // Navigate to view details page - accessible to all users
+        window.location.href = `/maps/${map.id}`;
     };
 
     const handleDeleteMap = (map: Map) => {
@@ -267,6 +272,14 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem 
+                                                            onClick={() => handleViewMap(map)}
+                                                            className="flex items-center gap-2 cursor-pointer"
+                                                        >
+                                                            <Eye className="h-3 w-3" />
+                                                            View Details
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
                                                         <DropdownMenuItem 
                                                             onClick={() => handleEditMap(map)}
                                                             className="flex items-center gap-2 cursor-pointer"
