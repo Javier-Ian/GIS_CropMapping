@@ -123,10 +123,8 @@ class MapController extends Controller
 
     public function show(Map $map)
     {
-        // Ensure the user owns this map
-        if ($map->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized access to this map.');
-        }
+        // Allow viewing for all authenticated users, but check ownership for edit/delete permissions
+        $isOwner = $map->user_id === auth()->id();
 
         // Add the full URL for the map image if it exists
         if ($map->map_image_path) {
@@ -142,7 +140,8 @@ class MapController extends Controller
         }
 
         return Inertia::render('maps/show', [
-            'map' => $map
+            'map' => $map,
+            'isOwner' => $isOwner
         ]);
     }
 

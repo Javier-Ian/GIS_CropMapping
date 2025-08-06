@@ -28,9 +28,10 @@ interface Map {
 
 interface Props {
     map: Map;
+    isOwner: boolean;
 }
 
-export default function MapShow({ map }: Props) {
+export default function MapShow({ map, isOwner }: Props) {
     const [isDownloading, setIsDownloading] = useState(false);
     
     const breadcrumbs: BreadcrumbItem[] = [
@@ -119,12 +120,14 @@ export default function MapShow({ map }: Props) {
                         </div>
                     </div>
                     <div className="flex gap-2">
-                        <Link href={`/maps/${map.id}/edit`}>
-                            <Button variant="outline" className="flex items-center gap-2">
-                                <Edit3 className="h-4 w-4" />
-                                Edit Map
-                            </Button>
-                        </Link>
+                        {isOwner && (
+                            <Link href={`/maps/${map.id}/edit`}>
+                                <Button variant="outline" className="flex items-center gap-2">
+                                    <Edit3 className="h-4 w-4" />
+                                    Edit Map
+                                </Button>
+                            </Link>
+                        )}
                         <Button 
                             variant="outline" 
                             onClick={handleDownload}
@@ -134,14 +137,16 @@ export default function MapShow({ map }: Props) {
                             <Download className="h-4 w-4" />
                             {isDownloading ? 'Preparing...' : 'Download ZIP'}
                         </Button>
-                        <Button 
-                            variant="destructive" 
-                            onClick={handleDelete}
-                            className="flex items-center gap-2"
-                        >
-                            <Trash2 className="h-4 w-4" />
-                            Delete
-                        </Button>
+                        {isOwner && (
+                            <Button 
+                                variant="destructive" 
+                                onClick={handleDelete}
+                                className="flex items-center gap-2"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                                Delete
+                            </Button>
+                        )}
                     </div>
                 </div>
 
