@@ -1,6 +1,7 @@
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
+import { useLogoutLoading } from '@/hooks/use-logout-loading';
 import { type User } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { LogOut, Settings } from 'lucide-react';
@@ -11,10 +12,20 @@ interface UserMenuContentProps {
 
 export function UserMenuContent({ user }: UserMenuContentProps) {
     const cleanup = useMobileNavigation();
+    const { startLogout } = useLogoutLoading();
 
     const handleLogout = () => {
         cleanup();
-        router.flushAll();
+        startLogout(); // Start the logout animation
+        
+        // Add a small delay to show the animation before navigation
+        setTimeout(() => {
+            router.post('/logout', {}, {
+                onFinish: () => {
+                    router.flushAll();
+                }
+            });
+        }, 300);
     };
 
     return (
@@ -36,10 +47,13 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             <DropdownMenuSeparator className="bg-emerald-200/50" />
             <div className="p-2">
                 <DropdownMenuItem asChild>
-                    <Link className="block w-full hover:bg-gradient-to-r hover:from-red-100/70 hover:to-pink-100/70 hover:text-red-900 rounded-lg transition-all duration-300 transform hover:scale-105 font-semibold text-red-700" method="post" href={route('logout')} as="button" onClick={handleLogout}>
+                    <button 
+                        className="block w-full hover:bg-gradient-to-r hover:from-red-100/70 hover:to-pink-100/70 hover:text-red-900 rounded-lg transition-all duration-300 transform hover:scale-105 font-semibold text-red-700 text-left" 
+                        onClick={handleLogout}
+                    >
                         <LogOut className="mr-3 h-4 w-4 text-red-600 transition-all duration-300 group-hover:translate-x-1" />
                         Log out
-                    </Link>
+                    </button>
                 </DropdownMenuItem>
             </div>
         </>
