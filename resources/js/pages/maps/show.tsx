@@ -13,6 +13,7 @@ interface Map {
     id: number;
     title: string;
     description: string;
+    barangay: string;
     map_image_path: string | null;
     map_image_url?: string;
     gis_file_paths: Array<{
@@ -257,6 +258,20 @@ export default function MapShow({ map, isOwner }: Props) {
                                         {map.description || 'No description provided'}
                                     </p>
                                 </div>
+
+                                {/* Barangay Location */}
+                                {map.barangay && (
+                                    <div>
+                                        <label className="text-sm font-bold text-emerald-800 flex items-center gap-2 mb-2">
+                                            <MapPin className="h-4 w-4" />
+                                            Barangay Location
+                                        </label>
+                                        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-100 to-teal-100 px-4 py-3 rounded-xl border border-emerald-200">
+                                            <MapPin className="w-5 h-5 text-emerald-700 animate-pulse" />
+                                            <span className="text-emerald-800 font-bold text-lg">{map.barangay} Barangay</span>
+                                        </div>
+                                    </div>
+                                )}
 
                                 <Separator className="bg-teal-200" />
 

@@ -10,6 +10,7 @@ class Map extends Model
     protected $fillable = [
         'title',
         'description',
+        'barangay',
         'map_image_path',
         'gis_file_paths',
         'user_id',

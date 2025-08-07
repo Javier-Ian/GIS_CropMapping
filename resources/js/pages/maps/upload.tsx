@@ -2,12 +2,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useFlashNotifications } from '@/hooks/use-flash-notifications';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { FileType, MapPin, Upload, Sparkles, CheckCircle, AlertCircle, Camera, Database, Layers } from 'lucide-react';
+import { FileType, MapPin, Upload, Sparkles, CheckCircle, AlertCircle, Camera, Database, Layers, Map } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -27,6 +28,7 @@ export default function MapUpload() {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [barangay, setBarangay] = useState('');
     const [mapImage, setMapImage] = useState<File | null>(null);
     const [gisFiles, setGisFiles] = useState<FileList | null>(null);
     const [dragActive, setDragActive] = useState(false);
@@ -50,11 +52,17 @@ export default function MapUpload() {
             return;
         }
 
+        if (!barangay.trim()) {
+            setErrors({ barangay: 'Barangay selection is required' });
+            return;
+        }
+
         setProcessing(true);
 
         const formData = new FormData();
         formData.append('title', title);
         formData.append('description', description);
+        formData.append('barangay', barangay);
 
         if (mapImage) {
             formData.append('map_image', mapImage);
@@ -69,6 +77,7 @@ export default function MapUpload() {
         console.log('Submitting form data:', {
             title,
             description,
+            barangay,
             mapImage: mapImage?.name,
             gisFilesCount: gisFiles?.length || 0,
         });
@@ -78,6 +87,7 @@ export default function MapUpload() {
                 console.log('Upload successful:', page);
                 setTitle('');
                 setDescription('');
+                setBarangay('');
                 setMapImage(null);
                 setGisFiles(null);
                 setProcessing(false);
@@ -293,6 +303,48 @@ export default function MapUpload() {
                                         {errors.description}
                                     </div>
                                 )}
+                            </div>
+
+                            <div className="space-y-3">
+                                <Label htmlFor="barangay" className="text-emerald-800 font-semibold flex items-center gap-2">
+                                    <Map className="h-4 w-4 text-emerald-600" />
+                                    Barangay Location
+                                </Label>
+                                <Select value={barangay} onValueChange={setBarangay}>
+                                    <SelectTrigger className={`border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.barangay ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}>
+                                        <SelectValue placeholder="Select barangay location..." />
+                                    </SelectTrigger>
+                                    <SelectContent className="rounded-xl border-emerald-200">
+                                        <SelectItem value="Butong" className="cursor-pointer hover:bg-emerald-50 focus:bg-emerald-100 rounded-lg">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                                                Butong
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem value="Salawagan" className="cursor-pointer hover:bg-emerald-50 focus:bg-emerald-100 rounded-lg">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                                                Salawagan
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem value="San Jose" className="cursor-pointer hover:bg-emerald-50 focus:bg-emerald-100 rounded-lg">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                San Jose
+                                            </div>
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                {errors.barangay && (
+                                    <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                        <AlertCircle className="h-4 w-4" />
+                                        {errors.barangay}
+                                    </div>
+                                )}
+                                <p className="text-sm text-emerald-600 flex items-center gap-2">
+                                    <CheckCircle className="h-4 w-4" />
+                                    Select the barangay where this agricultural map data was collected
+                                </p>
                             </div>
                         </CardContent>
                     </Card>

@@ -47,6 +47,7 @@ class MapController extends Controller
             $validated = $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
+                'barangay' => 'required|string|in:Butong,Salawagan,San Jose',
                 'map_image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240', // 10MB
                 'gis_files.*' => 'nullable|file|max:51200', // 50MB per file - removed MIME validation for now
             ]);
@@ -98,6 +99,7 @@ class MapController extends Controller
             $map = Map::create([
                 'title' => $request->title,
                 'description' => $request->description,
+                'barangay' => $request->barangay,
                 'map_image_path' => $mapImagePath,
                 'gis_file_paths' => $gisFilePaths,
                 'user_id' => auth()->id(),
@@ -180,6 +182,7 @@ class MapController extends Controller
             $validated = $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
+                'barangay' => 'required|string|in:Butong,Salawagan,San Jose',
                 'map_image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240', // 10MB
                 'gis_files.*' => 'nullable|file|max:51200', // 50MB per file
                 'remove_map_image' => 'nullable|boolean',
@@ -236,6 +239,7 @@ class MapController extends Controller
             $map->update([
                 'title' => $request->title,
                 'description' => $request->description,
+                'barangay' => $request->barangay,
                 'map_image_path' => $mapImagePath,
                 'gis_file_paths' => $gisFilePaths,
             ]);

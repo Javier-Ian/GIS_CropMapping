@@ -5,18 +5,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useFlashNotifications } from '@/hooks/use-flash-notifications';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { AlertCircle, Eye, FileText, MapPin, Save, Upload, X, Sparkles, Activity, Database, Layers, Camera, ArrowLeft, CheckCircle, FileUp, Download, FileCheck, Info } from 'lucide-react';
+import { AlertCircle, Eye, FileText, MapPin, Save, Upload, X, Sparkles, Activity, Database, Layers, Camera, ArrowLeft, CheckCircle, FileUp, Download, FileCheck, Info, Map } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface Map {
     id: number;
     title: string;
     description: string;
+    barangay: string;
     map_image_path: string | null;
     map_image_url?: string;
     gis_file_paths: Array<{
@@ -52,6 +54,7 @@ export default function MapEdit({ map, errors }: Props) {
     const { data, setData, post, processing } = useForm({
         title: map.title,
         description: map.description,
+        barangay: map.barangay || '',
         map_image: null as File | null,
         gis_files: null as File[] | null,
         remove_gis_files: [] as number[],
@@ -354,6 +357,48 @@ export default function MapEdit({ map, errors }: Props) {
                                             {errors.description}
                                         </div>
                                     )}
+                                </div>
+
+                                <div className="space-y-3">
+                                    <Label htmlFor="barangay" className="text-emerald-800 font-semibold flex items-center gap-2">
+                                        <Map className="h-4 w-4 text-emerald-600" />
+                                        Barangay Location
+                                    </Label>
+                                    <Select value={data.barangay} onValueChange={(value) => setData('barangay', value)}>
+                                        <SelectTrigger className={`border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.barangay ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}>
+                                            <SelectValue placeholder="Select barangay location..." />
+                                        </SelectTrigger>
+                                        <SelectContent className="rounded-xl border-emerald-200">
+                                            <SelectItem value="Butong" className="cursor-pointer hover:bg-emerald-50 focus:bg-emerald-100 rounded-lg">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                                                    Butong
+                                                </div>
+                                            </SelectItem>
+                                            <SelectItem value="Salawagan" className="cursor-pointer hover:bg-emerald-50 focus:bg-emerald-100 rounded-lg">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                                                    Salawagan
+                                                </div>
+                                            </SelectItem>
+                                            <SelectItem value="San Jose" className="cursor-pointer hover:bg-emerald-50 focus:bg-emerald-100 rounded-lg">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                    San Jose
+                                                </div>
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {errors.barangay && (
+                                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                            <AlertCircle className="h-4 w-4" />
+                                            {errors.barangay}
+                                        </div>
+                                    )}
+                                    <p className="text-sm text-emerald-600 flex items-center gap-2">
+                                        <CheckCircle className="h-4 w-4" />
+                                        Update the barangay where this agricultural map data was collected
+                                    </p>
                                 </div>
                             </CardContent>
                         </Card>

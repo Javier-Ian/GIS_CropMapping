@@ -22,6 +22,7 @@ interface Map {
     id: number;
     title: string;
     description: string;
+    barangay: string;
     map_image_path: string | null;
     map_image_url?: string;
     gis_file_paths: Array<{
@@ -313,7 +314,17 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                     {/* Post Content */}
                                     <div className="px-6 py-4">
                                         <h4 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-emerald-800 transition-colors leading-tight">{map.title}</h4>
-                                        <p className="text-slate-600 mb-4 group-hover:text-slate-700 transition-colors leading-relaxed font-medium">{map.description}</p>
+                                        <p className="text-slate-600 mb-3 group-hover:text-slate-700 transition-colors leading-relaxed font-medium">{map.description}</p>
+                                        
+                                        {/* Barangay Location */}
+                                        {map.barangay && (
+                                            <div className="mb-4">
+                                                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-100 to-teal-100 px-3 py-2 rounded-xl border border-emerald-200 transform hover:scale-105 transition-all duration-300">
+                                                    <MapPin className="w-4 h-4 text-emerald-700 animate-pulse" />
+                                                    <span className="text-emerald-800 font-semibold text-sm">{map.barangay} Barangay</span>
+                                                </div>
+                                            </div>
+                                        )}
                                         
                                         {/* GIS File Info */}
                                         <div className="flex items-center space-x-6 text-sm text-slate-500 mb-4 group-hover:text-emerald-600 transition-colors">
