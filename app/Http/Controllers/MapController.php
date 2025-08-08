@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Map;
+use App\Services\GoogleSheetsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -352,6 +353,142 @@ class MapController extends Controller
             \Log::error('Failed to download map files', ['map_id' => $map->id, 'error' => $e->getMessage()]);
 
             return back()->withErrors(['general' => 'Failed to create download: '.$e->getMessage()]);
+        }
+    }
+
+    /**
+     * Get Google Sheets URL for a specific map based on its barangay
+     */
+    public function getGoogleSheetsUrl(Map $map)
+    {
+        try {
+            \Log::info('Getting Google Sheets URL for map', [
+                'map_id' => $map->id,
+                'map_title' => $map->title,
+                'barangay' => $map->barangay
+            ]);
+
+            if (!$map->barangay) {
+                return response()->json([
+                    'error' => 'No barangay specified for this map'
+                ], 400);
+            }
+
+            $googleSheetsService = new GoogleSheetsService();
+            $url = $googleSheetsService->getSheetUrlForBarangay($map->barangay);
+            
+            if (!$url) {
+                \Log::warning('Failed to get Google Sheets URL', [
+                    'map_id' => $map->id,
+                    'barangay' => $map->barangay
+                ]);
+
+                return response()->json([
+                    'error' => 'Failed to get Google Sheet for barangay: ' . $map->barangay
+                ], 404);
+            }
+
+            \Log::info('Successfully generated Google Sheets URL', [
+                'map_id' => $map->id,
+                'barangay' => $map->barangay,
+                'url' => $url
+            ]);
+
+            return response()->json([
+                'url' => $url,
+                'barangay' => $map->barangay,
+                'sheet_name' => "Brgy. " . $map->barangay
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to get Google Sheets URL', [
+                'map_id' => $map->id,
+                'barangay' => $map->barangay,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to get Google Sheets URL: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Redirect directly to Google Sheets for a specific map
+     */
+    public function redirectToGoogleSheets(Map $map)
+    {
+        try {
+            \Log::info('Redirecting to Google Sheets for map', [
+                'map_id' => $map->id,
+                'map_title' => $map->title,
+                'barangay' => $map->barangay
+            ]);
+
+            if (!$map->barangay) {
+                abort(400, 'No barangay specified for this map');
+            }
+
+            $googleSheetsService = new GoogleSheetsService();
+            $url = $googleSheetsService->getSheetUrlForBarangay($map->barangay);
+            
+            if (!$url) {
+                \Log::warning('Failed to get Google Sheets URL for redirect', [
+                    'map_id' => $map->id,
+                    'barangay' => $map->barangay
+                ]);
+
+                abort(404, 'Failed to get Google Sheet for barangay: ' . $map->barangay);
+            }
+
+            \Log::info('Successfully redirecting to Google Sheets', [
+                'map_id' => $map->id,
+                'barangay' => $map->barangay,
+                'url' => $url
+            ]);
+
+            return redirect()->away($url);
+
+        } catch (\Exception $e) {
+            \Log::error('Error redirecting to Google Sheets', [
+                'map_id' => $map->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            abort(500, 'Internal server error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Export map data to Google Sheets
+     */
+    public function exportToGoogleSheets(Map $map)
+    {
+        try {
+            $googleSheetsService = new GoogleSheetsService();
+            $result = $googleSheetsService->exportMapData($map);
+            
+            if ($result) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Map data exported to Google Sheets successfully',
+                    'cells_updated' => $result
+                ]);
+            } else {
+                return response()->json([
+                    'error' => 'Failed to export data to Google Sheets'
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Failed to export to Google Sheets', [
+                'map_id' => $map->id,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to export to Google Sheets'
+            ], 500);
         }
     }
 }

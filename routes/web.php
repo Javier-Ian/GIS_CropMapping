@@ -35,6 +35,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('maps/{map}', [MapController::class, 'update'])->name('maps.update');
     Route::delete('maps/{map}', [MapController::class, 'destroy'])->name('maps.destroy');
     Route::get('maps/{map}/download', [MapController::class, 'download'])->name('maps.download');
+    
+    // Google Sheets integration routes
+    Route::get('maps/{map}/google-sheets-url', [MapController::class, 'getGoogleSheetsUrl'])->name('maps.google-sheets-url');
+    Route::get('maps/{map}/google-sheets-redirect', [MapController::class, 'redirectToGoogleSheets'])->name('maps.google-sheets-redirect');
+    Route::post('maps/{map}/export-to-sheets', [MapController::class, 'exportToGoogleSheets'])->name('maps.export-to-sheets');
 
     // Ultra-Unique Notification Test Route
     Route::get('notification-test', function () {

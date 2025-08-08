@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import GoogleSheetsIcon from '@/components/icons/GoogleSheetsIcon';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Calendar, Download, Edit3, FileText, MapPin, Trash2, ZoomIn, Sparkles, Activity, Database, Layers, Eye, ArrowLeft } from 'lucide-react';
+import { Calendar, Download, Edit3, FileText, MapPin, Trash2, ZoomIn, Sparkles, Activity, Database, Layers, Eye, ArrowLeft, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface Map {
@@ -35,10 +36,31 @@ interface Props {
 export default function MapShow({ map, isOwner }: Props) {
     const [isDownloading, setIsDownloading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isGoogleSheetsLoading, setIsGoogleSheetsLoading] = useState(false);
 
     useEffect(() => {
         setIsLoaded(true);
     }, []);
+
+    const handleGoogleSheetsClick = async (e: React.MouseEvent) => {
+        // Allow the default link behavior (opening in new tab)
+        // but also show loading state
+        setIsGoogleSheetsLoading(true);
+        
+        try {
+            console.log('Opening Google Sheets for map:', map.id, 'barangay:', map.barangay);
+            
+            // The link will handle opening in new tab
+            // We just need to manage the loading state
+            setTimeout(() => {
+                setIsGoogleSheetsLoading(false);
+            }, 2000); // Reset loading state after 2 seconds
+            
+        } catch (error) {
+            console.error('Error with Google Sheets:', error);
+            setIsGoogleSheetsLoading(false);
+        }
+    };
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -270,6 +292,36 @@ export default function MapShow({ map, isOwner }: Props) {
                                             <MapPin className="w-5 h-5 text-emerald-700 animate-pulse" />
                                             <span className="text-emerald-800 font-bold text-lg">{map.barangay} Barangay</span>
                                         </div>
+                                    </div>
+                                )}
+
+                                <Separator className="bg-teal-200" />
+
+                                {/* Google Sheets Integration */}
+                                {map.barangay && (
+                                    <div>
+                                        <label className="text-sm font-bold text-green-800 flex items-center gap-2 mb-3">
+                                            <GoogleSheetsIcon className="h-4 w-4" />
+                                            Data Management
+                                        </label>
+                                        <a
+                                            href={`/maps/${map.id}/google-sheets-redirect`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={handleGoogleSheetsClick}
+                                            className="w-full inline-flex items-center justify-center bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-200/50 rounded-xl font-semibold px-4 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            style={{ 
+                                                pointerEvents: isGoogleSheetsLoading ? 'none' : 'auto',
+                                                opacity: isGoogleSheetsLoading ? 0.5 : 1 
+                                            }}
+                                        >
+                                            <GoogleSheetsIcon className="mr-2 h-5 w-5" />
+                                            {isGoogleSheetsLoading ? 'Opening...' : `Open ${map.barangay} Data Sheet`}
+                                            <ExternalLink className="ml-2 h-4 w-4" />
+                                        </a>
+                                        <p className="text-xs text-green-600 mt-2 text-center">
+                                            View and manage crop mapping data for {map.barangay} Barangay
+                                        </p>
                                     </div>
                                 )}
 
