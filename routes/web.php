@@ -1,8 +1,13 @@
 <?php
 
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\SheetsWebhookController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+// Public webhook routes (no authentication required)
+Route::post('webhook/sheets-update', [SheetsWebhookController::class, 'handleSheetUpdate'])->name('webhook.sheets-update');
+Route::get('webhook/verify', [SheetsWebhookController::class, 'verifyWebhook'])->name('webhook.verify');
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -40,6 +45,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('maps/{map}/google-sheets-url', [MapController::class, 'getGoogleSheetsUrl'])->name('maps.google-sheets-url');
     Route::get('maps/{map}/google-sheets-redirect', [MapController::class, 'redirectToGoogleSheets'])->name('maps.google-sheets-redirect');
     Route::post('maps/{map}/export-to-sheets', [MapController::class, 'exportToGoogleSheets'])->name('maps.export-to-sheets');
+    
+    // Sheets to Database Sync routes
+    Route::get('sync', function () {
+        return Inertia::render('sync/SheetsSync');
+    })->name('sync.page');
+    Route::post('sync/sheets-to-database', [MapController::class, 'syncSheetsToDatabase'])->name('sync.sheets-to-database');
+    Route::post('sync/barangay-to-database', [MapController::class, 'syncSpecificBarangayToDatabase'])->name('sync.barangay-to-database');
+    Route::get('sync/statistics', [MapController::class, 'getSyncStatistics'])->name('sync.statistics');
+    Route::get('barangay/crop-data', [MapController::class, 'getBarangayCropData'])->name('barangay.crop-data');
 
     // Ultra-Unique Notification Test Route
     Route::get('notification-test', function () {

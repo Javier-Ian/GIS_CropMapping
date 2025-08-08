@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Map;
 use App\Services\GoogleSheetsService;
+use App\Services\SheetsSyncService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -488,6 +489,166 @@ class MapController extends Controller
 
             return response()->json([
                 'error' => 'Failed to export to Google Sheets'
+            ], 500);
+        }
+    }
+
+    /**
+     * Sync Google Sheets data to database for all barangays
+     */
+    public function syncSheetsToDatabase()
+    {
+        try {
+            $syncService = new SheetsSyncService();
+            $results = $syncService->syncAllBarangays();
+
+            $totalSynced = 0;
+            $totalErrors = 0;
+            $details = [];
+
+            foreach ($results as $barangay => $result) {
+                if (isset($result['error'])) {
+                    $details[] = [
+                        'barangay' => $barangay,
+                        'status' => 'error',
+                        'message' => $result['error']
+                    ];
+                    $totalErrors++;
+                } else {
+                    $details[] = [
+                        'barangay' => $barangay,
+                        'status' => 'success',
+                        'synced' => $result['synced'],
+                        'errors' => $result['errors']
+                    ];
+                    $totalSynced += $result['synced'];
+                    $totalErrors += $result['errors'];
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Sync completed: {$totalSynced} records synced, {$totalErrors} errors",
+                'total_synced' => $totalSynced,
+                'total_errors' => $totalErrors,
+                'details' => $details,
+                'statistics' => $syncService->getSyncStatistics()
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to sync sheets to database', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to sync sheets to database: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Sync Google Sheets data to database for a specific barangay
+     */
+    public function syncSpecificBarangayToDatabase(Request $request)
+    {
+        try {
+            $barangayName = $request->input('barangay');
+            
+            if (!$barangayName) {
+                return response()->json([
+                    'error' => 'Barangay name is required'
+                ], 400);
+            }
+
+            $syncService = new SheetsSyncService();
+            $result = $syncService->syncSpecificBarangay($barangayName);
+
+            if (isset($result['error'])) {
+                return response()->json([
+                    'error' => $result['error']
+                ], 500);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Sync completed for {$barangayName}: {$result['synced']} records synced",
+                'barangay' => $barangayName,
+                'synced' => $result['synced'],
+                'errors' => $result['errors'],
+                'error_details' => $result['error_details'] ?? []
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to sync specific barangay to database', [
+                'barangay' => $request->input('barangay'),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to sync barangay to database: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get crop data for a specific barangay from database
+     */
+    public function getBarangayCropData(Request $request)
+    {
+        try {
+            $barangayName = $request->input('barangay');
+            
+            if (!$barangayName) {
+                return response()->json([
+                    'error' => 'Barangay name is required'
+                ], 400);
+            }
+
+            $syncService = new SheetsSyncService();
+            $cropData = $syncService->getBarangayCropData($barangayName);
+
+            return response()->json([
+                'success' => true,
+                'barangay' => $barangayName,
+                'data' => $cropData,
+                'count' => $cropData->count()
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to get barangay crop data', [
+                'barangay' => $request->input('barangay'),
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to get crop data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get sync statistics for all barangays
+     */
+    public function getSyncStatistics()
+    {
+        try {
+            $syncService = new SheetsSyncService();
+            $statistics = $syncService->getSyncStatistics();
+
+            return response()->json([
+                'success' => true,
+                'statistics' => $statistics
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to get sync statistics', [
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to get sync statistics: ' . $e->getMessage()
             ], 500);
         }
     }

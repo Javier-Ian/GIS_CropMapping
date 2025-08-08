@@ -3,7 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { LayoutGrid, Upload } from 'lucide-react';
+import { LayoutGrid, Upload, RefreshCw } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -16,6 +16,11 @@ const mainNavItems: NavItem[] = [
         title: 'Upload Map',
         href: '/maps/upload',
         icon: Upload,
+    },
+    {
+        title: 'Sheets Sync',
+        href: '/sync',
+        icon: RefreshCw,
     },
 ];
 

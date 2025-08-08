@@ -7,7 +7,7 @@ import GoogleSheetsIcon from '@/components/icons/GoogleSheetsIcon';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Calendar, Download, Edit3, FileText, MapPin, Trash2, ZoomIn, Sparkles, Activity, Database, Layers, Eye, ArrowLeft, ExternalLink } from 'lucide-react';
+import { Calendar, Download, Edit3, FileText, MapPin, Trash2, ZoomIn, Sparkles, Activity, Database, Layers, Eye, ArrowLeft, ExternalLink, RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface Map {
@@ -37,12 +37,14 @@ export default function MapShow({ map, isOwner }: Props) {
     const [isDownloading, setIsDownloading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isGoogleSheetsLoading, setIsGoogleSheetsLoading] = useState(false);
+    const [isSyncing, setIsSyncing] = useState(false);
+    const [syncMessage, setSyncMessage] = useState<string | null>(null);
 
     useEffect(() => {
         setIsLoaded(true);
     }, []);
 
-    const handleGoogleSheetsClick = async (e: React.MouseEvent) => {
+        const handleGoogleSheetsClick = async (e: React.MouseEvent) => {
         // Allow the default link behavior (opening in new tab)
         // but also show loading state
         setIsGoogleSheetsLoading(true);
@@ -50,15 +52,44 @@ export default function MapShow({ map, isOwner }: Props) {
         try {
             console.log('Opening Google Sheets for map:', map.id, 'barangay:', map.barangay);
             
-            // The link will handle opening in new tab
-            // We just need to manage the loading state
+            // Reset loading state after a short delay since the page opens in new tab
             setTimeout(() => {
                 setIsGoogleSheetsLoading(false);
-            }, 2000); // Reset loading state after 2 seconds
-            
+            }, 2000);
         } catch (error) {
             console.error('Error with Google Sheets:', error);
             setIsGoogleSheetsLoading(false);
+        }
+    };
+
+    const handleSyncData = async () => {
+        setIsSyncing(true);
+        setSyncMessage(null);
+        
+        try {
+            const response = await fetch('/sync/barangay-to-database', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                },
+                body: JSON.stringify({ barangay: `Brgy. ${map.barangay}` }),
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                setSyncMessage(`✅ Synced ${data.synced} records from Google Sheets to database`);
+            } else {
+                setSyncMessage(`❌ Sync failed: ${data.error}`);
+            }
+        } catch (error) {
+            console.error('Sync failed:', error);
+            setSyncMessage('❌ Sync failed: Unable to connect to server');
+        } finally {
+            setIsSyncing(false);
+            // Clear message after 5 seconds
+            setTimeout(() => setSyncMessage(null), 5000);
         }
     };
 
@@ -322,6 +353,30 @@ export default function MapShow({ map, isOwner }: Props) {
                                         <p className="text-xs text-green-600 mt-2 text-center">
                                             View and manage crop mapping data for {map.barangay} Barangay
                                         </p>
+                                        
+                                        {/* Sync Database Button */}
+                                        <div className="mt-3 space-y-2">
+                                            <Button
+                                                onClick={handleSyncData}
+                                                disabled={isSyncing}
+                                                variant="outline"
+                                                className="w-full flex items-center justify-center border-blue-300 text-blue-700 hover:bg-blue-50"
+                                            >
+                                                <RefreshCw className={`mr-2 h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                                                {isSyncing ? 'Syncing...' : 'Sync to Database'}
+                                                <Database className="ml-2 h-4 w-4" />
+                                            </Button>
+                                            
+                                            {syncMessage && (
+                                                <div className="text-xs text-center p-2 rounded bg-gray-50 border">
+                                                    {syncMessage}
+                                                </div>
+                                            )}
+                                            
+                                            <p className="text-xs text-blue-600 text-center">
+                                                Import latest data from Google Sheets to local database
+                                            </p>
+                                        </div>
                                     </div>
                                 )}
 
