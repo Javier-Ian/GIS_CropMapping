@@ -71,13 +71,9 @@ class GoogleSheetsService
                 if ($sheet->getProperties()->getTitle() === $sheetName) {
                     $sheetId = $sheet->getProperties()->getSheetId();
                     
-                    // Apply formatting to ensure consistency (but skip if it's the Brgy. Butong template)
-                    if ($sheetName !== 'Brgy. Butong') {
-                        Log::info('Found existing sheet: ' . $sheetName . ', applying clean formatting to ensure consistency');
-                        $this->copyFormattingFromTemplate($sheetName);
-                    } else {
-                        Log::info('Found Brgy. Butong template sheet, keeping original design');
-                    }
+                    // Just return the existing sheet without applying any formatting
+                    // This preserves any pre-built table designs that users have created
+                    Log::info('Found existing sheet: ' . $sheetName . ', keeping existing design intact');
                     
                     return $sheetId;
                 }
