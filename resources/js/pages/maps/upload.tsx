@@ -10,6 +10,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { FileType, MapPin, Upload, Sparkles, CheckCircle, AlertCircle, Camera, Database, Layers, Map } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -91,8 +92,14 @@ export default function MapUpload() {
                 setMapImage(null);
                 setGisFiles(null);
                 setProcessing(false);
-                // Force redirect to dashboard
-                router.visit('/dashboard');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Map Uploaded!',
+                    text: 'Your map has been uploaded successfully.',
+                    confirmButtonText: 'Go to Dashboard',
+                }).then(() => {
+                    router.visit('/dashboard');
+                });
             },
             onError: (errors) => {
                 console.error('Upload errors:', errors);
