@@ -2,14 +2,15 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { useFlashNotifications } from '@/hooks/use-flash-notifications';
 import AppLayout from '@/layouts/app-layout';
 import { notify } from '@/lib/notifications';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Eye, FileText, MapPin, MoreHorizontal, Pencil, Plus, Trash2, Users, Heart, MessageCircle, Share2, Download, Calendar, Clock, Sparkles, TrendingUp, Activity } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Eye, FileText, MapPin, MoreHorizontal, Pencil, Plus, Trash2, Users, Heart, MessageCircle, Share2, Download, Calendar, Clock, Sparkles, TrendingUp, Activity, Filter, X } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -58,16 +59,56 @@ export default function Dashboard({ maps = [], auth }: Props) {
     // Animation states
     const [isLoaded, setIsLoaded] = useState(false);
     const [visibleCards, setVisibleCards] = useState<number[]>([]);
+    
+    // Filter states
+    const [filterType, setFilterType] = useState<'all' | 'yearly' | 'monthly'>('all');
+    const [selectedYear, setSelectedYear] = useState<string>('');
+    const [selectedMonth, setSelectedMonth] = useState<string>('');
+    const [showFilters, setShowFilters] = useState(false);
+
+    // Get available years and months from maps
+    const availableYears = useMemo(() => {
+        const years = maps.map(map => new Date(map.created_at).getFullYear());
+        return [...new Set(years)].sort((a, b) => b - a);
+    }, [maps]);
+
+    const availableMonths = useMemo(() => {
+        if (!selectedYear) return [];
+        const monthsInYear = maps
+            .filter(map => new Date(map.created_at).getFullYear() === parseInt(selectedYear))
+            .map(map => new Date(map.created_at).getMonth());
+        return [...new Set(monthsInYear)].sort((a, b) => a - b);
+    }, [maps, selectedYear]);
+
+    // Filter maps based on selected filters
+    const filteredMaps = useMemo(() => {
+        if (filterType === 'all') return maps;
+        
+        return maps.filter(map => {
+            const mapDate = new Date(map.created_at);
+            
+            if (filterType === 'yearly' && selectedYear) {
+                return mapDate.getFullYear() === parseInt(selectedYear);
+            }
+            
+            if (filterType === 'monthly' && selectedYear && selectedMonth) {
+                return mapDate.getFullYear() === parseInt(selectedYear) && 
+                       mapDate.getMonth() === parseInt(selectedMonth);
+            }
+            
+            return true;
+        });
+    }, [maps, filterType, selectedYear, selectedMonth]);
 
     useEffect(() => {
         setIsLoaded(true);
         // Stagger card animations
-        maps.forEach((_, index) => {
+        filteredMaps.forEach((_, index) => {
             setTimeout(() => {
                 setVisibleCards(prev => [...prev, index]);
             }, index * 150);
         });
-    }, [maps]);
+    }, [filteredMaps]);
 
     const formatFileSize = (bytes: number) => {
         if (bytes === 0) return '0 Bytes';
@@ -157,7 +198,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                 </div>
 
                 {/* Animated Stats Cards */}
-                <div className={`grid gap-6 md:grid-cols-3 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                <div className={`grid gap-6 md:grid-cols-2 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                     <Card className="border-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30 group cursor-pointer rounded-2xl backdrop-blur-sm">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                             <CardTitle className="text-sm font-semibold text-emerald-800 group-hover:text-emerald-900 transition-colors">Total Maps</CardTitle>
@@ -166,7 +207,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-3xl font-bold bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent group-hover:scale-110 transition-all duration-300">{maps.length}</div>
+                            <div className="text-3xl font-bold bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent group-hover:scale-110 transition-all duration-300">{filteredMaps.length}</div>
                             <p className="text-sm text-slate-600 flex items-center gap-2 mt-2 font-medium">
                                 <TrendingUp className="h-4 w-4 text-emerald-600 animate-pulse" />
                                 Maps in your collection
@@ -174,36 +215,20 @@ export default function Dashboard({ maps = [], auth }: Props) {
                         </CardContent>
                     </Card>
                     
-                    <Card className="border-0 bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-teal-200/30 group cursor-pointer rounded-2xl backdrop-blur-sm">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                            <CardTitle className="text-sm font-semibold text-teal-800 group-hover:text-teal-900 transition-colors">GIS Files</CardTitle>
-                            <div className="p-2 rounded-xl bg-teal-100 group-hover:bg-teal-200 transition-colors">
-                                <FileText className="h-5 w-5 text-teal-700 group-hover:text-teal-800 group-hover:animate-pulse transition-all" />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-bold bg-gradient-to-r from-teal-700 to-cyan-700 bg-clip-text text-transparent group-hover:scale-110 transition-all duration-300">{maps.reduce((total, map) => total + (map.gis_file_paths?.length || 0), 0)}</div>
-                            <p className="text-sm text-slate-600 flex items-center gap-2 mt-2 font-medium">
-                                <Activity className="h-4 w-4 text-teal-600 animate-spin" />
-                                Total uploaded files
-                            </p>
-                        </CardContent>
-                    </Card>
-                    
                     <Card className="border-0 bg-gradient-to-br from-green-50 via-lime-50 to-yellow-50 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-green-200/30 group cursor-pointer rounded-2xl backdrop-blur-sm">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                            <CardTitle className="text-sm font-semibold text-green-800 group-hover:text-green-900 transition-colors">Storage Used</CardTitle>
+                            <CardTitle className="text-sm font-semibold text-green-800 group-hover:text-green-900 transition-colors">Your Total Posts</CardTitle>
                             <div className="p-2 rounded-xl bg-green-100 group-hover:bg-green-200 transition-colors">
                                 <Users className="h-5 w-5 text-green-700 group-hover:text-green-800 group-hover:animate-bounce transition-all" />
                             </div>
                         </CardHeader>
                         <CardContent>
                             <div className="text-3xl font-bold bg-gradient-to-r from-green-700 to-lime-700 bg-clip-text text-transparent group-hover:scale-110 transition-all duration-300">
-                                {formatFileSize(maps.reduce((total, map) => total + (map.gis_file_paths?.reduce((fileTotal, file) => fileTotal + file.size, 0) || 0), 0))}
+                                {maps.filter(map => map.user.id === auth.user.id).length}
                             </div>
                             <p className="text-sm text-slate-600 flex items-center gap-2 mt-2 font-medium">
                                 <Sparkles className="h-4 w-4 text-green-600 animate-pulse" />
-                                Across all maps
+                                Maps you've created
                             </p>
                         </CardContent>
                     </Card>
@@ -216,13 +241,119 @@ export default function Dashboard({ maps = [], auth }: Props) {
                             <MapPin className="h-7 w-7 text-emerald-600 animate-pulse drop-shadow-sm" />
                             Your Maps
                         </h2>
-                        <div className="text-sm text-slate-600 flex items-center gap-2 bg-gradient-to-r from-emerald-50 to-teal-50 px-4 py-2 rounded-full border border-emerald-100 shadow-sm">
-                            <Activity className="h-4 w-4 text-emerald-600 animate-spin" />
-                            <span className="font-medium">{maps.length} maps in your collection</span>
-                        </div>
+                        <Button
+                            onClick={() => setShowFilters(!showFilters)}
+                            variant="outline"
+                            className="flex items-center gap-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-300 transition-all duration-300"
+                        >
+                            <Filter className="h-4 w-4" />
+                            Filters
+                        </Button>
                     </div>
 
-                    {maps.length === 0 ? (
+                    {/* Filter Panel */}
+                    {showFilters && (
+                        <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-emerald-50/80 via-teal-50/80 to-green-50/80 backdrop-blur-sm rounded-2xl border border-emerald-200/50 shadow-sm hover:shadow-md transition-all duration-500 group">
+                            <div className="flex items-center gap-2 text-sm font-semibold text-emerald-800 group-hover:text-emerald-900 transition-colors">
+                                <div className="p-1.5 rounded-lg bg-emerald-100 group-hover:bg-emerald-200 transition-colors">
+                                    <Filter className="h-4 w-4 text-emerald-700" />
+                                </div>
+                                <span className="hidden sm:inline">Filter Maps</span>
+                                <span className="sm:hidden">Filter</span>
+                            </div>
+                            
+                            <div className="h-6 w-px bg-emerald-200/60"></div>
+                            
+                            <Select value={filterType} onValueChange={(value: 'all' | 'yearly' | 'monthly') => {
+                                setFilterType(value);
+                                if (value === 'all') {
+                                    setSelectedYear('');
+                                    setSelectedMonth('');
+                                }
+                            }}>
+                                <SelectTrigger className="w-36 h-9 text-sm border-emerald-200/60 bg-white/70 hover:bg-white focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 rounded-lg shadow-sm transition-all duration-200">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="rounded-lg border-emerald-200 shadow-lg">
+                                    <SelectItem value="all" className="hover:bg-emerald-50 focus:bg-emerald-50">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                                            All Maps
+                                        </div>
+                                    </SelectItem>
+                                    <SelectItem value="yearly" className="hover:bg-emerald-50 focus:bg-emerald-50">
+                                        <div className="flex items-center gap-2">
+                                            <Calendar className="h-3 w-3 text-emerald-600" />
+                                            By Year
+                                        </div>
+                                    </SelectItem>
+                                    <SelectItem value="monthly" className="hover:bg-emerald-50 focus:bg-emerald-50">
+                                        <div className="flex items-center gap-2">
+                                            <Clock className="h-3 w-3 text-emerald-600" />
+                                            By Month
+                                        </div>
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            {filterType !== 'all' && (
+                                <>
+                                    <div className="h-6 w-px bg-emerald-200/60"></div>
+                                    <Select value={selectedYear} onValueChange={(value) => {
+                                        setSelectedYear(value);
+                                        setSelectedMonth('');
+                                    }}>
+                                        <SelectTrigger className="w-28 h-9 text-sm border-emerald-200/60 bg-white/70 hover:bg-white focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 rounded-lg shadow-sm transition-all duration-200">
+                                            <SelectValue placeholder="Year" />
+                                        </SelectTrigger>
+                                        <SelectContent className="rounded-lg border-emerald-200 shadow-lg">
+                                            {availableYears.map((year) => (
+                                                <SelectItem key={year} value={year.toString()} className="hover:bg-emerald-50 focus:bg-emerald-50">
+                                                    {year}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </>
+                            )}
+
+                            {filterType === 'monthly' && selectedYear && (
+                                <>
+                                    <div className="h-6 w-px bg-emerald-200/60"></div>
+                                    <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                                        <SelectTrigger className="w-36 h-9 text-sm border-emerald-200/60 bg-white/70 hover:bg-white focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 rounded-lg shadow-sm transition-all duration-200">
+                                            <SelectValue placeholder="Month" />
+                                        </SelectTrigger>
+                                        <SelectContent className="rounded-lg border-emerald-200 shadow-lg">
+                                            {availableMonths.map((month) => (
+                                                <SelectItem key={month} value={month.toString()} className="hover:bg-emerald-50 focus:bg-emerald-50">
+                                                    {new Date(2000, month, 1).toLocaleString('default', { month: 'long' })}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </>
+                            )}
+
+                            <div className="flex-1"></div>
+
+                            <Button
+                                onClick={() => {
+                                    setFilterType('all');
+                                    setSelectedYear('');
+                                    setSelectedMonth('');
+                                }}
+                                variant="ghost"
+                                size="sm"
+                                className="h-9 px-4 text-sm text-emerald-700 hover:text-emerald-800 hover:bg-emerald-100/80 rounded-lg border border-emerald-200/60 bg-white/70 hover:bg-white shadow-sm transition-all duration-200"
+                            >
+                                <X className="h-4 w-4 mr-2" />
+                                Clear
+                            </Button>
+                        </div>
+                    )}
+
+                    {filteredMaps.length === 0 ? (
                         <div className={`max-w-3xl mx-auto transition-all duration-1000 delay-800 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
                             <Card className="border-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-3xl backdrop-blur-sm">
                                 <CardContent className="flex flex-col items-center justify-center py-16 px-8">
@@ -230,22 +361,44 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                         <PlaceholderPattern className="h-20 w-20 text-emerald-300 animate-bounce drop-shadow-lg" />
                                         <div className="absolute -inset-4 bg-gradient-to-r from-emerald-400 via-teal-400 to-green-400 rounded-full blur-xl opacity-20 animate-pulse"></div>
                                     </div>
-                                    <h3 className="mb-4 text-2xl font-bold bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent text-center">No maps uploaded yet</h3>
-                                    <p className="mb-8 text-center text-slate-600 font-medium leading-relaxed max-w-md">
-                                        Start by uploading your first GIS map to begin your agricultural data analysis journey and unlock powerful insights.
-                                    </p>
-                                    <Link href="/maps/upload">
-                                        <Button className="bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-700 hover:via-teal-700 hover:to-green-700 text-white transform hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl px-8 py-4 rounded-2xl font-semibold text-lg">
-                                            <Plus className="mr-3 h-6 w-6 animate-spin hover:animate-none" />
-                                            Upload Your First Map
-                                        </Button>
-                                    </Link>
+                                    {maps.length === 0 ? (
+                                        <>
+                                            <h3 className="mb-4 text-2xl font-bold bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent text-center">No maps uploaded yet</h3>
+                                            <p className="mb-8 text-center text-slate-600 font-medium leading-relaxed max-w-md">
+                                                Start by uploading your first GIS map to begin your agricultural data analysis journey and unlock powerful insights.
+                                            </p>
+                                            <Link href="/maps/upload">
+                                                <Button className="bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-700 hover:via-teal-700 hover:to-green-700 text-white transform hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl px-8 py-4 rounded-2xl font-semibold text-lg">
+                                                    <Plus className="mr-3 h-6 w-6 animate-spin hover:animate-none" />
+                                                    Upload Your First Map
+                                                </Button>
+                                            </Link>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <h3 className="mb-4 text-2xl font-bold bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent text-center">No maps found</h3>
+                                            <p className="mb-8 text-center text-slate-600 font-medium leading-relaxed max-w-md">
+                                                No maps match your current filter criteria. Try adjusting your filters or clear them to see all maps.
+                                            </p>
+                                            <Button 
+                                                onClick={() => {
+                                                    setFilterType('all');
+                                                    setSelectedYear('');
+                                                    setSelectedMonth('');
+                                                }}
+                                                className="bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-700 hover:via-teal-700 hover:to-green-700 text-white transform hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl px-8 py-4 rounded-2xl font-semibold text-lg"
+                                            >
+                                                <X className="mr-3 h-6 w-6" />
+                                                Clear All Filters
+                                            </Button>
+                                        </>
+                                    )}
                                 </CardContent>
                             </Card>
                         </div>
                     ) : (
                         <div className="space-y-8 max-w-3xl mx-auto">
-                            {maps.map((map, index) => (
+                            {filteredMaps.map((map, index) => (
                                 <Card 
                                     key={map.id} 
                                     className={`border-0 bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden transform hover:scale-[1.02] hover:-translate-y-2 group ${
