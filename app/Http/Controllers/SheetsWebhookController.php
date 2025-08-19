@@ -34,6 +34,8 @@ class SheetsWebhookController extends Controller
             $sheetName = $request->input('sheetName');
             $action = $request->input('action');
             $dataRows = $request->input('dataRows', 0);
+            $saveType = $request->input('saveType');
+            $userEvent = $request->input('userEvent');
             
             // Validate the webhook data
             if (!$sheetName || !$sheetId) {
@@ -43,29 +45,46 @@ class SheetsWebhookController extends Controller
 
             // If we can determine which barangay sheet was updated
             if ($sheetName && strpos($sheetName, 'Brgy.') === 0) {
-                Log::info("🔄 Processing automatic sync for {$sheetName}", [
+                $logData = [
                     'sheet_id' => $sheetId,
                     'action' => $action,
-                    'data_rows' => $dataRows
-                ]);
+                    'data_rows' => $dataRows,
+                    'save_type' => $saveType,
+                    'user_event' => $userEvent
+                ];
                 
-                // Add a small delay to ensure Google Sheets has processed the save
-                sleep(1);
+                // Different messages for instant vs regular sync
+                if ($saveType === 'instant' || $userEvent === 'ctrl_s_or_edit') {
+                    Log::info("🚀 Processing INSTANT sync for {$sheetName} (user save)", $logData);
+                } else {
+                    Log::info("🔄 Processing automatic sync for {$sheetName}", $logData);
+                }
+                
+                // No delay for instant sync to maintain real-time feeling
+                if ($saveType !== 'instant') {
+                    sleep(1);
+                }
                 
                 // Automatically sync this specific barangay
                 $result = $this->syncService->syncSpecificBarangay($sheetName);
                 
-                Log::info("✅ Automatic sync completed for {$sheetName}", [
+                $successMessage = $saveType === 'instant' 
+                    ? "⚡ INSTANTLY synced {$sheetName}" 
+                    : "✅ Automatically synced {$sheetName}";
+                
+                Log::info($successMessage, [
                     'synced' => $result['synced'] ?? 0,
                     'errors' => $result['errors'] ?? 0,
-                    'error_details' => $result['error_details'] ?? []
+                    'error_details' => $result['error_details'] ?? [],
+                    'sync_type' => $saveType ?? 'automatic'
                 ]);
 
                 return response()->json([
                     'success' => true,
-                    'message' => "✅ Automatically synced {$sheetName}",
+                    'message' => $successMessage,
                     'synced' => $result['synced'] ?? 0,
                     'errors' => $result['errors'] ?? 0,
+                    'sync_type' => $saveType ?? 'automatic',
                     'timestamp' => now()->toISOString()
                 ]);
             }
