@@ -7,7 +7,7 @@ import GoogleSheetsIcon from '@/components/icons/GoogleSheetsIcon';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Calendar, Download, Edit3, FileText, MapPin, Trash2, ZoomIn, Sparkles, Activity, Database, Layers, Eye, ArrowLeft, ExternalLink, RefreshCw } from 'lucide-react';
+import { Calendar, Download, Edit3, FileText, MapPin, Trash2, ZoomIn, Sparkles, Activity, Layers, Eye, ArrowLeft, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface Map {
@@ -37,8 +37,6 @@ export default function MapShow({ map, isOwner }: Props) {
     const [isDownloading, setIsDownloading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isGoogleSheetsLoading, setIsGoogleSheetsLoading] = useState(false);
-    const [isSyncing, setIsSyncing] = useState(false);
-    const [syncMessage, setSyncMessage] = useState<string | null>(null);
 
     useEffect(() => {
         setIsLoaded(true);
@@ -59,37 +57,6 @@ export default function MapShow({ map, isOwner }: Props) {
         } catch (error) {
             console.error('Error with Google Sheets:', error);
             setIsGoogleSheetsLoading(false);
-        }
-    };
-
-    const handleSyncData = async () => {
-        setIsSyncing(true);
-        setSyncMessage(null);
-        
-        try {
-            const response = await fetch('/sync/barangay-to-database', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                },
-                body: JSON.stringify({ barangay: `Brgy. ${map.barangay}` }),
-            });
-
-            const data = await response.json();
-            
-            if (data.success) {
-                setSyncMessage(`✅ Synced ${data.synced} records from Google Sheets to database`);
-            } else {
-                setSyncMessage(`❌ Sync failed: ${data.error}`);
-            }
-        } catch (error) {
-            console.error('Sync failed:', error);
-            setSyncMessage('❌ Sync failed: Unable to connect to server');
-        } finally {
-            setIsSyncing(false);
-            // Clear message after 5 seconds
-            setTimeout(() => setSyncMessage(null), 5000);
         }
     };
 
@@ -296,7 +263,7 @@ export default function MapShow({ map, isOwner }: Props) {
                             <CardHeader className="bg-gradient-to-r from-teal-100/50 to-green-100/50 border-b border-teal-100">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 rounded-xl bg-teal-100">
-                                        <Database className="h-5 w-5 text-teal-700" />
+                                        <MapPin className="h-5 w-5 text-teal-700" />
                                     </div>
                                     <CardTitle className="text-teal-800 font-bold text-xl">Map Details</CardTitle>
                                 </div>
@@ -353,30 +320,6 @@ export default function MapShow({ map, isOwner }: Props) {
                                         <p className="text-xs text-green-600 mt-2 text-center">
                                             View and manage crop mapping data for {map.barangay} Barangay
                                         </p>
-                                        
-                                        {/* Sync Database Button */}
-                                        <div className="mt-3 space-y-2">
-                                            <Button
-                                                onClick={handleSyncData}
-                                                disabled={isSyncing}
-                                                variant="outline"
-                                                className="w-full flex items-center justify-center border-blue-300 text-blue-700 hover:bg-blue-50"
-                                            >
-                                                <RefreshCw className={`mr-2 h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
-                                                {isSyncing ? 'Syncing...' : 'Sync to Database'}
-                                                <Database className="ml-2 h-4 w-4" />
-                                            </Button>
-                                            
-                                            {syncMessage && (
-                                                <div className="text-xs text-center p-2 rounded bg-gray-50 border">
-                                                    {syncMessage}
-                                                </div>
-                                            )}
-                                            
-                                            <p className="text-xs text-blue-600 text-center">
-                                                Import latest data from Google Sheets to local database
-                                            </p>
-                                        </div>
                                     </div>
                                 )}
 
@@ -473,7 +416,7 @@ export default function MapShow({ map, isOwner }: Props) {
                             <CardContent className="p-6 space-y-4">
                                 <div className="flex justify-between items-center p-3 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-emerald-200">
                                     <span className="text-sm font-semibold text-emerald-800 flex items-center gap-2">
-                                        <Database className="h-4 w-4" />
+                                        <FileText className="h-4 w-4" />
                                         Total Files:
                                     </span>
                                     <span className="text-lg font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-lg">
