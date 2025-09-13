@@ -1,5 +1,5 @@
 import { Head, Link, useForm, router } from '@inertiajs/react';
-import { ArrowLeft, Globe, LoaderCircle, Sprout } from 'lucide-react';
+import { Globe, LoaderCircle, Sprout } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 
 import InputError from '@/components/input-error';
@@ -44,20 +44,6 @@ export default function Register() {
                     <div className="absolute top-1/4 left-1/4 h-72 w-72 animate-pulse rounded-full bg-green-200/20 mix-blend-multiply blur-xl filter"></div>
                     <div className="absolute top-3/4 right-1/4 h-96 w-96 animate-pulse rounded-full bg-emerald-200/20 mix-blend-multiply blur-xl filter delay-1000"></div>
                     <div className="absolute bottom-1/4 left-1/3 h-80 w-80 animate-pulse rounded-full bg-teal-200/20 mix-blend-multiply blur-xl filter delay-500"></div>
-                </div>
-
-                {/* Back to Home Link */}
-                <div className="absolute top-4 left-4 z-10">
-                    <button
-                        onClick={() => {
-                            console.log('Navigating to home page');
-                            router.visit('/');
-                        }}
-                        className="group flex items-center space-x-2 rounded-full bg-white/80 px-3 py-1.5 text-sm font-medium text-green-700 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:shadow-lg cursor-pointer"
-                    >
-                        <ArrowLeft className="h-3 w-3 transition-transform duration-300 group-hover:-translate-x-1" />
-                        <span>Back to Home</span>
-                    </button>
                 </div>
 
                 {/* Main Content */}

@@ -1,5 +1,5 @@
 import { Head, useForm, Link, router } from '@inertiajs/react';
-import { LoaderCircle, Globe, LogIn, ArrowLeft, MapPin, Satellite, Navigation } from 'lucide-react';
+import { LoaderCircle, Globe, LogIn, MapPin, Satellite, Navigation } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 
 import InputError from '@/components/input-error';
@@ -149,20 +149,6 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-green-200/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
                     <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-emerald-200/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
                     <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-teal-200/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-500"></div>
-                </div>
-
-                {/* Back to Home Link */}
-                <div className="absolute top-4 left-4 z-10">
-                    <button 
-                        onClick={() => {
-                            console.log('Navigating to home page');
-                            router.visit('/');
-                        }}
-                        className="group flex items-center space-x-2 px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full text-green-700 font-medium transition-all duration-300 hover:bg-white hover:shadow-lg text-sm cursor-pointer"
-                    >
-                        <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform duration-300" />
-                        <span>Back to Home</span>
-                    </button>
                 </div>
 
                 {/* Main Content */}
