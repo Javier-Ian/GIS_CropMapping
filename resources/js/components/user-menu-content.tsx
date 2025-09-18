@@ -32,7 +32,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
         <>
             <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-3 px-3 py-3 text-left text-sm bg-gradient-to-r from-emerald-100/80 to-teal-100/80 rounded-t-xl border-b border-emerald-200/50">
-                    <UserInfo user={user} showEmail={true} />
+                    <UserInfo user={user} showEmail={true} variant="light" />
                 </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-emerald-200/50" />
