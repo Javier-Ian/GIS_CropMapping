@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { RefreshCw, Database, FileSpreadsheet, CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { RefreshCw, Database, FileSpreadsheet, CheckCircle, AlertCircle, Info, Search } from 'lucide-react';
 
 interface SyncStatistics {
     [key: string]: {
@@ -30,6 +30,8 @@ export default function SheetsSync() {
     const [syncResults, setSyncResults] = useState<any>(null);
     const [selectedBarangay, setSelectedBarangay] = useState<string>('Brgy. Butong');
     const [cropData, setCropData] = useState<CropData[]>([]);
+    const [filteredCropData, setFilteredCropData] = useState<CropData[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const [loadingData, setLoadingData] = useState(false);
     const [viewMode, setViewMode] = useState<'overview' | 'data'>('overview');
 
@@ -41,6 +43,27 @@ export default function SheetsSync() {
             fetchCropData(selectedBarangay);
         }
     }, [selectedBarangay, viewMode]);
+
+    // Filter crop data based on search query
+    useEffect(() => {
+        if (!searchQuery.trim()) {
+            setFilteredCropData(cropData);
+        } else {
+            const filtered = cropData.filter((crop) => {
+                const query = searchQuery.toLowerCase();
+                return (
+                    crop.name.toLowerCase().includes(query) ||
+                    crop.place.toLowerCase().includes(query) ||
+                    crop.crop.toLowerCase().includes(query) ||
+                    crop.planting_date.toLowerCase().includes(query) ||
+                    crop.harvest_date.toLowerCase().includes(query) ||
+                    crop.total_area.toLowerCase().includes(query) ||
+                    crop.total_yield.toLowerCase().includes(query)
+                );
+            });
+            setFilteredCropData(filtered);
+        }
+    }, [cropData, searchQuery]);
 
     const fetchStatistics = async () => {
         console.log('Fetching statistics...');
@@ -66,6 +89,8 @@ export default function SheetsSync() {
             const data = await response.json();
             if (data.success) {
                 setCropData(data.data);
+                // Clear search when switching barangays
+                setSearchQuery('');
             }
         } catch (error) {
             console.error('Failed to fetch crop data:', error);
@@ -175,6 +200,21 @@ export default function SheetsSync() {
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleString();
+    };
+
+    const highlightSearchTerm = (text: string, searchTerm: string) => {
+        if (!searchTerm.trim()) return text;
+        
+        const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        const parts = text.split(regex);
+        
+        return parts.map((part, index) => 
+            regex.test(part) ? (
+                <span key={index} className="bg-yellow-200 text-yellow-800 px-1 rounded">
+                    {part}
+                </span>
+            ) : part
+        );
     };
 
     const getStatusBadge = (barangay: string) => {
@@ -354,15 +394,43 @@ export default function SheetsSync() {
                                     </select>
                                 </div>
                                 <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-                                    <span className="text-sm font-medium text-gray-700">{cropData.length} records</span>
+                                    <span className="text-sm font-medium text-gray-700">
+                                        {filteredCropData.length} of {cropData.length} records
+                                    </span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                             <div className="p-6 border-b border-gray-100">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Crop Data for {selectedBarangay}</h3>
-                                <p className="text-gray-600">Data synced from Google Sheets to local database</p>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Crop Data for {selectedBarangay}</h3>
+                                        <p className="text-gray-600">Data synced from Google Sheets to local database</p>
+                                    </div>
+                                    
+                                    {/* Search Bar - Aligned with description */}
+                                    <div className="relative w-80">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Search className="h-4 w-4 text-gray-400" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Search by name, place, crop, area, yield..."
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                                        />
+                                        {searchQuery && (
+                                            <button
+                                                onClick={() => setSearchQuery('')}
+                                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                            >
+                                                <span className="text-lg">&times;</span>
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                             <div className="p-6">
                                 {loadingData ? (
@@ -370,7 +438,21 @@ export default function SheetsSync() {
                                         <RefreshCw className="h-6 w-6 animate-spin text-teal-600" />
                                         <span className="ml-3 text-gray-600">Loading crop data...</span>
                                     </div>
-                                ) : cropData.length === 0 ? (
+                                ) : filteredCropData.length === 0 && cropData.length > 0 ? (
+                                    <div className="text-center py-12">
+                                        <div className="p-3 bg-gray-50 rounded-full inline-block mb-4">
+                                            <Search className="h-8 w-8 text-gray-400" />
+                                        </div>
+                                        <p className="text-gray-700 font-medium mb-2">No results found for "{searchQuery}"</p>
+                                        <p className="text-sm text-gray-500">Try adjusting your search terms</p>
+                                        <button
+                                            onClick={() => setSearchQuery('')}
+                                            className="mt-3 text-teal-600 hover:text-teal-700 text-sm font-medium"
+                                        >
+                                            Clear search
+                                        </button>
+                                    </div>
+                                ) : filteredCropData.length === 0 ? (
                                     <div className="text-center py-12">
                                         <div className="p-3 bg-gray-50 rounded-full inline-block mb-4">
                                             <Info className="h-8 w-8 text-gray-400" />
@@ -394,15 +476,15 @@ export default function SheetsSync() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {cropData.map((crop) => (
+                                                {filteredCropData.map((crop) => (
                                                     <tr key={crop.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors duration-150">
-                                                        <td className="p-4 text-gray-800">{crop.name}</td>
-                                                        <td className="p-4 text-gray-800">{crop.place}</td>
-                                                        <td className="p-4 text-gray-800">{crop.crop}</td>
-                                                        <td className="p-4 text-gray-800">{crop.planting_date}</td>
-                                                        <td className="p-4 text-gray-800">{crop.harvest_date}</td>
-                                                        <td className="p-4 text-gray-800">{crop.total_area}</td>
-                                                        <td className="p-4 text-gray-800">{crop.total_yield}</td>
+                                                        <td className="p-4 text-gray-800">{highlightSearchTerm(crop.name, searchQuery)}</td>
+                                                        <td className="p-4 text-gray-800">{highlightSearchTerm(crop.place, searchQuery)}</td>
+                                                        <td className="p-4 text-gray-800">{highlightSearchTerm(crop.crop, searchQuery)}</td>
+                                                        <td className="p-4 text-gray-800">{highlightSearchTerm(crop.planting_date, searchQuery)}</td>
+                                                        <td className="p-4 text-gray-800">{highlightSearchTerm(crop.harvest_date, searchQuery)}</td>
+                                                        <td className="p-4 text-gray-800">{highlightSearchTerm(crop.total_area, searchQuery)}</td>
+                                                        <td className="p-4 text-gray-800">{highlightSearchTerm(crop.total_yield, searchQuery)}</td>
                                                         <td className="p-4 text-gray-800">{formatDate(crop.synced_at)}</td>
                                                     </tr>
                                                 ))}
