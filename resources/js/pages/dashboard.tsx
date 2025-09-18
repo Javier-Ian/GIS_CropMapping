@@ -209,8 +209,8 @@ export default function Dashboard({ maps = [], auth }: Props) {
                 </div>
 
                 {/* Animated Stats Cards */}
-                <div className={`grid gap-6 md:grid-cols-2 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                    <Card className="border border-teal-200 bg-white transform hover:scale-105 transition-all duration-300 hover:shadow-lg group cursor-pointer rounded-2xl">
+                <div className={`grid gap-8 md:grid-cols-2 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                    <Card className="border border-teal-200 bg-white transform hover:scale-[1.02] hover:z-10 transition-all duration-300 hover:shadow-xl group cursor-pointer rounded-2xl relative">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                             <CardTitle className="text-sm font-semibold text-teal-800 group-hover:text-teal-900 transition-colors">Total Maps</CardTitle>
                             <div className="p-2 rounded-xl bg-teal-100 group-hover:bg-teal-200 transition-colors">
@@ -218,7 +218,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-3xl font-bold text-teal-800 group-hover:scale-110 transition-all duration-300">{filteredMaps.length}</div>
+                            <div className="text-3xl font-bold text-teal-800 group-hover:scale-105 transition-all duration-300 origin-left">{filteredMaps.length}</div>
                             <p className="text-sm text-teal-600 flex items-center gap-2 mt-2 font-medium">
                                 <TrendingUp className="h-4 w-4 text-teal-600 animate-pulse" />
                                 Maps in your collection
@@ -226,7 +226,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                         </CardContent>
                     </Card>
                     
-                    <Card className="border border-teal-200 bg-white transform hover:scale-105 transition-all duration-300 hover:shadow-lg group cursor-pointer rounded-2xl">
+                    <Card className="border border-teal-200 bg-white transform hover:scale-[1.02] hover:z-10 transition-all duration-300 hover:shadow-xl group cursor-pointer rounded-2xl relative">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                             <CardTitle className="text-sm font-semibold text-teal-800 group-hover:text-teal-900 transition-colors">Your Total Posts</CardTitle>
                             <div className="p-2 rounded-xl bg-teal-100 group-hover:bg-teal-200 transition-colors">
@@ -234,7 +234,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-3xl font-bold text-teal-800 group-hover:scale-110 transition-all duration-300">
+                            <div className="text-3xl font-bold text-teal-800 group-hover:scale-105 transition-all duration-300 origin-left">
                                 {maps.filter(map => map.user.id === auth.user.id).length}
                             </div>
                             <p className="text-sm text-teal-600 flex items-center gap-2 mt-2 font-medium">
