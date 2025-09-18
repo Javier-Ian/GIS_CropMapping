@@ -159,7 +159,7 @@ export default function MapShow({ map, isOwner }: Props) {
                             </Link>
                             {isOwner && (
                                 <Link href={`/maps/${map.id}/edit`}>
-                                    <Button size="sm" className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white transform hover:scale-105 transition-all duration-300 shadow-sm rounded-lg font-semibold">
+                                    <Button size="sm" className="flex items-center gap-2 bg-blue-400 hover:bg-blue-500 text-white transform hover:scale-105 transition-all duration-300 shadow-sm rounded-lg font-semibold">
                                         <Edit3 className="h-4 w-4" />
                                         Edit
                                     </Button>
@@ -188,7 +188,7 @@ export default function MapShow({ map, isOwner }: Props) {
                                     size="sm"
                                     variant="destructive" 
                                     onClick={handleDelete} 
-                                    className="flex items-center gap-2 bg-red-600 hover:bg-red-700 transform hover:scale-105 transition-all duration-300 rounded-lg font-semibold"
+                                    className="flex items-center gap-2 bg-red-400 hover:bg-red-500 transform hover:scale-105 transition-all duration-300 rounded-lg font-semibold"
                                 >
                                     <Trash2 className="h-4 w-4" />
                                     Delete
