@@ -43,11 +43,16 @@ export default function SheetsSync() {
     }, [selectedBarangay, viewMode]);
 
     const fetchStatistics = async () => {
+        console.log('Fetching statistics...');
         try {
             const response = await fetch('/sync/statistics');
             const data = await response.json();
+            console.log('Statistics response:', data);
             if (data.success) {
                 setStatistics(data.statistics);
+                console.log('Statistics updated:', data.statistics);
+            } else {
+                console.error('Failed to fetch statistics:', data);
             }
         } catch (error) {
             console.error('Failed to fetch statistics:', error);
@@ -71,26 +76,54 @@ export default function SheetsSync() {
 
     const syncAllBarangays = async () => {
         setIsLoading(true);
+        setSyncResults(null); // Clear previous results
+        console.log('Starting sync all barangays...');
+        
         try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            console.log('CSRF Token found:', !!csrfToken);
+            
+            if (!csrfToken) {
+                throw new Error('CSRF token not found. Please refresh the page.');
+            }
+
             const response = await fetch('/sync/sheets-to-database', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
                 },
             });
 
+            console.log('Sync response status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Response error:', errorText);
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+
             const data = await response.json();
+            console.log('Sync response data:', data);
             setSyncResults(data);
             
             if (data.success) {
+                console.log('Sync successful, refreshing data...');
                 await fetchStatistics();
                 if (viewMode === 'data') {
                     await fetchCropData(selectedBarangay);
                 }
+                console.log('Data refresh completed');
+            } else {
+                console.error('Sync failed:', data.message || data.error);
             }
         } catch (error) {
             console.error('Sync failed:', error);
+            setSyncResults({
+                success: false,
+                message: `Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+            });
         } finally {
             setIsLoading(false);
         }
@@ -99,14 +132,26 @@ export default function SheetsSync() {
     const syncSpecificBarangay = async (barangay: string) => {
         setIsLoading(true);
         try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            
+            if (!csrfToken) {
+                throw new Error('CSRF token not found. Please refresh the page.');
+            }
+
             const response = await fetch('/sync/barangay-to-database', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
                 },
                 body: JSON.stringify({ barangay }),
             });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
 
             const data = await response.json();
             setSyncResults(data);
@@ -119,6 +164,10 @@ export default function SheetsSync() {
             }
         } catch (error) {
             console.error('Sync failed:', error);
+            setSyncResults({
+                success: false,
+                message: `Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+            });
         } finally {
             setIsLoading(false);
         }
@@ -177,25 +226,40 @@ export default function SheetsSync() {
                                 className="inline-flex items-center gap-2 bg-teal-700 hover:bg-teal-800 disabled:bg-gray-300 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-sm disabled:hover:scale-100 disabled:cursor-not-allowed"
                             >
                                 <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                                Sync All
+                                {isLoading ? 'Syncing...' : 'Sync All'}
                             </button>
                         </div>
                     </div>
                 </div>
 
                 {syncResults && (
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div className={`bg-white rounded-xl shadow-sm border p-6 ${
+                        syncResults.success 
+                        ? 'border-emerald-200 bg-emerald-50' 
+                        : 'border-red-200 bg-red-50'
+                    }`}>
                         <div className="flex items-center gap-3">
                             {syncResults.success ? (
-                                <div className="p-2 bg-emerald-50 rounded-full">
+                                <div className="p-2 bg-emerald-100 rounded-full">
                                     <CheckCircle className="h-5 w-5 text-emerald-600" />
                                 </div>
                             ) : (
-                                <div className="p-2 bg-red-50 rounded-full">
+                                <div className="p-2 bg-red-100 rounded-full">
                                     <AlertCircle className="h-5 w-5 text-red-600" />
                                 </div>
                             )}
-                            <span className="text-gray-800 font-medium">{syncResults.message}</span>
+                            <div>
+                                <div className={`font-semibold ${
+                                    syncResults.success ? 'text-emerald-800' : 'text-red-800'
+                                }`}>
+                                    {syncResults.success ? 'Sync Completed Successfully!' : 'Sync Failed'}
+                                </div>
+                                <div className={`text-sm ${
+                                    syncResults.success ? 'text-emerald-700' : 'text-red-700'
+                                }`}>
+                                    {syncResults.message}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -231,7 +295,7 @@ export default function SheetsSync() {
                                             className="w-full inline-flex items-center justify-center gap-2 bg-teal-700 hover:bg-teal-800 disabled:bg-gray-300 text-white font-semibold px-4 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 disabled:cursor-not-allowed"
                                         >
                                             <FileSpreadsheet className="h-4 w-4" />
-                                            Sync {barangay}
+                                            {isLoading ? 'Syncing...' : `Sync ${barangay}`}
                                         </button>
                                     </div>
                                 </div>
