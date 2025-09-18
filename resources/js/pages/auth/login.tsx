@@ -66,21 +66,21 @@ export default function Login({ status, canResetPassword }: LoginProps) {
             
             {/* Loading Overlay */}
             {processing && (
-                <div className="fixed inset-0 z-50 bg-gradient-to-br from-emerald-900/95 via-green-900/95 to-teal-900/95 backdrop-blur-sm flex items-center justify-center">
+                <div className="fixed inset-0 z-50 bg-gradient-to-br from-[#00786f]/95 via-[#00786f]/95 to-[#00786f]/95 backdrop-blur-sm flex items-center justify-center">
                     <div className="text-center space-y-8 p-8">
                         {/* Animated GIS Loading Icons */}
                         <div className="relative">
                             <div className="flex justify-center space-x-4 mb-6">
                                 <div className="relative">
-                                    <MapPin className="w-8 h-8 text-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                                    <MapPin className="w-8 h-8 text-[#00786f] animate-bounce" style={{ animationDelay: '0ms' }} />
                                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full animate-ping" style={{ animationDelay: '200ms' }}></div>
                                 </div>
                                 <div className="relative">
-                                    <Satellite className="w-8 h-8 text-green-400 animate-bounce" style={{ animationDelay: '200ms' }} />
+                                    <Satellite className="w-8 h-8 text-[#00786f] animate-bounce" style={{ animationDelay: '200ms' }} />
                                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: '400ms' }}></div>
                                 </div>
                                 <div className="relative">
-                                    <Navigation className="w-8 h-8 text-teal-400 animate-bounce" style={{ animationDelay: '400ms' }} />
+                                    <Navigation className="w-8 h-8 text-[#00786f] animate-bounce" style={{ animationDelay: '400ms' }} />
                                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-400 rounded-full animate-ping" style={{ animationDelay: '600ms' }}></div>
                                 </div>
                                 <div className="relative">
@@ -91,13 +91,13 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             
                             {/* Orbital animation around icons */}
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-32 h-32 border-2 border-emerald-400/30 rounded-full animate-spin" style={{ animationDuration: '3s' }}>
-                                    <div className="w-2 h-2 bg-emerald-400 rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1"></div>
+                                <div className="w-32 h-32 border-2 border-[#00786f]/30 rounded-full animate-spin" style={{ animationDuration: '3s' }}>
+                                    <div className="w-2 h-2 bg-[#00786f] rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1"></div>
                                 </div>
                             </div>
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-40 h-40 border border-green-400/20 rounded-full animate-spin" style={{ animationDuration: '4s', animationDirection: 'reverse' }}>
-                                    <div className="w-1.5 h-1.5 bg-green-400 rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1"></div>
+                                <div className="w-40 h-40 border border-[#00786f]/20 rounded-full animate-spin" style={{ animationDuration: '4s', animationDirection: 'reverse' }}>
+                                    <div className="w-1.5 h-1.5 bg-[#00786f] rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1"></div>
                                 </div>
                             </div>
                         </div>
@@ -111,21 +111,21 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                  loadingProgress < 95 ? "Preparing dashboard..." :
                                  "Almost ready!"}
                             </h2>
-                            <p className="text-emerald-200">Accessing your GIS mapping workspace</p>
+                            <p className="text-[#00786f]/70">Accessing your GIS mapping workspace</p>
                         </div>
 
                         {/* Custom Progress Bar */}
                         <div className="w-80 mx-auto space-y-3">
                             <div className="relative h-3 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
                                 <div 
-                                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 rounded-full transition-all duration-500 ease-out"
+                                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#00786f] via-[#00786f] to-[#00786f] rounded-full transition-all duration-500 ease-out"
                                     style={{ width: `${loadingProgress}%` }}
                                 >
                                     <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse"></div>
                                     <div className="absolute right-0 top-0 w-4 h-full bg-white/40 rounded-full blur-sm"></div>
                                 </div>
                             </div>
-                            <div className="flex justify-between text-sm text-emerald-200">
+                            <div className="flex justify-between text-sm text-[#00786f]/70">
                                 <span>Loading...</span>
                                 <span>{loadingProgress}%</span>
                             </div>
@@ -133,9 +133,9 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
                         {/* Animated Data Points */}
                         <div className="flex justify-center space-x-2">
-                            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
-                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '200ms' }}></div>
-                            <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse" style={{ animationDelay: '400ms' }}></div>
+                            <div className="w-2 h-2 bg-[#00786f] rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
+                            <div className="w-2 h-2 bg-[#00786f] rounded-full animate-pulse" style={{ animationDelay: '200ms' }}></div>
+                            <div className="w-2 h-2 bg-[#00786f] rounded-full animate-pulse" style={{ animationDelay: '400ms' }}></div>
                             <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '600ms' }}></div>
                             <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '800ms' }}></div>
                         </div>
@@ -143,12 +143,12 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 </div>
             )}
             
-            <div className={`h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative overflow-hidden ${processing ? 'pointer-events-none' : ''}`}>
+            <div className={`h-screen bg-gradient-to-br from-[#00786f]/10 via-[#00786f]/5 to-[#00786f]/10 relative overflow-hidden ${processing ? 'pointer-events-none' : ''}`}>
                 {/* Animated Background Elements */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-green-200/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-                    <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-emerald-200/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-                    <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-teal-200/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-500"></div>
+                    <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-[#00786f]/10 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+                    <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-[#00786f]/15 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+                    <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-[#00786f]/10 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-500"></div>
                 </div>
 
                 {/* Main Content */}
@@ -161,7 +161,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                 {/* Logo */}
                                 <div className="flex justify-center">
                                     <div className="relative">
-                                        <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                                        <div className="w-12 h-12 bg-gradient-to-br from-[#00786f] to-[#00786f] rounded-2xl flex items-center justify-center shadow-lg">
                                             <Globe className="w-6 h-6 text-white animate-pulse" />
                                         </div>
                                         <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full animate-ping"></div>
@@ -170,16 +170,16 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
                                 {/* System Name */}
                                 <div>
-                                    <h1 className="text-lg font-bold bg-gradient-to-r from-green-700 to-emerald-700 bg-clip-text text-transparent">
+                                    <h1 className="text-lg font-bold bg-gradient-to-r from-[#00786f] to-[#00786f] bg-clip-text text-transparent">
                                         GIS CROP LAND USE MAPPING
                                     </h1>
-                                    <p className="text-xs text-green-600/70 font-bold uppercase">
+                                    <p className="text-xs text-[#00786f]/70 font-bold uppercase">
                                         REMOTE DATA MANAGEMENT SYSTEM
                                     </p>
                                 </div>
 
                                 {/* Badge */}
-                                <div className="inline-flex items-center px-3 py-1.5 bg-green-100 rounded-full text-green-700 text-sm font-medium">
+                                <div className="inline-flex items-center px-3 py-1.5 bg-[#00786f]/10 rounded-full text-[#00786f] text-sm font-medium">
                                     <LogIn className="w-3 h-3 mr-2 animate-bounce" />
                                     Sign In to Continue
                                 </div>
@@ -187,7 +187,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
                             {/* Status Message */}
                             {status && (
-                                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl text-center text-sm font-medium text-green-700">
+                                <div className="mb-4 p-3 bg-[#00786f]/10 border border-[#00786f]/20 rounded-xl text-center text-sm font-medium text-[#00786f]">
                                     {status}
                                 </div>
                             )}
@@ -208,7 +208,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                             onChange={(e) => setData('email', e.target.value)}
                                             disabled={processing}
                                             placeholder="Enter your email address"
-                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-green-500/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500"
+                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-[#00786f] focus:ring-[#00786f]/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.email} />
                                     </div>
@@ -220,7 +220,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                             {canResetPassword && (
                                                 <Link 
                                                     href="/forgot-password" 
-                                                    className="text-xs text-green-600 hover:text-green-700 transition-colors duration-300 font-medium"
+                                                    className="text-xs text-[#00786f] hover:text-[#00786f]/80 transition-colors duration-300 font-medium"
                                                     tabIndex={5}
                                                 >
                                                     Forgot password?
@@ -237,7 +237,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                             onChange={(e) => setData('password', e.target.value)}
                                             disabled={processing}
                                             placeholder="Enter your password"
-                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-green-500/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500"
+                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-[#00786f] focus:ring-[#00786f]/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.password} />
                                     </div>
@@ -250,7 +250,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                             checked={data.remember}
                                             onClick={() => setData('remember', !data.remember)}
                                             tabIndex={3}
-                                            className="border-2 border-gray-300 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                                            className="border-2 border-gray-300 data-[state=checked]:bg-[#00786f] data-[state=checked]:border-[#00786f]"
                                         />
                                         <Label htmlFor="remember" className="text-sm text-gray-700 font-medium">Remember me</Label>
                                     </div>
@@ -259,7 +259,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                 {/* Submit Button */}
                                 <Button 
                                     type="submit" 
-                                    className={`w-full h-10 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-semibold transition-all duration-300 hover:shadow-xl hover:shadow-green-500/30 hover:scale-105 ${processing ? 'animate-pulse' : ''}`}
+                                    className={`w-full h-10 bg-gradient-to-r from-[#00786f] to-[#00786f] hover:from-[#00786f]/90 hover:to-[#00786f]/90 text-white rounded-xl font-semibold transition-all duration-300 hover:shadow-xl hover:shadow-[#00786f]/30 hover:scale-105 ${processing ? 'animate-pulse' : ''}`}
                                     tabIndex={4} 
                                     disabled={processing}
                                 >
@@ -287,7 +287,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                         <Link 
                                             href="/register" 
                                             tabIndex={6}
-                                            className="font-medium text-green-600 hover:text-green-700 transition-colors duration-300"
+                                            className="font-medium text-[#00786f] hover:text-[#00786f]/80 transition-colors duration-300"
                                         >
                                             Sign up here
                                         </Link>

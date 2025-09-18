@@ -38,12 +38,12 @@ export default function Register() {
         <>
             <Head title="Register - GIS Crop Land Use Mapping" />
 
-            <div className="relative h-screen overflow-hidden bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
+            <div className="relative h-screen overflow-hidden bg-gradient-to-br from-[#00786f]/10 via-[#00786f]/5 to-[#00786f]/10">
                 {/* Animated Background Elements */}
                 <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                    <div className="absolute top-1/4 left-1/4 h-72 w-72 animate-pulse rounded-full bg-green-200/20 mix-blend-multiply blur-xl filter"></div>
-                    <div className="absolute top-3/4 right-1/4 h-96 w-96 animate-pulse rounded-full bg-emerald-200/20 mix-blend-multiply blur-xl filter delay-1000"></div>
-                    <div className="absolute bottom-1/4 left-1/3 h-80 w-80 animate-pulse rounded-full bg-teal-200/20 mix-blend-multiply blur-xl filter delay-500"></div>
+                    <div className="absolute top-1/4 left-1/4 h-72 w-72 animate-pulse rounded-full bg-[#00786f]/10 mix-blend-multiply blur-xl filter"></div>
+                    <div className="absolute top-3/4 right-1/4 h-96 w-96 animate-pulse rounded-full bg-[#00786f]/15 mix-blend-multiply blur-xl filter delay-1000"></div>
+                    <div className="absolute bottom-1/4 left-1/3 h-80 w-80 animate-pulse rounded-full bg-[#00786f]/10 mix-blend-multiply blur-xl filter delay-500"></div>
                 </div>
 
                 {/* Main Content */}
@@ -57,7 +57,7 @@ export default function Register() {
                                 {/* Logo */}
                                 <div className="flex justify-center">
                                     <div className="relative">
-                                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg">
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#00786f] to-[#00786f] shadow-lg">
                                             <Globe className="h-6 w-6 animate-pulse text-white" />
                                         </div>
                                         <div className="absolute -top-1 -right-1 h-4 w-4 animate-ping rounded-full bg-amber-400"></div>
@@ -66,14 +66,14 @@ export default function Register() {
 
                                 {/* System Name */}
                                 <div>
-                                    <h1 className="bg-gradient-to-r from-green-700 to-emerald-700 bg-clip-text text-lg font-bold text-transparent">
+                                    <h1 className="bg-gradient-to-r from-[#00786f] to-[#00786f] bg-clip-text text-lg font-bold text-transparent">
                                         GIS CROP LAND USE MAPPING
                                     </h1>
-                                    <p className="text-xs font-bold text-green-600/70 uppercase">REMOTE DATA MANAGEMENT SYSTEM</p>
+                                    <p className="text-xs font-bold text-[#00786f]/70 uppercase">REMOTE DATA MANAGEMENT SYSTEM</p>
                                 </div>
 
                                 {/* Badge */}
-                                <div className="inline-flex items-center rounded-full bg-green-100 px-3 py-1.5 text-sm font-medium text-green-700">
+                                <div className="inline-flex items-center rounded-full bg-[#00786f]/10 px-3 py-1.5 text-sm font-medium text-[#00786f]">
                                     <Sprout className="mr-2 h-3 w-3 animate-bounce" />
                                     Create Your Account
                                 </div>
@@ -97,7 +97,7 @@ export default function Register() {
                                             onChange={(e) => setData('name', e.target.value)}
                                             disabled={processing}
                                             placeholder="Enter your full name"
-                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20 text-gray-900 placeholder:text-gray-500"
+                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-[#00786f] focus:ring-[#00786f]/20 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.name} className="mt-1" />
                                     </div>
@@ -117,7 +117,7 @@ export default function Register() {
                                             onChange={(e) => setData('email', e.target.value)}
                                             disabled={processing}
                                             placeholder="Enter your email address"
-                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20 text-gray-900 placeholder:text-gray-500"
+                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-[#00786f] focus:ring-[#00786f]/20 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.email} />
                                     </div>
@@ -137,7 +137,7 @@ export default function Register() {
                                             onChange={(e) => setData('password', e.target.value)}
                                             disabled={processing}
                                             placeholder="Create a secure password"
-                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20 text-gray-900 placeholder:text-gray-500"
+                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-[#00786f] focus:ring-[#00786f]/20 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.password} />
                                     </div>
@@ -157,7 +157,7 @@ export default function Register() {
                                             onChange={(e) => setData('password_confirmation', e.target.value)}
                                             disabled={processing}
                                             placeholder="Confirm your password"
-                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-green-500 focus:ring-green-500/20 text-gray-900 placeholder:text-gray-500"
+                                            className="h-10 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:border-[#00786f] focus:ring-[#00786f]/20 text-gray-900 placeholder:text-gray-500"
                                         />
                                         <InputError message={errors.password_confirmation} />
                                     </div>
@@ -166,7 +166,7 @@ export default function Register() {
                                 {/* Submit Button */}
                                 <Button
                                     type="submit"
-                                    className="h-10 w-full rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-emerald-700 hover:shadow-xl hover:shadow-green-500/30"
+                                    className="h-10 w-full rounded-xl bg-gradient-to-r from-[#00786f] to-[#00786f] font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-[#00786f]/90 hover:to-[#00786f]/90 hover:shadow-xl hover:shadow-[#00786f]/30"
                                     tabIndex={5}
                                     disabled={processing}
                                 >
@@ -181,7 +181,7 @@ export default function Register() {
                                         <Link
                                             href="/login"
                                             tabIndex={6}
-                                            className="font-medium text-green-600 transition-colors duration-300 hover:text-green-700"
+                                            className="font-medium text-[#00786f] transition-colors duration-300 hover:text-[#00786f]/80"
                                         >
                                             Sign in here
                                         </Link>
