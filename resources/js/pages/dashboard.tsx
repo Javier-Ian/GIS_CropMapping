@@ -563,12 +563,6 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                                     <Eye className="w-4 h-4 group-hover/btn:animate-pulse" />
                                                     <span>View Details</span>
                                                 </button>
-                                                {map.gis_file_paths && map.gis_file_paths.length > 0 && (
-                                                    <button className="group/btn flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-emerald-700 hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-teal-600 rounded-xl border border-emerald-200 hover:border-transparent transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
-                                                        <Download className="w-4 h-4 group-hover/btn:animate-bounce" />
-                                                        <span>Download</span>
-                                                    </button>
-                                                )}
                                             </div>
                                         </div>
                                     </div>
