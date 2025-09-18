@@ -250,6 +250,7 @@ export default function MapEdit({ map, errors }: Props) {
         '.hdf5',
         '.tif',
         '.tiff',
+        '.png',
         '.asc',
         '.xyz',
         '.las',
@@ -265,34 +266,34 @@ export default function MapEdit({ map, errors }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit ${map.title}`} />
 
-            <div className={`flex h-full flex-1 flex-col gap-8 rounded-xl p-6 bg-gradient-to-br from-emerald-50/30 to-teal-50/30 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className={`flex h-full flex-1 flex-col gap-8 rounded-xl p-6 bg-gray-50 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 {/* Animated Header */}
                 <div className={`transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
                     <div className="flex items-start justify-between mb-6">
                         <div className="flex items-center gap-4">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-green-600 text-white shadow-lg shadow-emerald-200/50 transform transition-all duration-300 hover:scale-110 hover:rotate-3">
-                                <MapPin className="h-8 w-8 animate-pulse" />
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white border border-gray-200 text-gray-600 shadow-sm transform transition-all duration-300 hover:scale-110 hover:shadow-md">
+                                <MapPin className="h-8 w-8" />
                             </div>
                             <div>
-                                <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-emerald-700 via-teal-600 to-green-700 bg-clip-text text-transparent flex items-center gap-3 mb-2">
-                                    <Sparkles className="h-8 w-8 text-emerald-600 transform transition-all duration-300 hover:rotate-12 hover:scale-110 drop-shadow-sm" />
+                                <h1 className="text-4xl font-bold tracking-tight text-gray-800 flex items-center gap-3 mb-2">
+                                    <Sparkles className="h-8 w-8 text-gray-500 transform transition-all duration-300 hover:rotate-12 hover:scale-110" />
                                     Edit Map
                                 </h1>
-                                <p className="text-slate-600 flex items-center gap-2 font-medium text-lg">
-                                    <Activity className="h-5 w-5 text-emerald-500" />
+                                <p className="text-gray-600 flex items-center gap-2 font-medium text-lg">
+                                    <Activity className="h-5 w-5 text-gray-500" />
                                     Update your map details and files
                                 </p>
                             </div>
                         </div>
                         <div className="flex gap-3">
                             <Link href={`/maps/${map.id}`}>
-                                <Button className="flex items-center gap-2 bg-gradient-to-r from-teal-600 to-green-600 hover:from-teal-700 hover:to-green-700 text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-teal-200/50 rounded-xl font-semibold px-4 py-2">
+                                <Button className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white transform hover:scale-105 transition-all duration-300 shadow-sm rounded-xl font-semibold px-4 py-2">
                                     <Eye className="h-4 w-4" />
                                     View Details
                                 </Button>
                             </Link>
                             <Link href="/dashboard">
-                                <Button className="flex items-center gap-2 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white transform hover:scale-105 transition-all duration-300 rounded-xl font-semibold px-4 py-2">
+                                <Button className="flex items-center gap-2 bg-red-400 hover:bg-red-500 text-white transform hover:scale-105 transition-all duration-300 rounded-xl font-semibold px-4 py-2">
                                     <ArrowLeft className="h-4 w-4" />
                                     Cancel
                                 </Button>
@@ -305,22 +306,22 @@ export default function MapEdit({ map, errors }: Props) {
                     {/* Form Section */}
                     <div className="space-y-8 lg:col-span-2">
                         {/* Basic Information */}
-                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
-                            <CardHeader className="bg-gradient-to-r from-emerald-100/50 to-teal-100/50 border-b border-emerald-100">
+                        <Card className="border border-gray-200 bg-white shadow-sm rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-md">
+                            <CardHeader className="bg-gray-50 border-b border-gray-200">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-emerald-100">
-                                        <Database className="h-5 w-5 text-emerald-700" />
+                                    <div className="p-2 rounded-xl bg-white border border-gray-200">
+                                        <Database className="h-5 w-5 text-gray-600" />
                                     </div>
                                     <div>
-                                        <CardTitle className="text-emerald-800 font-bold text-xl">Map Information</CardTitle>
-                                        <CardDescription className="text-emerald-600 font-medium">Update the basic details of your map</CardDescription>
+                                        <CardTitle className="text-gray-800 font-bold text-xl">Map Information</CardTitle>
+                                        <CardDescription className="text-gray-600 font-medium">Update the basic details of your map</CardDescription>
                                     </div>
                                 </div>
                             </CardHeader>
                             <CardContent className="p-6 space-y-6">
                                 <div className="space-y-3">
-                                    <Label htmlFor="title" className="text-emerald-800 font-semibold flex items-center gap-2">
-                                        <MapPin className="h-4 w-4 text-emerald-600" />
+                                    <Label htmlFor="title" className="text-gray-800 font-semibold flex items-center gap-2">
+                                        <MapPin className="h-4 w-4 text-gray-600" />
                                         Map Title
                                     </Label>
                                     <Input
@@ -329,7 +330,7 @@ export default function MapEdit({ map, errors }: Props) {
                                         onChange={(e) => setData('title', e.target.value)}
                                         placeholder="Enter map title"
                                         required
-                                        className={`border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.title ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}
+                                        className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${errors.title ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                     />
                                     {errors.title && (
                                         <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
@@ -340,8 +341,8 @@ export default function MapEdit({ map, errors }: Props) {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <Label htmlFor="description" className="text-emerald-800 font-semibold flex items-center gap-2">
-                                        <Layers className="h-4 w-4 text-emerald-600" />
+                                    <Label htmlFor="description" className="text-gray-800 font-semibold flex items-center gap-2">
+                                        <Layers className="h-4 w-4 text-gray-600" />
                                         Description
                                     </Label>
                                     <Textarea
@@ -349,7 +350,7 @@ export default function MapEdit({ map, errors }: Props) {
                                         value={data.description}
                                         onChange={(e) => setData('description', e.target.value)}
                                         placeholder="Describe your map"
-                                        className={`min-h-[120px] border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.description ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}
+                                        className={`min-h-[120px] border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${errors.description ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                     />
                                     {errors.description && (
                                         <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
@@ -360,30 +361,30 @@ export default function MapEdit({ map, errors }: Props) {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <Label htmlFor="barangay" className="text-emerald-800 font-semibold flex items-center gap-2">
-                                        <Map className="h-4 w-4 text-emerald-600" />
+                                    <Label htmlFor="barangay" className="text-gray-800 font-semibold flex items-center gap-2">
+                                        <Map className="h-4 w-4 text-gray-600" />
                                         Barangay Location
                                     </Label>
                                     <Select value={data.barangay} onValueChange={(value) => setData('barangay', value)}>
-                                        <SelectTrigger className={`border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.barangay ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}>
+                                        <SelectTrigger className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${errors.barangay ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}>
                                             <SelectValue placeholder="Select barangay location..." />
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-xl border-emerald-200">
-                                            <SelectItem value="Butong" className="cursor-pointer hover:bg-emerald-50 focus:bg-emerald-100 rounded-lg">
+                                        <SelectContent className="rounded-xl border-gray-200">
+                                            <SelectItem value="Butong" className="cursor-pointer hover:bg-gray-50 focus:bg-gray-100 rounded-lg">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                                                    <div className="w-2 h-2 bg-teal-700 rounded-full"></div>
                                                     Butong
                                                 </div>
                                             </SelectItem>
-                                            <SelectItem value="Salawagan" className="cursor-pointer hover:bg-emerald-50 focus:bg-emerald-100 rounded-lg">
+                                            <SelectItem value="Salawagan" className="cursor-pointer hover:bg-gray-50 focus:bg-gray-100 rounded-lg">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                                                    <div className="w-2 h-2 bg-teal-700 rounded-full"></div>
                                                     Salawagan
                                                 </div>
                                             </SelectItem>
-                                            <SelectItem value="San Jose" className="cursor-pointer hover:bg-emerald-50 focus:bg-emerald-100 rounded-lg">
+                                            <SelectItem value="San Jose" className="cursor-pointer hover:bg-gray-50 focus:bg-gray-100 rounded-lg">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                    <div className="w-2 h-2 bg-teal-700 rounded-full"></div>
                                                     San Jose
                                                 </div>
                                             </SelectItem>
@@ -395,7 +396,7 @@ export default function MapEdit({ map, errors }: Props) {
                                             {errors.barangay}
                                         </div>
                                     )}
-                                    <p className="text-sm text-emerald-600 flex items-center gap-2">
+                                    <p className="text-sm text-gray-600 flex items-center gap-2">
                                         <CheckCircle className="h-4 w-4" />
                                         Update the barangay where this agricultural map data was collected
                                     </p>
@@ -404,15 +405,15 @@ export default function MapEdit({ map, errors }: Props) {
                         </Card>
 
                         {/* Map Image Upload */}
-                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-teal-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-teal-200/30">
-                            <CardHeader className="bg-gradient-to-r from-teal-100/50 to-green-100/50 border-b border-teal-100">
+                        <Card className="border border-gray-200 bg-white shadow-sm rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-md">
+                            <CardHeader className="bg-gray-50 border-b border-gray-200">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-teal-100">
-                                        <Camera className="h-5 w-5 text-teal-700" />
+                                    <div className="p-2 rounded-xl bg-white border border-gray-200">
+                                        <Camera className="h-5 w-5 text-gray-600" />
                                     </div>
                                     <div>
-                                        <CardTitle className="text-teal-800 font-bold text-xl">Map Preview Image</CardTitle>
-                                        <CardDescription className="text-teal-600 font-medium">Upload a new preview image for your map (optional)</CardDescription>
+                                        <CardTitle className="text-gray-800 font-bold text-xl">Map Preview Image</CardTitle>
+                                        <CardDescription className="text-gray-600 font-medium">Upload a new preview image for your map (optional)</CardDescription>
                                     </div>
                                 </div>
                             </CardHeader>
@@ -435,8 +436,8 @@ export default function MapEdit({ map, errors }: Props) {
                                     )}
 
                                     <div className="space-y-3">
-                                        <Label htmlFor="map_image" className="text-teal-800 font-semibold flex items-center gap-2">
-                                            <Camera className="h-4 w-4 text-teal-600" />
+                                        <Label htmlFor="map_image" className="text-gray-800 font-semibold flex items-center gap-2">
+                                            <Camera className="h-4 w-4 text-gray-600" />
                                             Choose New Image
                                         </Label>
                                         <Input 
@@ -444,7 +445,7 @@ export default function MapEdit({ map, errors }: Props) {
                                             type="file" 
                                             accept="image/*" 
                                             onChange={handleImageChange}
-                                            className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl file:bg-gradient-to-r file:from-teal-600 file:to-green-600 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:from-teal-700 hover:file:to-green-700 ${errors.map_image ? 'border-red-400 focus:border-red-400' : 'border-teal-200 hover:border-teal-300'}`}
+                                            className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl file:bg-teal-700 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-teal-800 ${errors.map_image ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                         />
                                         {errors.map_image && (
                                             <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
@@ -458,15 +459,15 @@ export default function MapEdit({ map, errors }: Props) {
                         </Card>
 
                         {/* GIS Files Upload */}
-                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-green-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-green-200/30">
-                            <CardHeader className="bg-gradient-to-r from-green-100/50 to-emerald-100/50 border-b border-green-100">
+                        <Card className="border border-gray-200 bg-white shadow-sm rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-md">
+                            <CardHeader className="bg-gray-50 border-b border-gray-200">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-green-100">
-                                        <FileUp className="h-5 w-5 text-green-700" />
+                                    <div className="p-2 rounded-xl bg-white border border-gray-200">
+                                        <FileUp className="h-5 w-5 text-gray-600" />
                                     </div>
                                     <div>
-                                        <CardTitle className="text-green-800 font-bold text-xl">GIS Files</CardTitle>
-                                        <CardDescription className="text-green-600 font-medium">Update your map's GIS data files (optional)</CardDescription>
+                                        <CardTitle className="text-gray-800 font-bold text-xl">GIS Files</CardTitle>
+                                        <CardDescription className="text-gray-600 font-medium">Update your map's GIS data files (optional)</CardDescription>
                                     </div>
                                 </div>
                             </CardHeader>
@@ -475,20 +476,20 @@ export default function MapEdit({ map, errors }: Props) {
                                     {/* Current Files */}
                                     {map.gis_file_paths && map.gis_file_paths.length > 0 && (
                                         <div className="space-y-3">
-                                            <Label className="text-green-800 font-semibold flex items-center gap-2">
-                                                <FileText className="h-4 w-4 text-green-600" />
+                                            <Label className="text-gray-800 font-semibold flex items-center gap-2">
+                                                <FileText className="h-4 w-4 text-gray-600" />
                                                 Current Files
                                             </Label>
                                             <div className="grid gap-3">
                                                 {map.gis_file_paths.map((file: any, index: number) => (
-                                                    <div key={index} className="flex items-center justify-between p-4 border border-green-200 rounded-xl bg-gradient-to-r from-green-50/50 to-emerald-50/50 hover:from-green-100/50 hover:to-emerald-100/50 transition-all duration-300">
+                                                    <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all duration-300">
                                                         <div className="flex items-center gap-3">
-                                                            <div className="p-2 rounded-lg bg-green-100">
-                                                                <FileText className="h-4 w-4 text-green-700" />
+                                                            <div className="p-2 rounded-lg bg-white border border-gray-200">
+                                                                <FileText className="h-4 w-4 text-gray-600" />
                                                             </div>
                                                             <div>
-                                                                <p className="font-semibold text-green-800">{file.original_name || file.name}</p>
-                                                                <p className="text-sm text-green-600">{(file.size / 1024).toFixed(2)} KB</p>
+                                                                <p className="font-semibold text-gray-800">{file.original_name || file.name}</p>
+                                                                <p className="text-sm text-gray-600">{(file.size / 1024).toFixed(2)} KB</p>
                                                             </div>
                                                         </div>
                                                         <Button
@@ -496,7 +497,7 @@ export default function MapEdit({ map, errors }: Props) {
                                                             variant="ghost"
                                                             size="sm"
                                                             onClick={() => handleFileDownload(file)}
-                                                            className="text-green-700 hover:text-green-800 hover:bg-green-100 rounded-lg"
+                                                            className="text-gray-700 hover:text-gray-800 hover:bg-gray-200 rounded-lg"
                                                         >
                                                             <Download className="h-4 w-4" />
                                                         </Button>
@@ -508,8 +509,8 @@ export default function MapEdit({ map, errors }: Props) {
 
                                     {/* File Upload */}
                                     <div className="space-y-3">
-                                        <Label htmlFor="gis_files" className="text-green-800 font-semibold flex items-center gap-2">
-                                            <FileUp className="h-4 w-4 text-green-600" />
+                                        <Label htmlFor="gis_files" className="text-gray-800 font-semibold flex items-center gap-2">
+                                            <FileUp className="h-4 w-4 text-gray-600" />
                                             Upload New Files
                                         </Label>
                                         <Input
@@ -518,7 +519,7 @@ export default function MapEdit({ map, errors }: Props) {
                                             multiple
                                             accept=".shp,.kml,.kmz,.geojson,.gpx,.gdb,.tif,.tiff"
                                             onChange={handleGisFilesChange}
-                                            className={`border-2 transition-all duration-300 focus:border-green-400 focus:ring-green-200 rounded-xl file:bg-gradient-to-r file:from-green-600 file:to-emerald-600 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:from-green-700 hover:file:to-emerald-700 ${errors.gis_files ? 'border-red-400 focus:border-red-400' : 'border-green-200 hover:border-green-300'}`}
+                                            className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl file:bg-teal-700 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-teal-800 ${errors.gis_files ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                         />
                                         {errors.gis_files && (
                                             <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
@@ -531,20 +532,20 @@ export default function MapEdit({ map, errors }: Props) {
                                     {/* New Files Preview */}
                                     {data.gis_files && data.gis_files.length > 0 && (
                                         <div className="space-y-3">
-                                            <Label className="text-green-800 font-semibold flex items-center gap-2">
-                                                <FileCheck className="h-4 w-4 text-green-600" />
+                                            <Label className="text-gray-800 font-semibold flex items-center gap-2">
+                                                <FileCheck className="h-4 w-4 text-gray-600" />
                                                 Files to Upload
                                             </Label>
                                             <div className="grid gap-3">
                                                 {Array.from(data.gis_files).map((file: File, index: number) => (
-                                                    <div key={index} className="flex items-center justify-between p-4 border-2 border-dashed border-green-300 rounded-xl bg-gradient-to-r from-green-50/80 to-emerald-50/80 hover:from-green-100/80 hover:to-emerald-100/80 transition-all duration-300">
+                                                    <div key={index} className="flex items-center justify-between p-4 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all duration-300">
                                                         <div className="flex items-center gap-3">
-                                                            <div className="p-2 rounded-lg bg-green-100">
-                                                                <FileCheck className="h-4 w-4 text-green-700" />
+                                                            <div className="p-2 rounded-lg bg-white border border-gray-200">
+                                                                <FileCheck className="h-4 w-4 text-gray-600" />
                                                             </div>
                                                             <div>
-                                                                <p className="font-semibold text-green-800">{file.name}</p>
-                                                                <p className="text-sm text-green-600">{(file.size / 1024).toFixed(2)} KB</p>
+                                                                <p className="font-semibold text-gray-800">{file.name}</p>
+                                                                <p className="text-sm text-gray-600">{(file.size / 1024).toFixed(2)} KB</p>
                                                             </div>
                                                         </div>
                                                         <Button
@@ -562,8 +563,8 @@ export default function MapEdit({ map, errors }: Props) {
                                         </div>
                                     )}
 
-                                    <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
-                                        <p className="text-sm text-green-700 font-medium flex items-center gap-2">
+                                    <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl">
+                                        <p className="text-sm text-gray-700 font-medium flex items-center gap-2">
                                             <Info className="h-4 w-4" />
                                             Supported formats: SHP, KML, KMZ, GeoJSON, GPX, GDB, TIFF
                                         </p>
@@ -576,11 +577,11 @@ export default function MapEdit({ map, errors }: Props) {
                     {/* Enhanced Sidebar */}
                     <div className="space-y-6">
                         {/* Submit Button */}
-                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
+                        <Card className="border border-gray-200 bg-white shadow-sm rounded-2xl overflow-hidden transform hover:scale-[1.02] transition-all duration-300 hover:shadow-md">
                             <CardContent className="p-6">
                                 <Button 
                                     type="submit" 
-                                    className="w-full h-12 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" 
+                                    className="w-full h-12 bg-teal-700 hover:bg-teal-800 text-white font-bold text-lg rounded-xl shadow-sm hover:shadow-md transform hover:scale-105 transition-all duration-300" 
                                     disabled={processing}
                                 >
                                     <Save className="mr-3 h-5 w-5" />
@@ -590,35 +591,35 @@ export default function MapEdit({ map, errors }: Props) {
                         </Card>
 
                         {/* Map Statistics */}
-                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-green-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-green-200/30">
-                            <CardHeader className="bg-gradient-to-r from-green-100/50 to-emerald-100/50 border-b border-green-100">
+                        <Card className="border border-gray-200 bg-white shadow-sm rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-md">
+                            <CardHeader className="bg-gray-50 border-b border-gray-200">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-green-100">
-                                        <Activity className="h-5 w-5 text-green-700" />
+                                    <div className="p-2 rounded-xl bg-white border border-gray-200">
+                                        <Activity className="h-5 w-5 text-gray-600" />
                                     </div>
                                     <div>
-                                        <CardTitle className="text-green-800 font-bold">Map Statistics</CardTitle>
-                                        <CardDescription className="text-green-600 font-medium">Current map details</CardDescription>
+                                        <CardTitle className="text-gray-800 font-bold">Map Statistics</CardTitle>
+                                        <CardDescription className="text-gray-600 font-medium">Current map details</CardDescription>
                                     </div>
                                 </div>
                             </CardHeader>
                             <CardContent className="p-6">
                                 <div className="space-y-4">
-                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl">
-                                        <span className="text-green-700 font-medium">Total Files</span>
-                                        <Badge className="bg-green-600 hover:bg-green-700 text-white">
+                                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                                        <span className="text-gray-700 font-medium">Total Files</span>
+                                        <Badge className="bg-teal-700 hover:bg-teal-800 text-white">
                                             {map.gis_file_paths?.length || 0}
                                         </Badge>
                                     </div>
-                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl">
-                                        <span className="text-emerald-700 font-medium">Created</span>
-                                        <span className="text-emerald-600 text-sm font-medium">
+                                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                                        <span className="text-gray-700 font-medium">Created</span>
+                                        <span className="text-gray-600 text-sm font-medium">
                                             {new Date(map.created_at).toLocaleDateString()}
                                         </span>
                                     </div>
-                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-teal-50 to-green-50 rounded-xl">
-                                        <span className="text-teal-700 font-medium">Last Updated</span>
-                                        <span className="text-teal-600 text-sm font-medium">
+                                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                                        <span className="text-gray-700 font-medium">Last Updated</span>
+                                        <span className="text-gray-600 text-sm font-medium">
                                             {new Date(map.updated_at).toLocaleDateString()}
                                         </span>
                                     </div>
@@ -628,16 +629,16 @@ export default function MapEdit({ map, errors }: Props) {
 
                         {/* Current GIS Files Management */}
                         {map.gis_file_paths && map.gis_file_paths.length > 0 && (
-                            <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
-                                <CardHeader className="bg-gradient-to-r from-emerald-100/50 to-green-100/50 border-b border-emerald-100">
+                            <Card className="border border-gray-200 bg-white shadow-sm rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-md">
+                                <CardHeader className="bg-gray-50 border-b border-gray-200">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className="p-2 rounded-xl bg-emerald-100">
-                                                <Database className="h-5 w-5 text-emerald-700" />
+                                            <div className="p-2 rounded-xl bg-white border border-gray-200">
+                                                <Database className="h-5 w-5 text-gray-600" />
                                             </div>
                                             <div>
-                                                <CardTitle className="text-emerald-800 font-bold">File Management</CardTitle>
-                                                <CardDescription className="text-emerald-600 font-medium">
+                                                <CardTitle className="text-gray-800 font-bold">File Management</CardTitle>
+                                                <CardDescription className="text-gray-600 font-medium">
                                                     {map.gis_file_paths.length} file{map.gis_file_paths.length !== 1 ? 's' : ''} attached
                                                 </CardDescription>
                                             </div>
@@ -647,9 +648,9 @@ export default function MapEdit({ map, errors }: Props) {
                                                 id="select-all-files"
                                                 checked={filesToDelete.length === map.gis_file_paths.length && map.gis_file_paths.length > 0}
                                                 onCheckedChange={handleSelectAllFiles}
-                                                className="border-emerald-400 data-[state=checked]:bg-emerald-600"
+                                                className="border-gray-400 data-[state=checked]:bg-teal-700"
                                             />
-                                            <Label htmlFor="select-all-files" className="cursor-pointer text-sm font-medium text-emerald-700 hover:text-emerald-800">
+                                            <Label htmlFor="select-all-files" className="cursor-pointer text-sm font-medium text-gray-700 hover:text-gray-800">
                                                 Select All
                                             </Label>
                                         </div>
@@ -658,25 +659,25 @@ export default function MapEdit({ map, errors }: Props) {
                                 <CardContent className="p-6">
                                     <div className="space-y-3">
                                         {map.gis_file_paths.map((file, index) => (
-                                            <div key={index} className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-300 ${filesToDelete.includes(index) ? 'border-red-300 bg-red-50/50' : 'border-emerald-200 bg-gradient-to-r from-emerald-50/50 to-green-50/50 hover:from-emerald-100/50 hover:to-green-100/50'}`}>
+                                            <div key={index} className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-300 ${filesToDelete.includes(index) ? 'border-red-300 bg-red-50/50' : 'border-gray-200 bg-gray-50 hover:bg-gray-100'}`}>
                                                 <Checkbox
                                                     id={`file-${index}`}
                                                     checked={filesToDelete.includes(index)}
                                                     onCheckedChange={() => handleFileDeleteToggle(index)}
-                                                    className="border-emerald-400 data-[state=checked]:bg-emerald-600"
+                                                    className="border-gray-400 data-[state=checked]:bg-teal-700"
                                                 />
-                                                <div className="p-2 rounded-lg bg-emerald-100">
-                                                    <FileText className="h-4 w-4 text-emerald-700" />
+                                                <div className="p-2 rounded-lg bg-white border border-gray-200">
+                                                    <FileText className="h-4 w-4 text-gray-600" />
                                                 </div>
                                                 <div className="min-w-0 flex-1">
-                                                    <p className="truncate font-semibold text-emerald-800" title={file.original_name}>
+                                                    <p className="truncate font-semibold text-gray-800" title={file.original_name}>
                                                         {file.original_name}
                                                     </p>
                                                     <div className="mt-2 flex items-center gap-2 flex-wrap">
-                                                        <Badge className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+                                                        <Badge className="text-xs bg-teal-700 hover:bg-teal-800 text-white">
                                                             {file.extension.toUpperCase()}
                                                         </Badge>
-                                                        <span className="text-xs text-emerald-600 font-medium">{formatFileSize(file.size)}</span>
+                                                        <span className="text-xs text-gray-600 font-medium">{formatFileSize(file.size)}</span>
                                                         {filesToDelete.includes(index) && (
                                                             <Badge variant="destructive" className="text-xs">
                                                                 Will be deleted
@@ -701,26 +702,26 @@ export default function MapEdit({ map, errors }: Props) {
                         )}
 
                         {/* Supported Formats */}
-                        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-teal-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-teal-200/30">
-                            <CardHeader className="bg-gradient-to-r from-teal-100/50 to-emerald-100/50 border-b border-teal-100">
+                        <Card className="border border-gray-200 bg-white shadow-sm rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-md">
+                            <CardHeader className="bg-gray-50 border-b border-gray-200">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-teal-100">
-                                        <Layers className="h-5 w-5 text-teal-700" />
+                                    <div className="p-2 rounded-xl bg-white border border-gray-200">
+                                        <Layers className="h-5 w-5 text-gray-600" />
                                     </div>
                                     <div>
-                                        <CardTitle className="text-teal-800 font-bold">Supported Formats</CardTitle>
-                                        <CardDescription className="text-teal-600 font-medium">Compatible file types</CardDescription>
+                                        <CardTitle className="text-gray-800 font-bold">Supported Formats</CardTitle>
+                                        <CardDescription className="text-gray-600 font-medium">Compatible file types</CardDescription>
                                     </div>
                                 </div>
                             </CardHeader>
                             <CardContent className="p-6">
                                 <div className="flex flex-wrap gap-2">
                                     {supportedGisFormats.slice(0, 15).map((format) => (
-                                        <Badge key={format} className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white text-xs">
+                                        <Badge key={format} className="bg-teal-700 hover:bg-teal-800 text-white text-xs">
                                             {format}
                                         </Badge>
                                     ))}
-                                    <Badge className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white text-xs">
+                                    <Badge className="bg-gray-500 hover:bg-gray-600 text-white text-xs">
                                         +{supportedGisFormats.length - 15} more
                                     </Badge>
                                 </div>

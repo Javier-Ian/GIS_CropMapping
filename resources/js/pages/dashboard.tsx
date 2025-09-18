@@ -455,8 +455,8 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-48 animate-in slide-in-from-top-2 duration-200 rounded-xl shadow-xl border-teal-100">
-                                                    <DropdownMenuItem onClick={() => handleViewMap(map)} className="hover:bg-teal-50 transition-colors rounded-lg">
-                                                        <Eye className="mr-2 h-4 w-4 text-teal-600" />
+                                                    <DropdownMenuItem onClick={() => handleViewMap(map)} className="hover:bg-gray-100 transition-colors rounded-lg">
+                                                        <Eye className="mr-2 h-4 w-4 text-gray-600" />
                                                         View Details
                                                     </DropdownMenuItem>
                                                     {map.user.id === auth.user.id && (
@@ -558,7 +558,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                             <div className="flex items-center space-x-3">
                                                 <button 
                                                     onClick={() => handleViewMap(map)}
-                                                    className="group/btn flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-teal-700 hover:text-white hover:bg-gradient-to-r hover:from-teal-600 hover:to-emerald-600 rounded-xl border border-teal-200 hover:border-transparent transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
+                                                    className="group/btn flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 rounded-xl border border-gray-500 hover:border-gray-600 transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
                                                 >
                                                     <Eye className="w-4 h-4 group-hover/btn:animate-pulse" />
                                                     <span>View Details</span>

@@ -152,7 +152,7 @@ export default function MapShow({ map, isOwner }: Props) {
                         </div>
                         <div className="flex gap-2">
                             <Link href="/dashboard">
-                                <Button size="sm" className="flex items-center gap-2 bg-slate-600 hover:bg-slate-700 text-white transform hover:scale-105 transition-all duration-300 rounded-lg font-semibold">
+                                <Button size="sm" className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white transform hover:scale-105 transition-all duration-300 rounded-lg font-semibold">
                                     <ArrowLeft className="h-4 w-4" />
                                     Back
                                 </Button>
