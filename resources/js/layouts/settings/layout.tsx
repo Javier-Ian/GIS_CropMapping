@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { type PropsWithChildren, useState, useEffect } from 'react';
-import { User, Lock, Palette, Settings, Sparkles } from 'lucide-react';
+import { User, Lock, Settings } from 'lucide-react';
 
 const sidebarNavItems: NavItem[] = [
     {
@@ -18,11 +18,6 @@ const sidebarNavItems: NavItem[] = [
         title: 'Password',
         href: '/settings/password',
         icon: Lock,
-    },
-    {
-        title: 'Appearance',
-        href: '/settings/appearance',
-        icon: Palette,
     },
 ];
 
@@ -42,36 +37,35 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
 
     return (
         <div className={`px-4 py-6 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            {/* Enhanced Header */}
+            {/* Clean Header */}
             <div className={`mb-8 transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
-                <div className="relative group">
-                    <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-emerald-700 via-teal-600 to-green-700 bg-clip-text text-transparent flex items-center gap-3">
-                        <Settings className="h-10 w-10 text-emerald-600 transform transition-all duration-300 group-hover:rotate-12 group-hover:scale-110 drop-shadow-sm" />
+                <div className="group">
+                    <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
+                        <Settings className="h-8 w-8 text-teal-600 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
                         Settings
                     </h1>
-                    <p className="text-slate-600 mt-2 flex items-center gap-2 font-medium">
-                        <Sparkles className="h-4 w-4 text-emerald-500 transform transition-all duration-700 hover:rotate-180" />
+                    <p className="text-slate-600 mt-2 font-medium">
                         Manage your profile and account settings
                     </p>
                 </div>
             </div>
 
-            <div className={`flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <aside className="w-full max-w-xl lg:w-64">
-                    <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
-                        <CardHeader className="bg-gradient-to-r from-emerald-100/50 to-teal-100/50 border-b border-emerald-100">
+            <div className={`flex flex-col space-y-6 lg:flex-row lg:space-y-0 lg:space-x-8 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                <aside className="w-full lg:w-64">
+                    <Card className="border border-slate-200/60 bg-white/95 backdrop-blur-sm shadow-sm rounded-xl overflow-hidden transition-all duration-200 hover:shadow-md hover:border-teal-200/80">
+                        <CardHeader className="bg-gradient-to-r from-slate-50/80 to-teal-50/60 border-b border-slate-100/80 pb-4">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-xl bg-emerald-100">
-                                    <Settings className="h-5 w-5 text-emerald-700" />
+                                <div className="p-2.5 rounded-lg bg-teal-100/80 border border-teal-200/50">
+                                    <Settings className="h-5 w-5 text-teal-600" />
                                 </div>
                                 <div>
-                                    <CardTitle className="text-emerald-800 font-bold">Navigation</CardTitle>
-                                    <CardDescription className="text-emerald-600 font-medium">Account settings</CardDescription>
+                                    <CardTitle className="text-slate-800 font-semibold">Navigation</CardTitle>
+                                    <CardDescription className="text-slate-600 font-medium">Account settings</CardDescription>
                                 </div>
                             </div>
                         </CardHeader>
                         <CardContent className="p-4">
-                            <nav className="flex flex-col space-y-2">
+                            <nav className="flex flex-col space-y-1">
                                 {sidebarNavItems.map((item, index) => {
                                     const Icon = item.icon;
                                     const isActive = currentPath === item.href;
@@ -82,14 +76,14 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                             variant="ghost"
                                             asChild
                                             className={cn(
-                                                'w-full justify-start h-12 rounded-xl font-medium transition-all duration-300 transform hover:scale-105',
+                                                'w-full justify-start h-10 rounded-lg font-medium transition-all duration-200',
                                                 isActive 
-                                                    ? 'bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800 border-2 border-emerald-200 shadow-lg' 
-                                                    : 'hover:bg-emerald-50 hover:text-emerald-700 text-slate-600'
+                                                    ? 'bg-teal-100/80 text-teal-800 border border-teal-200/60 shadow-sm' 
+                                                    : 'hover:bg-slate-100/70 hover:text-slate-700 text-slate-600'
                                             )}
                                         >
                                             <Link href={item.href} prefetch className="flex items-center gap-3">
-                                                {Icon && <Icon className={cn("h-4 w-4", isActive ? "text-emerald-700" : "text-slate-500")} />}
+                                                {Icon && <Icon className={cn("h-4 w-4", isActive ? "text-teal-700" : "text-slate-500")} />}
                                                 {item.title}
                                             </Link>
                                         </Button>

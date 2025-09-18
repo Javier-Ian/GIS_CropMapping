@@ -52,33 +52,32 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
             <Head title="Profile settings" />
 
             <SettingsLayout>
-                <div className={`space-y-8 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                    {/* Animated Header Card */}
-                    <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-emerald-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-200/30">
-                        <CardHeader className="bg-gradient-to-r from-emerald-100/50 to-teal-100/50 border-b border-emerald-100">
+                <div className={`space-y-6 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                    {/* Clean Profile Information Card */}
+                    <Card className="border border-slate-200/60 bg-white/95 backdrop-blur-sm shadow-sm rounded-xl overflow-hidden transition-all duration-200 hover:shadow-md hover:border-teal-200/80">
+                        <CardHeader className="bg-gradient-to-r from-slate-50/80 to-teal-50/60 border-b border-slate-100/80 pb-4">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-xl bg-emerald-100">
-                                    <User className="h-6 w-6 text-emerald-700" />
+                                <div className="p-2.5 rounded-lg bg-teal-100/80 border border-teal-200/50">
+                                    <User className="h-5 w-5 text-teal-600" />
                                 </div>
                                 <div>
-                                    <CardTitle className="text-emerald-800 font-bold text-2xl flex items-center gap-2">
+                                    <CardTitle className="text-slate-800 font-semibold text-xl">
                                         Profile Information
-                                        <Sparkles className="h-5 w-5 text-emerald-600 animate-pulse" />
                                     </CardTitle>
-                                    <CardDescription className="text-emerald-600 font-medium">Update your name and email address</CardDescription>
+                                    <CardDescription className="text-slate-600 font-medium">Update your name and email address</CardDescription>
                                 </div>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6">
                             <form onSubmit={submit} className="space-y-6">
-                                <div className="space-y-3">
-                                    <Label htmlFor="name" className="text-emerald-800 font-semibold flex items-center gap-2">
-                                        <User className="h-4 w-4 text-emerald-600" />
+                                <div className="space-y-2">
+                                    <Label htmlFor="name" className="text-slate-700 font-medium flex items-center gap-2">
+                                        <User className="h-4 w-4 text-slate-500" />
                                         Full Name
                                     </Label>
                                     <Input
                                         id="name"
-                                        className={`border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.name ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}
+                                        className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg ${errors.name ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
                                         required
@@ -86,22 +85,22 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                         placeholder="Enter your full name"
                                     />
                                     {errors.name && (
-                                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg border border-red-100">
                                             <AlertCircle className="h-4 w-4" />
                                             {errors.name}
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="space-y-3">
-                                    <Label htmlFor="email" className="text-emerald-800 font-semibold flex items-center gap-2">
-                                        <Mail className="h-4 w-4 text-emerald-600" />
+                                <div className="space-y-2">
+                                    <Label htmlFor="email" className="text-slate-700 font-medium flex items-center gap-2">
+                                        <Mail className="h-4 w-4 text-slate-500" />
                                         Email Address
                                     </Label>
                                     <Input
                                         id="email"
                                         type="email"
-                                        className={`border-2 transition-all duration-300 focus:border-emerald-400 focus:ring-emerald-200 rounded-xl ${errors.email ? 'border-red-400 focus:border-red-400' : 'border-emerald-200 hover:border-emerald-300'}`}
+                                        className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg ${errors.email ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
                                         value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
                                         required
@@ -109,7 +108,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                         placeholder="Enter your email address"
                                     />
                                     {errors.email && (
-                                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg border border-red-100">
                                             <AlertCircle className="h-4 w-4" />
                                             {errors.email}
                                         </div>
@@ -117,7 +116,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 </div>
 
                                 {mustVerifyEmail && auth.user.email_verified_at === null && (
-                                    <Card className="border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50">
+                                    <Card className="border-amber-200/60 bg-gradient-to-r from-amber-50/80 to-yellow-50/60">
                                         <CardContent className="p-4">
                                             <div className="flex items-center gap-3">
                                                 <AlertCircle className="h-5 w-5 text-amber-600" />
@@ -128,13 +127,13 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                                             href={route('verification.send')}
                                                             method="post"
                                                             as="button"
-                                                            className="text-amber-700 underline decoration-amber-300 underline-offset-4 transition-colors duration-300 hover:decoration-amber-600 font-semibold"
+                                                            className="text-amber-700 underline decoration-amber-300 underline-offset-4 transition-colors duration-200 hover:decoration-amber-600 font-semibold"
                                                         >
                                                             Click here to resend the verification email.
                                                         </Link>
                                                     </p>
                                                     {status === 'verification-link-sent' && (
-                                                        <div className="mt-2 text-sm font-medium text-green-600 flex items-center gap-2">
+                                                        <div className="mt-2 text-sm font-medium text-teal-600 flex items-center gap-2">
                                                             <CheckCircle className="h-4 w-4" />
                                                             A new verification link has been sent to your email address.
                                                         </div>
@@ -145,10 +144,10 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                     </Card>
                                 )}
 
-                                <div className="flex items-center gap-4 pt-4">
+                                <div className="flex items-center gap-4 pt-2">
                                     <Button 
                                         disabled={processing}
-                                        className="bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-8 py-3"
+                                        className="bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 px-6 py-2"
                                     >
                                         <Save className="mr-2 h-4 w-4" />
                                         {processing ? 'Saving...' : 'Save Changes'}
@@ -157,11 +156,11 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                     <Transition
                                         show={recentlySuccessful}
                                         enter="transition ease-in-out duration-300"
-                                        enterFrom="opacity-0 scale-90"
+                                        enterFrom="opacity-0 scale-95"
                                         leave="transition ease-in-out duration-300"
-                                        leaveTo="opacity-0 scale-90"
+                                        leaveTo="opacity-0 scale-95"
                                     >
-                                        <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-200 font-medium">
+                                        <div className="flex items-center gap-2 text-teal-700 bg-teal-50 px-3 py-2 rounded-lg border border-teal-200 font-medium text-sm">
                                             <CheckCircle className="h-4 w-4" />
                                             Changes saved successfully!
                                         </div>

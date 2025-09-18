@@ -33,68 +33,67 @@ export default function DeleteUser() {
     };
 
     return (
-        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl shadow-red-100/20 rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-red-200/30">
-            <CardHeader className="bg-gradient-to-r from-red-100/50 to-rose-100/50 border-b border-red-100">
+        <Card className="border border-red-200/60 bg-white/95 backdrop-blur-sm shadow-sm rounded-xl overflow-hidden transition-all duration-200 hover:shadow-md hover:border-red-300/80">
+            <CardHeader className="bg-gradient-to-r from-slate-50/80 to-red-50/60 border-b border-red-100/80 pb-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-red-100">
-                        <Shield className="h-6 w-6 text-red-700" />
+                    <div className="p-2.5 rounded-lg bg-red-100/80 border border-red-200/50">
+                        <Shield className="h-5 w-5 text-red-600" />
                     </div>
                     <div>
-                        <CardTitle className="text-red-800 font-bold text-xl flex items-center gap-2">
+                        <CardTitle className="text-slate-800 font-semibold text-xl flex items-center gap-2">
                             Account Security
-                            <AlertTriangle className="h-5 w-5 text-red-600 animate-pulse" />
+                            <AlertTriangle className="h-4 w-4 text-red-500" />
                         </CardTitle>
-                        <CardDescription className="text-red-600 font-medium">Permanently delete your account and all associated data</CardDescription>
+                        <CardDescription className="text-slate-600 font-medium">Permanently delete your account and all associated data</CardDescription>
                     </div>
                 </div>
             </CardHeader>
             <CardContent className="p-6">
-                <div className="space-y-4 rounded-xl border-2 border-red-200 bg-gradient-to-r from-red-50/50 to-rose-50/50 p-6">
-                    <div className="flex items-start gap-4">
-                        <div className="p-2 rounded-xl bg-red-100">
-                            <AlertTriangle className="h-6 w-6 text-red-700" />
+                <div className="space-y-4 rounded-lg border border-red-200/60 bg-red-50/40 p-4">
+                    <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-red-100/80">
+                            <AlertTriangle className="h-5 w-5 text-red-600" />
                         </div>
-                        <div className="space-y-2">
-                            <p className="font-bold text-red-800 text-lg">⚠️ Critical Warning</p>
-                            <p className="text-red-700 font-medium leading-relaxed">
-                                This action is irreversible and will permanently delete your account, all uploaded maps, GIS files, and associated data. 
-                                Please proceed with extreme caution.
+                        <div className="space-y-1">
+                            <p className="font-semibold text-red-800">Critical Warning</p>
+                            <p className="text-red-700 font-medium text-sm leading-relaxed">
+                                This action is irreversible and will permanently delete your account, all uploaded maps, GIS files, and associated data.
                             </p>
                         </div>
                     </div>
 
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button className="bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-6 py-3">
+                            <Button className="bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 px-4 py-2">
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Delete Account
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className="border-0 bg-white/95 backdrop-blur-lg shadow-2xl rounded-2xl">
-                            <div className="space-y-6">
+                        <DialogContent className="border border-slate-200 bg-white shadow-xl rounded-xl">
+                            <div className="space-y-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-3 rounded-xl bg-red-100">
-                                        <AlertTriangle className="h-8 w-8 text-red-700" />
+                                    <div className="p-2.5 rounded-lg bg-red-100">
+                                        <AlertTriangle className="h-6 w-6 text-red-600" />
                                     </div>
                                     <div>
-                                        <DialogTitle className="text-red-800 font-bold text-xl">⚠️ Confirm Account Deletion</DialogTitle>
-                                        <DialogDescription className="text-red-600 font-medium mt-2">
+                                        <DialogTitle className="text-slate-800 font-semibold text-lg">Confirm Account Deletion</DialogTitle>
+                                        <DialogDescription className="text-slate-600 font-medium mt-1">
                                             This action cannot be undone and will permanently remove all your data.
                                         </DialogDescription>
                                     </div>
                                 </div>
                                 
-                                <div className="p-4 bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-200 rounded-xl">
-                                    <p className="text-red-700 font-medium">
+                                <div className="p-4 bg-red-50/60 border border-red-200/60 rounded-lg">
+                                    <p className="text-red-700 font-medium text-sm">
                                         Once your account is deleted, all of its resources and data will be permanently removed. 
                                         Please enter your password to confirm you want to permanently delete your account.
                                     </p>
                                 </div>
 
                                 <form onSubmit={deleteUser} className="space-y-4">
-                                    <div className="space-y-3">
-                                        <Label htmlFor="password" className="text-red-800 font-semibold flex items-center gap-2">
-                                            <Lock className="h-4 w-4 text-red-600" />
+                                    <div className="space-y-2">
+                                        <Label htmlFor="password" className="text-slate-700 font-medium flex items-center gap-2">
+                                            <Lock className="h-4 w-4 text-slate-500" />
                                             Confirm Password
                                         </Label>
                                         <Input
@@ -103,7 +102,7 @@ export default function DeleteUser() {
                                             ref={passwordInput}
                                             value={data.password}
                                             onChange={(e) => setData('password', e.target.value)}
-                                            className="border-2 border-red-200 focus:border-red-400 focus:ring-red-200 rounded-xl"
+                                            className="border border-slate-200 focus:border-red-400 focus:ring-2 focus:ring-red-100 rounded-lg"
                                             placeholder="Enter your password to confirm"
                                         />
                                         <InputError message={errors.password} className="text-red-600" />
@@ -115,7 +114,7 @@ export default function DeleteUser() {
                                                 type="button" 
                                                 variant="ghost" 
                                                 onClick={closeModal}
-                                                className="border-2 border-gray-300 hover:bg-gray-100 rounded-xl px-6"
+                                                className="border border-slate-300 hover:bg-slate-100 rounded-lg px-4"
                                             >
                                                 Cancel
                                             </Button>
@@ -123,7 +122,7 @@ export default function DeleteUser() {
                                         <Button 
                                             type="submit" 
                                             disabled={processing}
-                                            className="bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-6"
+                                            className="bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 px-4"
                                         >
                                             <Trash2 className="mr-2 h-4 w-4" />
                                             {processing ? 'Deleting...' : 'Delete Account'}
