@@ -317,7 +317,7 @@ export default function MapShow({ map, isOwner }: Props) {
                     </div>
 
                     {/* Compact Sidebar */}
-                    <div className="lg:col-span-1 xl:col-span-2 space-y-3 h-full overflow-y-auto">
+                    <div className="lg:col-span-1 xl:col-span-2 space-y-3 h-full">
                         {/* Map Information */}
                         <Card className="border border-slate-200 bg-white shadow-lg rounded-xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:shadow-xl">
                             <CardHeader className="bg-slate-50 border-b border-slate-200 py-3">
