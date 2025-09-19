@@ -9,6 +9,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Calendar, Download, Edit3, FileText, MapPin, Trash2, ZoomIn, Sparkles, Activity, Layers, Eye, ArrowLeft, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 interface Map {
     id: number;
@@ -90,9 +91,67 @@ export default function MapShow({ map, isOwner }: Props) {
     };
 
     const handleDelete = () => {
-        if (confirm('Are you sure you want to delete this map? This action cannot be undone.')) {
-            router.delete(route('maps.destroy', map.id));
-        }
+        Swal.fire({
+            title: 'Delete Map?',
+            text: `Are you sure you want to delete "${map.title}"? This action cannot be undone.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            background: '#ffffff',
+            color: '#374151',
+            backdrop: `
+                rgba(0, 120, 111, 0.1)
+                left top
+                no-repeat
+            `,
+            customClass: {
+                popup: 'animate__animated animate__fadeInDown',
+                title: 'text-gray-800 font-bold',
+                content: 'text-gray-600',
+                confirmButton: 'hover:bg-red-600 transition-colors duration-200',
+                cancelButton: 'hover:bg-gray-600 transition-colors duration-200'
+            },
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route('maps.destroy', map.id), {
+                    onSuccess: () => {
+                        Swal.fire({
+                            title: 'Map Deleted Successfully!',
+                            text: `Your map "${map.title}" has been permanently removed.`,
+                            icon: 'success',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#00786f',
+                            background: '#ffffff',
+                            color: '#374151',
+                            customClass: {
+                                popup: 'animate__animated animate__fadeInDown',
+                                title: 'text-gray-800 font-bold',
+                                content: 'text-gray-600',
+                                confirmButton: 'hover:bg-[#00786f]/90 transition-colors duration-200'
+                            }
+                        });
+                    },
+                    onError: () => {
+                        Swal.fire({
+                            title: 'Delete Failed',
+                            text: 'There was an error deleting the map. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#00786f'
+                        });
+                    }
+                });
+            }
+        });
     };
 
     const handleDownload = () => {
