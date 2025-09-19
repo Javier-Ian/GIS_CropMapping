@@ -175,12 +175,12 @@ export default function Welcome() {
                 `}</style>
             </Head>
 
-            <div className="relative flex h-screen flex-col overflow-hidden bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
+            <div className="relative flex h-screen flex-col overflow-hidden bg-gradient-to-br from-[#00786f]/10 via-[#00786f]/5 to-[#00786f]/10">
                 {/* Animated Background Elements */}
                 <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                    <div className="animate-float absolute top-1/4 left-1/4 h-72 w-72 rounded-full bg-green-200/30 mix-blend-multiply blur-xl filter"></div>
-                    <div className="animate-float-delayed absolute top-3/4 right-1/4 h-96 w-96 rounded-full bg-emerald-200/30 mix-blend-multiply blur-xl filter"></div>
-                    <div className="animate-float-slow absolute bottom-1/4 left-1/3 h-80 w-80 rounded-full bg-teal-200/30 mix-blend-multiply blur-xl filter"></div>
+                    <div className="animate-float absolute top-1/4 left-1/4 h-72 w-72 rounded-full bg-[#00786f]/20 mix-blend-multiply blur-xl filter"></div>
+                    <div className="animate-float-delayed absolute top-3/4 right-1/4 h-96 w-96 rounded-full bg-[#00786f]/15 mix-blend-multiply blur-xl filter"></div>
+                    <div className="animate-float-slow absolute bottom-1/4 left-1/3 h-80 w-80 rounded-full bg-[#00786f]/20 mix-blend-multiply blur-xl filter"></div>
                 </div>
 
                 {/* Navigation */}
@@ -190,16 +190,16 @@ export default function Welcome() {
                     <div className="mx-auto flex max-w-7xl items-center justify-between">
                         <div className="flex items-center space-x-3">
                             <div className="relative">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#00786f] to-[#00786f] shadow-lg">
                                     <Globe className="h-6 w-6 animate-pulse text-white" />
                                 </div>
                                 <div className="absolute -top-1 -right-1 h-4 w-4 animate-ping rounded-full bg-amber-400"></div>
                             </div>
                             <div>
-                                <h1 className="bg-gradient-to-r from-green-700 to-emerald-700 bg-clip-text text-lg leading-tight font-bold text-transparent lg:text-xl">
+                                <h1 className="bg-gradient-to-r from-[#00786f] to-[#00786f] bg-clip-text text-lg leading-tight font-bold text-transparent lg:text-xl">
                                     GIS CROP LAND USE MAPPING
                                 </h1>
-                                <p className="text-xs font-bold text-green-600/70 uppercase">
+                                <p className="text-xs font-bold text-[#00786f]/70 uppercase">
                                     REMOTE <span className="font-extrabold">DATA MANAGEMENT</span> SYSTEM
                                 </p>
                             </div>
@@ -209,25 +209,25 @@ export default function Welcome() {
                             {auth.user ? (
                                 <Link
                                     href={route('dashboard')}
-                                    className="group relative rounded-full bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25"
+                                    className="group relative rounded-full bg-gradient-to-r from-[#00786f] to-[#00786f] px-6 py-2.5 font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00786f]/25"
                                 >
                                     <span className="relative z-10">Dashboard</span>
-                                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-700 to-emerald-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#00786f]/90 to-[#00786f]/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
                                 </Link>
                             ) : (
                                 <>
                                     <Link
                                         href={route('login')}
-                                        className="px-4 py-2 font-medium text-green-700 transition-colors duration-200 hover:text-green-800"
+                                        className="px-4 py-2 font-medium text-[#00786f] transition-colors duration-200 hover:text-[#00786f]/80"
                                     >
                                         Log in
                                     </Link>
                                     <Link
                                         href={route('register')}
-                                        className="group relative rounded-full bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25"
+                                        className="group relative rounded-full bg-gradient-to-r from-[#00786f] to-[#00786f] px-6 py-2.5 font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00786f]/25"
                                     >
                                         <span className="relative z-10">Register</span>
-                                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-700 to-emerald-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#00786f]/90 to-[#00786f]/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
                                     </Link>
                                 </>
                             )}
@@ -243,13 +243,13 @@ export default function Welcome() {
                             className={`space-y-8 transition-all delay-300 duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
                         >
                             <div className="space-y-4">
-                                <div className="inline-flex items-center rounded-full bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
+                                <div className="inline-flex items-center rounded-full bg-[#00786f]/10 px-4 py-2 text-sm font-medium text-[#00786f]">
                                     <Sprout className="mr-2 h-4 w-4 animate-bounce" />
                                     Advanced Crop Mapping
                                 </div>
 
                                 <h1 className="text-5xl leading-tight font-bold lg:text-6xl">
-                                    <span className="bg-gradient-to-r from-green-700 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                                    <span className="bg-gradient-to-r from-[#00786f] via-[#00786f] to-[#00786f] bg-clip-text text-transparent">
                                         Land Use
                                     </span>
                                     <br />
@@ -272,25 +272,25 @@ export default function Welcome() {
                                 <div className="relative h-24 overflow-hidden">
                                     <div className="absolute inset-0">
                                         {/* Horizontal line that extends */}
-                                        <div className="animate-extend-line absolute top-10 left-0 h-0.5 max-w-md bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500"></div>
+                                        <div className="animate-extend-line absolute top-10 left-0 h-0.5 max-w-md bg-gradient-to-r from-[#00786f] via-[#00786f] to-[#00786f]"></div>
 
                                         {/* Moving geometric shapes */}
-                                        <div className="animate-slide-right absolute top-8 left-4 h-4 w-4 rotate-45 bg-green-500 opacity-80"></div>
-                                        <div className="animate-slide-right-delayed absolute top-6 left-20 h-3 w-3 rounded-full bg-emerald-500 opacity-60"></div>
-                                        <div className="animate-slide-right-slow absolute top-12 left-32 h-2 w-5 bg-teal-500 opacity-70"></div>
+                                        <div className="animate-slide-right absolute top-8 left-4 h-4 w-4 rotate-45 bg-[#00786f] opacity-80"></div>
+                                        <div className="animate-slide-right-delayed absolute top-6 left-20 h-3 w-3 rounded-full bg-[#00786f] opacity-60"></div>
+                                        <div className="animate-slide-right-slow absolute top-12 left-32 h-2 w-5 bg-[#00786f] opacity-70"></div>
 
                                         {/* Vertical accent lines */}
-                                        <div className="animate-grow-vertical absolute top-4 left-12 h-12 w-0.5 bg-green-300"></div>
-                                        <div className="animate-grow-vertical-delayed absolute top-2 left-28 h-16 w-0.5 bg-emerald-300"></div>
-                                        <div className="animate-grow-vertical-slow absolute top-6 left-44 h-8 w-0.5 bg-teal-300"></div>
+                                        <div className="animate-grow-vertical absolute top-4 left-12 h-12 w-0.5 bg-[#00786f]/60"></div>
+                                        <div className="animate-grow-vertical-delayed absolute top-2 left-28 h-16 w-0.5 bg-[#00786f]/60"></div>
+                                        <div className="animate-grow-vertical-slow absolute top-6 left-44 h-8 w-0.5 bg-[#00786f]/60"></div>
                                     </div>
                                 </div>
 
                                 {/* Floating minimalist elements */}
                                 <div className="pointer-events-none absolute inset-0">
-                                    <div className="animate-float-dot absolute top-2 right-8 h-1 w-1 rounded-full bg-green-400"></div>
-                                    <div className="animate-float-dot-delayed absolute bottom-4 left-16 h-1 w-1 rounded-full bg-emerald-400"></div>
-                                    <div className="absolute top-8 right-20 h-0.5 w-2 animate-pulse bg-teal-400"></div>
+                                    <div className="animate-float-dot absolute top-2 right-8 h-1 w-1 rounded-full bg-[#00786f]"></div>
+                                    <div className="animate-float-dot-delayed absolute bottom-4 left-16 h-1 w-1 rounded-full bg-[#00786f]"></div>
+                                    <div className="absolute top-8 right-20 h-0.5 w-2 animate-pulse bg-[#00786f]"></div>
                                 </div>
                             </div>
                         </div>
@@ -310,13 +310,13 @@ export default function Welcome() {
                                                     key={index}
                                                     className={`rounded-2xl p-4 transition-all duration-500 ${
                                                         currentFeature === index
-                                                            ? 'scale-105 bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                                                            ? 'scale-105 bg-gradient-to-r from-[#00786f] to-[#00786f] text-white shadow-lg'
                                                             : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                                                     }`}
                                                 >
                                                     <div className="flex items-center space-x-4">
                                                         <div className={`rounded-xl p-2 ${currentFeature === index ? 'bg-white/20' : 'bg-white'}`}>
-                                                            <div className={currentFeature === index ? 'text-white' : 'text-green-600'}>
+                                                            <div className={currentFeature === index ? 'text-white' : 'text-[#00786f]'}>
                                                                 {feature.icon}
                                                             </div>
                                                         </div>
