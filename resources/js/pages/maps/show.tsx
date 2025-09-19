@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import GoogleSheetsIcon from '@/components/icons/GoogleSheetsIcon';
 import AppLayout from '@/layouts/app-layout';
@@ -295,9 +295,40 @@ export default function MapShow({ map, isOwner }: Props) {
                                                 </div>
                                             </div>
                                         </DialogTrigger>
-                                        <DialogContent className="max-h-[90vh] max-w-7xl p-4 bg-white border border-slate-200 rounded-2xl">
-                                            <div className="relative rounded-xl overflow-hidden shadow-xl">
-                                                <img src={map.map_image_url} alt={map.title} className="h-auto max-h-[90vh] w-full object-contain rounded-xl" />
+                                        <DialogContent className="p-0 m-0 border-0 bg-transparent max-w-none max-h-none" style={{ width: '100vw', height: '100vh' }}>
+                                            <div 
+                                                className="fixed inset-0 bg-black flex items-center justify-center"
+                                                style={{ zIndex: 9999 }}
+                                                onClick={(e) => {
+                                                    if (e.target === e.currentTarget) {
+                                                        const closeButton = e.currentTarget.querySelector('[data-slot="dialog-close"]') as HTMLButtonElement;
+                                                        closeButton?.click();
+                                                    }
+                                                }}
+                                            >
+                                                <img 
+                                                    src={map.map_image_url} 
+                                                    alt={map.title} 
+                                                    className="max-w-full max-h-full w-auto h-auto object-contain"
+                                                    style={{ 
+                                                        maxWidth: '100vw',
+                                                        maxHeight: '100vh',
+                                                        width: 'auto',
+                                                        height: 'auto'
+                                                    }}
+                                                />
+                                                {/* Close button */}
+                                                <DialogClose asChild>
+                                                    <button 
+                                                        className="fixed top-4 right-4 p-3 bg-red-600 hover:bg-red-700 rounded-full text-white transition-all duration-200 shadow-lg"
+                                                        style={{ zIndex: 10000 }}
+                                                        title="Close full screen view (ESC)"
+                                                    >
+                                                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
+                                                </DialogClose>
                                             </div>
                                         </DialogContent>
                                     </Dialog>
