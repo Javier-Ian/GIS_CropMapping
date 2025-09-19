@@ -317,18 +317,6 @@ export default function MapShow({ map, isOwner }: Props) {
                                                         height: 'auto'
                                                     }}
                                                 />
-                                                {/* Close button */}
-                                                <DialogClose asChild>
-                                                    <button 
-                                                        className="fixed top-4 right-4 p-3 bg-red-600 hover:bg-red-700 rounded-full text-white transition-all duration-200 shadow-lg"
-                                                        style={{ zIndex: 10000 }}
-                                                        title="Close full screen view (ESC)"
-                                                    >
-                                                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                                                        </svg>
-                                                    </button>
-                                                </DialogClose>
                                             </div>
                                         </DialogContent>
                                     </Dialog>
