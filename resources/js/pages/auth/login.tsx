@@ -72,32 +72,32 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         <div className="relative">
                             <div className="flex justify-center space-x-4 mb-6">
                                 <div className="relative">
-                                    <MapPin className="w-8 h-8 text-[#00786f] animate-bounce" style={{ animationDelay: '0ms' }} />
+                                    <MapPin className="w-8 h-8 text-white animate-bounce" style={{ animationDelay: '0ms' }} />
                                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full animate-ping" style={{ animationDelay: '200ms' }}></div>
                                 </div>
                                 <div className="relative">
-                                    <Satellite className="w-8 h-8 text-[#00786f] animate-bounce" style={{ animationDelay: '200ms' }} />
+                                    <Satellite className="w-8 h-8 text-white animate-bounce" style={{ animationDelay: '200ms' }} />
                                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: '400ms' }}></div>
                                 </div>
                                 <div className="relative">
-                                    <Navigation className="w-8 h-8 text-[#00786f] animate-bounce" style={{ animationDelay: '400ms' }} />
+                                    <Navigation className="w-8 h-8 text-white animate-bounce" style={{ animationDelay: '400ms' }} />
                                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-400 rounded-full animate-ping" style={{ animationDelay: '600ms' }}></div>
                                 </div>
                                 <div className="relative">
-                                    <Globe className="w-8 h-8 text-cyan-400 animate-bounce" style={{ animationDelay: '600ms' }} />
+                                    <Globe className="w-8 h-8 text-white animate-bounce" style={{ animationDelay: '600ms' }} />
                                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-pink-400 rounded-full animate-ping" style={{ animationDelay: '800ms' }}></div>
                                 </div>
                             </div>
                             
                             {/* Orbital animation around icons */}
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-32 h-32 border-2 border-[#00786f]/30 rounded-full animate-spin" style={{ animationDuration: '3s' }}>
-                                    <div className="w-2 h-2 bg-[#00786f] rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1"></div>
+                                <div className="w-32 h-32 border-2 border-white/40 rounded-full animate-spin" style={{ animationDuration: '3s' }}>
+                                    <div className="w-2 h-2 bg-white rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1"></div>
                                 </div>
                             </div>
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-40 h-40 border border-[#00786f]/20 rounded-full animate-spin" style={{ animationDuration: '4s', animationDirection: 'reverse' }}>
-                                    <div className="w-1.5 h-1.5 bg-[#00786f] rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1"></div>
+                                <div className="w-40 h-40 border border-white/30 rounded-full animate-spin" style={{ animationDuration: '4s', animationDirection: 'reverse' }}>
+                                    <div className="w-1.5 h-1.5 bg-white rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1"></div>
                                 </div>
                             </div>
                         </div>
@@ -111,21 +111,21 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                  loadingProgress < 95 ? "Preparing dashboard..." :
                                  "Almost ready!"}
                             </h2>
-                            <p className="text-[#00786f]/70">Accessing your GIS mapping workspace</p>
+                            <p className="text-white/80">Accessing your GIS mapping workspace</p>
                         </div>
 
                         {/* Custom Progress Bar */}
                         <div className="w-80 mx-auto space-y-3">
-                            <div className="relative h-3 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
+                            <div className="relative h-3 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm border border-white/30">
                                 <div 
-                                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#00786f] via-[#00786f] to-[#00786f] rounded-full transition-all duration-500 ease-out"
+                                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-white via-cyan-200 to-blue-200 rounded-full transition-all duration-500 ease-out"
                                     style={{ width: `${loadingProgress}%` }}
                                 >
-                                    <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse"></div>
-                                    <div className="absolute right-0 top-0 w-4 h-full bg-white/40 rounded-full blur-sm"></div>
+                                    <div className="absolute inset-0 bg-white/30 rounded-full animate-pulse"></div>
+                                    <div className="absolute right-0 top-0 w-4 h-full bg-white/50 rounded-full blur-sm"></div>
                                 </div>
                             </div>
-                            <div className="flex justify-between text-sm text-[#00786f]/70">
+                            <div className="flex justify-between text-sm text-white/90">
                                 <span>Loading...</span>
                                 <span>{loadingProgress}%</span>
                             </div>
@@ -133,9 +133,9 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
                         {/* Animated Data Points */}
                         <div className="flex justify-center space-x-2">
-                            <div className="w-2 h-2 bg-[#00786f] rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
-                            <div className="w-2 h-2 bg-[#00786f] rounded-full animate-pulse" style={{ animationDelay: '200ms' }}></div>
-                            <div className="w-2 h-2 bg-[#00786f] rounded-full animate-pulse" style={{ animationDelay: '400ms' }}></div>
+                            <div className="w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
+                            <div className="w-2 h-2 bg-cyan-200 rounded-full animate-pulse" style={{ animationDelay: '200ms' }}></div>
+                            <div className="w-2 h-2 bg-blue-200 rounded-full animate-pulse" style={{ animationDelay: '400ms' }}></div>
                             <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '600ms' }}></div>
                             <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '800ms' }}></div>
                         </div>
