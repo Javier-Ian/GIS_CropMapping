@@ -50,16 +50,16 @@ export function LogoutLoadingOverlay() {
     const currentText = logoutSteps[currentStep]?.text || "Signing you out...";
 
     return (
-        <div className="fixed inset-0 z-50 bg-gradient-to-br from-red-900/95 via-orange-900/95 to-amber-900/95 backdrop-blur-sm flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-gradient-to-br from-cyan-900/95 via-teal-900/95 to-emerald-900/95 backdrop-blur-sm flex items-center justify-center">
             <div className="text-center space-y-8 p-8">
                 {/* Main Logout Icon Animation */}
                 <div className="relative">
                     <div className="flex justify-center mb-6">
                         <div className="relative">
-                            <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-orange-600 rounded-3xl flex items-center justify-center shadow-2xl animate-pulse">
+                            <div className="w-20 h-20 bg-gradient-to-br from-cyan-600 to-teal-700 rounded-3xl flex items-center justify-center shadow-2xl animate-pulse">
                                 <LogOut className="w-10 h-10 text-white animate-bounce" />
                             </div>
-                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-400 rounded-full animate-ping"></div>
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-cyan-400 rounded-full animate-ping"></div>
                         </div>
                     </div>
                     
@@ -106,21 +106,21 @@ export function LogoutLoadingOverlay() {
                             {currentText}
                         </h2>
                     </div>
-                    <p className="text-red-200">Securely ending your GIS session</p>
+                    <p className="text-cyan-100">Securely ending your GIS session</p>
                 </div>
 
                 {/* Progress Bar */}
                 <div className="w-80 mx-auto space-y-3">
                     <div className="relative h-3 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
                         <div 
-                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 rounded-full transition-all duration-500 ease-out"
+                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-300 rounded-full transition-all duration-500 ease-out"
                             style={{ width: `${loadingProgress}%` }}
                         >
                             <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse"></div>
                             <div className="absolute right-0 top-0 w-4 h-full bg-white/40 rounded-full blur-sm"></div>
                         </div>
                     </div>
-                    <div className="flex justify-between text-sm text-red-200">
+                    <div className="flex justify-between text-sm text-cyan-200">
                         <span>Logging out...</span>
                         <span>{loadingProgress}%</span>
                     </div>
