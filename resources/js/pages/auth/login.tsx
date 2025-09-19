@@ -77,7 +77,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         customClass: {
                             popup: 'animate__animated animate__fadeInDown',
                             title: 'text-gray-800 font-bold',
-                            content: 'text-gray-600',
+                            htmlContainer: 'text-gray-600',
                             confirmButton: 'hover:bg-[#00786f]/90 transition-colors duration-200'
                         },
                         showClass: {
