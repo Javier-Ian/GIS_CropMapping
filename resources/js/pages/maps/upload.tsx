@@ -97,6 +97,7 @@ export default function MapUpload() {
                     title: 'Map Uploaded!',
                     text: 'Your map has been uploaded successfully.',
                     confirmButtonText: 'Go to Dashboard',
+                    confirmButtonColor: '#00786f',
                 }).then(() => {
                     router.visit('/dashboard');
                 });

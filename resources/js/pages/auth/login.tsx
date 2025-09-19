@@ -1,6 +1,7 @@
 import { Head, useForm, Link, router } from '@inertiajs/react';
 import { LoaderCircle, Globe, LogIn, MapPin, Satellite, Navigation } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -57,6 +58,37 @@ export default function Login({ status, canResetPassword }: LoginProps) {
         e.preventDefault();
         post('/login', {
             onFinish: () => reset('password'),
+            onError: (errors) => {
+                // Show SweetAlert for authentication errors
+                if (errors.email || errors.password) {
+                    Swal.fire({
+                        title: '🔒 Authentication Failed',
+                        text: 'Invalid email or password. Please check your credentials and try again.',
+                        icon: 'error',
+                        confirmButtonText: 'Try Again',
+                        confirmButtonColor: '#00786f',
+                        background: '#ffffff',
+                        color: '#374151',
+                        backdrop: `
+                            rgba(0, 120, 111, 0.1)
+                            left top
+                            no-repeat
+                        `,
+                        customClass: {
+                            popup: 'animate__animated animate__fadeInDown',
+                            title: 'text-gray-800 font-bold',
+                            content: 'text-gray-600',
+                            confirmButton: 'hover:bg-[#00786f]/90 transition-colors duration-200'
+                        },
+                        showClass: {
+                            popup: 'animate__animated animate__fadeInDown animate__faster'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOutUp animate__faster'
+                        }
+                    });
+                }
+            }
         });
     };
 

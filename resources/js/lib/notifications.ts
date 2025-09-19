@@ -8,6 +8,8 @@ export interface NotificationOptions {
     showCancelButton?: boolean;
     confirmButtonText?: string;
     cancelButtonText?: string;
+    confirmButtonColor?: string;
+    cancelButtonColor?: string;
     timer?: number;
     timerProgressBar?: boolean;
     position?: 'top' | 'top-start' | 'top-end' | 'center' | 'center-start' | 'center-end' | 'bottom' | 'bottom-start' | 'bottom-end';
@@ -39,6 +41,8 @@ class NotificationService {
     private defaultOptions: NotificationOptions = {
         position: 'center',
         showConfirmButton: true,
+        confirmButtonColor: '#00786f',
+        cancelButtonColor: '#6b7280',
         customClass: {
             popup: 'fade-in-animation',
             title: '',
@@ -213,6 +217,8 @@ class NotificationService {
         return this.confirm('Delete Map?', `Are you sure you want to delete "${mapTitle}"? This action cannot be undone.`, {
             confirmButtonText: 'Delete',
             cancelButtonText: 'Cancel',
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
             customClass: {
                 popup: 'error-notification ultra-bounce-animation',
                 confirmButton: 'danger-button',

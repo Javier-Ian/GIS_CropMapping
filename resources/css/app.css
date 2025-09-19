@@ -145,3 +145,24 @@
         min-height: 100vh;
     }
 }
+
+/* GLOBAL SWEETALERT TEAL THEME - FINAL OVERRIDE */
+@layer utilities {
+    /* Force all SweetAlert confirm buttons to use teal */
+    .swal2-confirm {
+        background: linear-gradient(145deg, #00786f, #10b981) !important;
+        border: none !important;
+        color: white !important;
+    }
+    
+    .swal2-confirm:hover {
+        background: linear-gradient(145deg, #065f5a, #00786f) !important;
+    }
+    
+    /* Override any default SweetAlert2 blue styles */
+    .swal2-styled.swal2-confirm {
+        background: linear-gradient(145deg, #00786f, #10b981) !important;
+        border-left-color: #00786f !important;
+        border-right-color: #00786f !important;
+    }
+}

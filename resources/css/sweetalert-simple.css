@@ -17,7 +17,7 @@
 }
 
 .swal2-confirm {
-    background: linear-gradient(145deg, #1e40af, #3b82f6) !important;
+    background: linear-gradient(145deg, #00786f, #10b981) !important;
     color: white !important;
     border: none !important;
     border-radius: 10px !important;
@@ -25,9 +25,67 @@
 }
 
 .royal-blue-button {
-    background: linear-gradient(145deg, #1e40af, #3b82f6) !important;
+    background: linear-gradient(145deg, #00786f, #10b981) !important;
     color: white !important;
     border: none !important;
     border-radius: 10px !important;
     padding: 12px 24px !important;
+}
+
+/* Additional teal button overrides */
+.swal2-confirm,
+.swal2-styled.swal2-confirm {
+    background: linear-gradient(145deg, #00786f, #10b981) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 12px 24px !important;
+    box-shadow: 0 4px 12px rgba(0, 120, 111, 0.4) !important;
+}
+
+.swal2-confirm:hover,
+.swal2-styled.swal2-confirm:hover {
+    background: linear-gradient(145deg, #065f5a, #00786f) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(0, 120, 111, 0.5) !important;
+}
+
+/* Override any blue button styles */
+button[style*="rgb(67, 116, 252)"],
+button[style*="#4374fc"],
+button[style*="#3085d6"] {
+    background: linear-gradient(145deg, #00786f, #10b981) !important;
+}
+
+/* Force teal for all SweetAlert action buttons */
+.swal2-actions button:not(.swal2-cancel) {
+    background: linear-gradient(145deg, #00786f, #10b981) !important;
+    color: white !important;
+}
+
+/* Global SweetAlert2 teal theme override - HIGHEST PRIORITY */
+.swal2-popup .swal2-actions button.swal2-confirm,
+.swal2-container .swal2-popup .swal2-actions button.swal2-confirm,
+div.swal2-container button.swal2-confirm {
+    background: linear-gradient(145deg, #00786f, #10b981) !important;
+    border-color: #00786f !important;
+    color: white !important;
+}
+
+.swal2-popup .swal2-actions button.swal2-confirm:hover,
+.swal2-container .swal2-popup .swal2-actions button.swal2-confirm:hover,
+div.swal2-container button.swal2-confirm:hover {
+    background: linear-gradient(145deg, #065f5a, #00786f) !important;
+    border-color: #065f5a !important;
+}
+
+/* Override SweetAlert2 default blue theme completely */
+.swal2-styled.swal2-confirm:not(.swal2-cancel) {
+    background: linear-gradient(145deg, #00786f, #10b981) !important;
+    border-left-color: #00786f !important;
+    border-right-color: #00786f !important;
+}
+
+.swal2-styled.swal2-confirm:not(.swal2-cancel):hover {
+    background: linear-gradient(145deg, #065f5a, #00786f) !important;
 }
