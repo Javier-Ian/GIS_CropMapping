@@ -1,5 +1,5 @@
 import { Head, useForm, Link, router } from '@inertiajs/react';
-import { LoaderCircle, Globe, LogIn, MapPin, Satellite, Navigation } from 'lucide-react';
+import { LoaderCircle, Globe, LogIn, MapPin, Satellite, Navigation, Eye, EyeOff } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
@@ -22,6 +22,7 @@ interface LoginProps {
 
 export default function Login({ status, canResetPassword }: LoginProps) {
     const [isVisible, setIsVisible] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
         email: '',
@@ -259,18 +260,28 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                                 </Link>
                                             )}
                                         </div>
-                                        <Input
-                                            id="password"
-                                            type="password"
-                                            required
-                                            tabIndex={2}
-                                            autoComplete="current-password"
-                                            value={data.password}
-                                            onChange={(e) => setData('password', e.target.value)}
-                                            disabled={processing}
-                                            placeholder="Enter your password"
-                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-[#00786f] focus:ring-[#00786f]/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500"
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                id="password"
+                                                type={showPassword ? "text" : "password"}
+                                                required
+                                                tabIndex={2}
+                                                autoComplete="current-password"
+                                                value={data.password}
+                                                onChange={(e) => setData('password', e.target.value)}
+                                                disabled={processing}
+                                                placeholder="Enter your password"
+                                                className="h-10 border-2 border-gray-200 rounded-xl focus:border-[#00786f] focus:ring-[#00786f]/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500 pr-10"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                                                tabIndex={-1}
+                                            >
+                                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                            </button>
+                                        </div>
                                         <InputError message={errors.password} />
                                     </div>
 

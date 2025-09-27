@@ -1,6 +1,7 @@
 import { Head, useForm, Link, router } from '@inertiajs/react';
-import { LoaderCircle, Globe, Key } from 'lucide-react';
+import { LoaderCircle, Globe, Key, Eye, EyeOff } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
+import { route } from 'ziggy-js';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,8 @@ type ResetPasswordForm = {
 
 export default function ForgotPassword({ status }: { status?: string }) {
     const [isVisible, setIsVisible] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const { data, setData, post, processing, errors } = useForm<Required<ResetPasswordForm>>({
         email: '',
         password: '',
@@ -85,7 +88,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                             <div className="text-center mb-6">
                                 <p className="text-gray-600 text-sm">
-                                    Enter your registered email address and create a new password.
+                                    Enter your registered email address and set your new password. Your password will be updated immediately.
                                 </p>
                             </div>
 
@@ -114,38 +117,58 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                     {/* New Password Field */}
                                     <div className="space-y-1">
                                         <Label htmlFor="password" className="text-gray-700 font-medium text-sm">New Password</Label>
-                                        <Input
-                                            id="password"
-                                            type="password"
-                                            name="password"
-                                            required
-                                            tabIndex={2}
-                                            autoComplete="new-password"
-                                            value={data.password}
-                                            onChange={(e) => setData('password', e.target.value)}
-                                            disabled={processing}
-                                            placeholder="Create a new secure password"
-                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-[#00786f] focus:ring-[#00786f]/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500"
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                id="password"
+                                                type={showPassword ? "text" : "password"}
+                                                name="password"
+                                                required
+                                                tabIndex={2}
+                                                autoComplete="new-password"
+                                                value={data.password}
+                                                onChange={(e) => setData('password', e.target.value)}
+                                                disabled={processing}
+                                                placeholder="Create a new secure password"
+                                                className="h-10 border-2 border-gray-200 rounded-xl focus:border-[#00786f] focus:ring-[#00786f]/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500 pr-10"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                                                tabIndex={-1}
+                                            >
+                                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                            </button>
+                                        </div>
                                         <InputError message={errors.password} />
                                     </div>
 
                                     {/* Confirm Password Field */}
                                     <div className="space-y-1">
                                         <Label htmlFor="password_confirmation" className="text-gray-700 font-medium text-sm">Confirm New Password</Label>
-                                        <Input
-                                            id="password_confirmation"
-                                            type="password"
-                                            name="password_confirmation"
-                                            required
-                                            tabIndex={3}
-                                            autoComplete="new-password"
-                                            value={data.password_confirmation}
-                                            onChange={(e) => setData('password_confirmation', e.target.value)}
-                                            disabled={processing}
-                                            placeholder="Confirm your new password"
-                                            className="h-10 border-2 border-gray-200 rounded-xl focus:border-[#00786f] focus:ring-[#00786f]/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500"
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                id="password_confirmation"
+                                                type={showConfirmPassword ? "text" : "password"}
+                                                name="password_confirmation"
+                                                required
+                                                tabIndex={3}
+                                                autoComplete="new-password"
+                                                value={data.password_confirmation}
+                                                onChange={(e) => setData('password_confirmation', e.target.value)}
+                                                disabled={processing}
+                                                placeholder="Confirm your new password"
+                                                className="h-10 border-2 border-gray-200 rounded-xl focus:border-[#00786f] focus:ring-[#00786f]/20 transition-all duration-300 text-gray-900 placeholder:text-gray-500 pr-10"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                                                tabIndex={-1}
+                                            >
+                                                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                            </button>
+                                        </div>
                                         <InputError message={errors.password_confirmation} />
                                     </div>
                                 </div>
@@ -165,16 +188,13 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 <div className="text-center pt-2">
                                     <p className="text-gray-600 text-sm">
                                         Remember your password?{' '}
-                                        <button
-                                            onClick={() => {
-                                                console.log('Navigating to login page from form');
-                                                router.visit('/login');
-                                            }}
+                                        <Link
+                                            href={route('login')}
                                             tabIndex={5}
                                             className="font-medium text-[#00786f] hover:text-[#00786f]/80 transition-colors duration-300 cursor-pointer underline"
                                         >
                                             Sign in here
-                                        </button>
+                                        </Link>
                                     </p>
                                 </div>
                             </form>

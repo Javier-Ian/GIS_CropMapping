@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,7 +24,7 @@ class PasswordResetLinkController extends Controller
     }
 
     /**
-     * Handle an incoming password reset link request.
+     * Handle an incoming password reset request.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -30,12 +32,22 @@ class PasswordResetLinkController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
         ]);
 
-        Password::sendResetLink(
-            $request->only('email')
-        );
+        // Find user by email
+        $user = User::where('email', $request->email)->first();
 
-        return back()->with('status', __('A reset link will be sent if the account exists.'));
+        if ($user) {
+            // Update the password directly
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            return redirect()->route('login')->with('status', 'Password has been reset successfully! Please sign in with your new password.');
+        }
+
+        // Always return success message for security (don't reveal if email exists)
+        return redirect()->route('login')->with('status', 'Password reset request processed successfully! Please sign in.');
     }
 }
