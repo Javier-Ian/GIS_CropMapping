@@ -366,7 +366,7 @@ export default function MapUpload() {
                                 </div>
                                 <div>
                                     <CardTitle className="text-gray-800 font-bold text-xl">Map Preview Image</CardTitle>
-                                    <CardDescription className="text-gray-600 font-medium">Upload a preview image of your map (PNG, JPG, JPEG)</CardDescription>
+                                    <CardDescription className="text-gray-600 font-medium">Upload a preview image of your map (PNG, JPG, JPEG) - No size limit</CardDescription>
                                 </div>
                             </div>
                         </CardHeader>

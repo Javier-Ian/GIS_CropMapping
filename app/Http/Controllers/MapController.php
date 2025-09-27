@@ -50,7 +50,7 @@ class MapController extends Controller
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'barangay' => 'required|string|in:Butong,Salawagan,San Jose',
-                'map_image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240', // 10MB
+                'map_image' => 'nullable|image|mimes:jpeg,png,jpg', // No size limit
                 'gis_files.*' => 'nullable|file|max:51200', // 50MB per file - removed MIME validation for now
             ]);
 
@@ -160,6 +160,19 @@ class MapController extends Controller
             abort(403, 'Unauthorized access to this map.');
         }
 
+        // Add the full URL for the map image if it exists
+        if ($map->map_image_path) {
+            $map->map_image_url = Storage::url($map->map_image_path);
+        }
+
+        // Add full URLs for GIS files if they exist
+        if ($map->gis_file_paths) {
+            $map->gis_file_paths = collect($map->gis_file_paths)->map(function ($file) {
+                $file['url'] = Storage::url($file['path']);
+                return $file;
+            })->toArray();
+        }
+
         return Inertia::render('maps/edit', [
             'map' => $map,
         ]);
@@ -176,8 +189,12 @@ class MapController extends Controller
             'map_id' => $map->id,
             'title' => $request->title,
             'description' => $request->description,
+            'barangay' => $request->barangay,
             'has_map_image' => $request->hasFile('map_image'),
             'has_gis_files' => $request->hasFile('gis_files'),
+            'gis_files_count' => $request->hasFile('gis_files') ? count($request->file('gis_files')) : 0,
+            'remove_gis_files' => $request->input('remove_gis_files'),
+            'all_input' => $request->all(),
         ]);
 
         try {
@@ -185,11 +202,15 @@ class MapController extends Controller
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'barangay' => 'required|string|in:Butong,Salawagan,San Jose',
-                'map_image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240', // 10MB
+                'map_image' => 'nullable|image|mimes:jpeg,png,jpg', // No size limit
+                'gis_files' => 'nullable|array',
                 'gis_files.*' => 'nullable|file|max:51200', // 50MB per file
                 'remove_map_image' => 'nullable|boolean',
                 'remove_gis_files' => 'nullable|array',
+                'remove_gis_files.*' => 'nullable|integer',
             ]);
+
+            \Log::info('Validation passed for map update', $validated);
 
             $mapImagePath = $map->map_image_path;
             $gisFilePaths = $map->gis_file_paths ?: [];
@@ -211,51 +232,85 @@ class MapController extends Controller
             }
 
             // Handle GIS files removal
-            if ($request->has('remove_gis_files')) {
+            if ($request->has('remove_gis_files') && is_array($request->input('remove_gis_files'))) {
                 $filesToRemove = $request->input('remove_gis_files', []);
+                \Log::info('Removing GIS files', ['indices' => $filesToRemove, 'current_files_count' => count($gisFilePaths)]);
+                
+                // Sort indices in descending order to avoid index shifting issues
+                rsort($filesToRemove);
+                
                 foreach ($filesToRemove as $index) {
                     if (isset($gisFilePaths[$index])) {
+                        \Log::info('Deleting file', ['index' => $index, 'file' => $gisFilePaths[$index]]);
                         Storage::disk('public')->delete($gisFilePaths[$index]['path']);
                         unset($gisFilePaths[$index]);
                     }
                 }
                 $gisFilePaths = array_values($gisFilePaths); // Re-index array
+                \Log::info('Files after removal', ['count' => count($gisFilePaths)]);
             }
 
             // Handle new GIS files upload
             if ($request->hasFile('gis_files')) {
-                foreach ($request->file('gis_files') as $index => $file) {
-                    $filename = $file->getClientOriginalName();
-                    $path = $file->storeAs('maps/gis', time().'_'.$filename, 'public');
-                    $gisFilePaths[] = [
-                        'original_name' => $filename,
-                        'path' => $path,
-                        'size' => $file->getSize(),
-                        'extension' => $file->getClientOriginalExtension(),
-                    ];
+                $uploadedFiles = $request->file('gis_files');
+                \Log::info('Uploading new GIS files', ['count' => count($uploadedFiles)]);
+                
+                foreach ($uploadedFiles as $index => $file) {
+                    if ($file && $file->isValid()) {
+                        $filename = $file->getClientOriginalName();
+                        $path = $file->storeAs('maps/gis', time().'_'.$index.'_'.$filename, 'public');
+                        $gisFilePaths[] = [
+                            'original_name' => $filename,
+                            'path' => $path,
+                            'size' => $file->getSize(),
+                            'extension' => $file->getClientOriginalExtension(),
+                        ];
+                        \Log::info('File uploaded', ['name' => $filename, 'path' => $path]);
+                    }
                 }
-                \Log::info('GIS files updated', ['count' => count($request->file('gis_files'))]);
+                \Log::info('GIS files upload completed', ['total_files' => count($gisFilePaths)]);
             }
 
             // Update the map record
-            $map->update([
+            $updateData = [
                 'title' => $request->title,
                 'description' => $request->description,
                 'barangay' => $request->barangay,
                 'map_image_path' => $mapImagePath,
                 'gis_file_paths' => $gisFilePaths,
-            ]);
+            ];
+            
+            \Log::info('Updating map with data', $updateData);
+            
+            $map->update($updateData);
 
-            \Log::info('Map updated successfully', ['map_id' => $map->id]);
+            \Log::info('Map updated successfully', [
+                'map_id' => $map->id,
+                'title' => $map->title,
+                'files_count' => count($gisFilePaths),
+                'has_image' => !empty($mapImagePath)
+            ]);
 
             return redirect()
                 ->route('maps.show', $map)
                 ->with('success', 'Map updated successfully!');
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation failed for map update', [
+                'map_id' => $map->id,
+                'errors' => $e->errors(),
+                'input' => $request->all()
+            ]);
+            return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            \Log::error('Failed to update map', ['error' => $e->getMessage()]);
+            \Log::error('Failed to update map', [
+                'map_id' => $map->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all()
+            ]);
 
-            return back()->withErrors(['general' => 'Failed to update map: '.$e->getMessage()]);
+            return back()->withErrors(['general' => 'Failed to update map: '.$e->getMessage()])->withInput();
         }
     }
 

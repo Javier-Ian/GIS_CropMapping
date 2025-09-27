@@ -11,6 +11,7 @@ import { useFlashNotifications } from '@/hooks/use-flash-notifications';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { route } from 'ziggy-js';
 import { AlertCircle, Eye, FileText, MapPin, Save, Upload, X, Sparkles, Activity, Database, Layers, Camera, ArrowLeft, CheckCircle, FileUp, Download, FileCheck, Info, Map } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -51,7 +52,12 @@ export default function MapEdit({ map, errors }: Props) {
         setIsLoaded(true);
     }, []);
 
-    const { data, setData, post, processing } = useForm({
+    useEffect(() => {
+        // Ensure form data is in sync with filesToDelete state
+        setData('remove_gis_files', filesToDelete);
+    }, [filesToDelete]);
+
+    const { data, setData, post, processing, errors: formErrors } = useForm({
         title: map.title,
         description: map.description,
         barangay: map.barangay || '',
@@ -167,8 +173,12 @@ export default function MapEdit({ map, errors }: Props) {
     };
 
     const handleFileDeleteToggle = (index: number) => {
-        const newFilesToDelete = filesToDelete.includes(index) ? filesToDelete.filter((i) => i !== index) : [...filesToDelete, index];
+        const newFilesToDelete = filesToDelete.includes(index) 
+            ? filesToDelete.filter((i) => i !== index) 
+            : [...filesToDelete, index];
 
+        console.log('Toggle file deletion', { index, oldArray: filesToDelete, newArray: newFilesToDelete });
+        
         setFilesToDelete(newFilesToDelete);
         setData('remove_gis_files', newFilesToDelete);
     };
@@ -190,8 +200,40 @@ export default function MapEdit({ map, errors }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(`/maps/${map.id}`, {
+        
+        const submissionData = {
+            title: data.title,
+            description: data.description,
+            barangay: data.barangay,
+            map_image: data.map_image,
+            gis_files: data.gis_files,
+            remove_gis_files: data.remove_gis_files,
+            _method: 'PUT'
+        };
+        
+        console.log('Form submission started', {
+            submissionData,
+            filesToDelete,
+            currentFiles: map.gis_file_paths,
+            hasMapImage: !!data.map_image,
+            hasGisFiles: !!data.gis_files && data.gis_files.length > 0,
+            removeGisFiles: data.remove_gis_files
+        });
+        
+        post(route('maps.update', map.id), {
             forceFormData: true,
+            onStart: () => {
+                console.log('Request started');
+            },
+            onSuccess: (response) => {
+                console.log('Update successful', response);
+            },
+            onError: (errors) => {
+                console.error('Update failed', errors);
+            },
+            onFinish: () => {
+                console.log('Request finished');
+            }
         });
     };
 
@@ -302,6 +344,26 @@ export default function MapEdit({ map, errors }: Props) {
                     </div>
                 </div>
 
+                {/* Debug and Error Information */}
+                {(errors.general || (formErrors && Object.keys(formErrors).length > 0)) && (
+                    <Alert className="border-red-200 bg-red-50">
+                        <AlertCircle className="h-4 w-4 text-red-600" />
+                        <AlertDescription className="text-red-700 font-medium">
+                            {errors.general || 'Please check the form for errors'}
+                            {formErrors && Object.keys(formErrors).length > 0 && (
+                                <div className="mt-2">
+                                    <strong>Form Errors:</strong>
+                                    <ul className="list-disc list-inside">
+                                        {Object.entries(formErrors).map(([key, value]) => (
+                                            <li key={key}>{key}: {Array.isArray(value) ? value.join(', ') : value}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </AlertDescription>
+                    </Alert>
+                )}
+
                 <form onSubmit={handleSubmit} className={`grid gap-8 lg:grid-cols-3 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                     {/* Form Section */}
                     <div className="space-y-8 lg:col-span-2">
@@ -330,12 +392,12 @@ export default function MapEdit({ map, errors }: Props) {
                                         onChange={(e) => setData('title', e.target.value)}
                                         placeholder="Enter map title"
                                         required
-                                        className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${errors.title ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
+                                        className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${(errors.title || formErrors?.title) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                     />
-                                    {errors.title && (
+                                    {(errors.title || formErrors?.title) && (
                                         <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
                                             <AlertCircle className="h-4 w-4" />
-                                            {errors.title}
+                                            {errors.title || formErrors?.title}
                                         </div>
                                     )}
                                 </div>
@@ -350,12 +412,12 @@ export default function MapEdit({ map, errors }: Props) {
                                         value={data.description}
                                         onChange={(e) => setData('description', e.target.value)}
                                         placeholder="Describe your map"
-                                        className={`min-h-[120px] border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${errors.description ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
+                                        className={`min-h-[120px] border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${(errors.description || formErrors?.description) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                     />
-                                    {errors.description && (
+                                    {(errors.description || formErrors?.description) && (
                                         <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
                                             <AlertCircle className="h-4 w-4" />
-                                            {errors.description}
+                                            {errors.description || formErrors?.description}
                                         </div>
                                     )}
                                 </div>
@@ -366,7 +428,7 @@ export default function MapEdit({ map, errors }: Props) {
                                         Barangay Location
                                     </Label>
                                     <Select value={data.barangay} onValueChange={(value) => setData('barangay', value)}>
-                                        <SelectTrigger className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${errors.barangay ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}>
+                                        <SelectTrigger className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${(errors.barangay || formErrors?.barangay) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}>
                                             <SelectValue placeholder="Select barangay location..." />
                                         </SelectTrigger>
                                         <SelectContent className="rounded-xl border-gray-200">
@@ -390,10 +452,10 @@ export default function MapEdit({ map, errors }: Props) {
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
-                                    {errors.barangay && (
+                                    {(errors.barangay || formErrors?.barangay) && (
                                         <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
                                             <AlertCircle className="h-4 w-4" />
-                                            {errors.barangay}
+                                            {errors.barangay || formErrors?.barangay}
                                         </div>
                                     )}
                                     <p className="text-sm text-gray-600 flex items-center gap-2">
@@ -413,7 +475,7 @@ export default function MapEdit({ map, errors }: Props) {
                                     </div>
                                     <div>
                                         <CardTitle className="text-gray-800 font-bold text-xl">Map Preview Image</CardTitle>
-                                        <CardDescription className="text-gray-600 font-medium">Upload a new preview image for your map (optional)</CardDescription>
+                                        <CardDescription className="text-gray-600 font-medium">Upload a new preview image for your map (optional) - No size limit</CardDescription>
                                     </div>
                                 </div>
                             </CardHeader>
@@ -445,12 +507,12 @@ export default function MapEdit({ map, errors }: Props) {
                                             type="file" 
                                             accept="image/*" 
                                             onChange={handleImageChange}
-                                            className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl file:bg-teal-700 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-teal-800 ${errors.map_image ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
+                                            className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl file:bg-teal-700 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-teal-800 ${(errors.map_image || formErrors?.map_image) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                         />
-                                        {errors.map_image && (
+                                        {(errors.map_image || formErrors?.map_image) && (
                                             <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
                                                 <AlertCircle className="h-4 w-4" />
-                                                {errors.map_image}
+                                                {errors.map_image || formErrors?.map_image}
                                             </div>
                                         )}
                                     </div>
@@ -517,14 +579,14 @@ export default function MapEdit({ map, errors }: Props) {
                                             id="gis_files"
                                             type="file"
                                             multiple
-                                            accept=".shp,.kml,.kmz,.geojson,.gpx,.gdb,.tif,.tiff"
+                                            accept=".shp,.kml,.kmz,.geojson,.gpx,.gdb,.tif,.tiff,.qgz,.qgs,.qlr,.qml,.qmd,.shx,.dbf,.prj,.cpg,.json,.gml,.sqlite,.db,.accdb,.nc,.hdf,.csv,.txt,.xlsx,.xls,.ods,.mdb,.las,.laz,.ply,.obj,.dae,.fbx,.3ds,.asc,.xyz,.png,.jpg,.jpeg"
                                             onChange={handleGisFilesChange}
-                                            className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl file:bg-teal-700 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-teal-800 ${errors.gis_files ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
+                                            className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl file:bg-teal-700 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-teal-800 ${(errors.gis_files || formErrors?.gis_files) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                         />
-                                        {errors.gis_files && (
+                                        {(errors.gis_files || formErrors?.gis_files) && (
                                             <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
                                                 <AlertCircle className="h-4 w-4" />
-                                                {errors.gis_files}
+                                                {errors.gis_files || formErrors?.gis_files}
                                             </div>
                                         )}
                                     </div>
