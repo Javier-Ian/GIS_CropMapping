@@ -8,7 +8,7 @@ import { useFlashNotifications } from '@/hooks/use-flash-notifications';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { FileType, MapPin, Upload, Sparkles, CheckCircle, AlertCircle, Camera, Database, Layers, Map } from 'lucide-react';
+import { FileType, MapPin, Upload, Sparkles, CheckCircle, AlertCircle, Camera, Database, Layers, Map, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
@@ -303,7 +303,7 @@ export default function MapUpload() {
                                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
                                     placeholder="Describe your map, its purpose, data sources, agricultural insights, etc..."
                                     rows={4}
-                                    className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${errors.description ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
+                                    className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl placeholder:text-gray-400 bg-white ${errors.description ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                 />
                                 {errors.description && (
                                     <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
@@ -559,9 +559,9 @@ export default function MapUpload() {
                                 setMapImage(null);
                                 setGisFiles(null);
                             }}
-                            className="flex items-center gap-3 border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-800 transform hover:scale-105 transition-all duration-300 px-8 py-4 rounded-2xl font-bold text-lg min-w-[150px]"
+                            className="flex items-center gap-3 bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900 transform hover:scale-105 transition-all duration-300 px-8 py-4 rounded-2xl font-bold text-lg min-w-[150px] shadow-md hover:shadow-lg"
                         >
-                            <Sparkles className="h-5 w-5" />
+                            <X className="h-5 w-5" />
                             Clear
                         </Button>
                     </div>
