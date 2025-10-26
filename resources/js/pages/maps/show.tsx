@@ -200,7 +200,6 @@ export default function MapShow({ map, isOwner }: Props) {
                             </div>
                             <div>
                                 <h1 className="text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2 mb-1">
-                                    <Sparkles className="h-6 w-6 text-slate-500 transform transition-all duration-300 hover:rotate-12 hover:scale-110" />
                                     {map.title}
                                 </h1>
                                 <p className="text-slate-500 flex items-center gap-2 font-medium text-sm">
@@ -218,7 +217,7 @@ export default function MapShow({ map, isOwner }: Props) {
                             </Link>
                             {isOwner && (
                                 <Link href={`/maps/${map.id}/edit`}>
-                                    <Button size="sm" className="flex items-center gap-2 bg-blue-400 hover:bg-blue-500 text-white transform hover:scale-105 transition-all duration-300 shadow-sm rounded-lg font-semibold">
+                                    <Button size="sm" className="flex items-center gap-2 bg-teal-700 hover:bg-teal-800 text-white transform hover:scale-105 transition-all duration-300 shadow-sm rounded-lg font-semibold">
                                         <Edit3 className="h-4 w-4" />
                                         Edit
                                     </Button>
