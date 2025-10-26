@@ -255,7 +255,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                         <Button
                             onClick={() => setShowFilters(!showFilters)}
                             variant="outline"
-                            className="flex items-center gap-2 border-teal-200 text-teal-700 hover:bg-teal-50 hover:border-teal-300 transition-all duration-300"
+                            className="flex items-center gap-2 bg-white border-2 border-teal-300 text-teal-700 hover:bg-teal-50 hover:border-teal-400 transition-all duration-300 shadow-md hover:shadow-lg rounded-xl font-semibold"
                         >
                             <Filter className="h-4 w-4" />
                             Filters
@@ -264,7 +264,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
 
                     {/* Filter Panel */}
                     {showFilters && (
-                        <div className="flex items-center gap-4 p-4 bg-teal-50 rounded-2xl border border-teal-200 shadow-sm hover:shadow-md transition-all duration-500 group">
+                        <div className="flex items-center gap-4 p-4 bg-white rounded-2xl border-2 border-teal-200 shadow-lg hover:shadow-xl transition-all duration-500 group">
                             <div className="flex items-center gap-2 text-sm font-semibold text-teal-800 group-hover:text-teal-900 transition-colors">
                                 <div className="p-1.5 rounded-lg bg-teal-100 group-hover:bg-teal-200 transition-colors">
                                     <Filter className="h-4 w-4 text-teal-700" />
@@ -285,23 +285,23 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                 }
                                 // When switching to monthly, keep the year if it's set
                             }}>
-                                <SelectTrigger className="w-36 h-9 text-sm border-teal-200 bg-white hover:bg-white focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg shadow-sm transition-all duration-200">
-                                    <SelectValue />
+                                <SelectTrigger className="w-36 h-9 text-sm font-semibold border-2 border-teal-200 bg-white hover:bg-teal-50 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg shadow-sm transition-all duration-200 text-gray-900">
+                                    <SelectValue className="text-gray-900 font-semibold" />
                                 </SelectTrigger>
-                                <SelectContent className="rounded-lg border-teal-200 shadow-lg">
-                                    <SelectItem value="all" className="hover:bg-teal-50 focus:bg-teal-50">
+                                <SelectContent className="rounded-xl border-2 border-teal-200 shadow-xl bg-white">
+                                    <SelectItem value="all" className="text-gray-900 font-semibold hover:bg-green-100 hover:text-black focus:bg-green-200 focus:text-black rounded-lg cursor-pointer">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-2 h-2 rounded-full bg-teal-400"></div>
+                                            <div className="w-2 h-2 rounded-full bg-teal-500"></div>
                                             All Maps
                                         </div>
                                     </SelectItem>
-                                    <SelectItem value="yearly" className="hover:bg-teal-50 focus:bg-teal-50">
+                                    <SelectItem value="yearly" className="text-gray-900 font-semibold hover:bg-green-100 hover:text-black focus:bg-green-200 focus:text-black rounded-lg cursor-pointer">
                                         <div className="flex items-center gap-2">
                                             <Calendar className="h-3 w-3 text-teal-600" />
                                             By Year
                                         </div>
                                     </SelectItem>
-                                    <SelectItem value="monthly" className="hover:bg-teal-50 focus:bg-teal-50">
+                                    <SelectItem value="monthly" className="text-gray-900 font-semibold hover:bg-green-100 hover:text-black focus:bg-green-200 focus:text-black rounded-lg cursor-pointer">
                                         <div className="flex items-center gap-2">
                                             <Clock className="h-3 w-3 text-teal-600" />
                                             By Month
@@ -320,12 +320,12 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                             setSelectedMonth('');
                                         }
                                     }}>
-                                        <SelectTrigger className="w-28 h-9 text-sm border-teal-200 bg-white hover:bg-white focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg shadow-sm transition-all duration-200">
-                                            <SelectValue placeholder="Year" />
+                                        <SelectTrigger className="w-28 h-9 text-sm font-semibold border-2 border-teal-200 bg-white hover:bg-teal-50 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg shadow-sm transition-all duration-200 text-gray-900">
+                                            <SelectValue placeholder="Year" className="text-gray-900 font-semibold" />
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-lg border-teal-200 shadow-lg">
+                                        <SelectContent className="rounded-xl border-2 border-teal-200 shadow-xl bg-white">
                                             {availableYears.map((year) => (
-                                                <SelectItem key={year} value={year.toString()} className="hover:bg-teal-50 focus:bg-teal-50">
+                                                <SelectItem key={year} value={year.toString()} className="text-gray-900 font-semibold hover:bg-green-100 hover:text-black focus:bg-green-200 focus:text-black rounded-lg cursor-pointer">
                                                     {year}
                                                 </SelectItem>
                                             ))}
@@ -338,12 +338,12 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                 <>
                                     <div className="h-6 w-px bg-teal-200"></div>
                                     <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                                        <SelectTrigger className="w-36 h-9 text-sm border-teal-200 bg-white hover:bg-white focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg shadow-sm transition-all duration-200">
-                                            <SelectValue placeholder="Month" />
+                                        <SelectTrigger className="w-36 h-9 text-sm font-semibold border-2 border-teal-200 bg-white hover:bg-teal-50 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg shadow-sm transition-all duration-200 text-gray-900">
+                                            <SelectValue placeholder="Month" className="text-gray-900 font-semibold" />
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-lg border-teal-200 shadow-lg">
+                                        <SelectContent className="rounded-xl border-2 border-teal-200 shadow-xl bg-white">
                                             {availableMonths.map((month) => (
-                                                <SelectItem key={month} value={month.toString()} className="hover:bg-teal-50 focus:bg-teal-50">
+                                                <SelectItem key={month} value={month.toString()} className="text-gray-900 font-semibold hover:bg-green-100 hover:text-black focus:bg-green-200 focus:text-black rounded-lg cursor-pointer">
                                                     {new Date(2000, month, 1).toLocaleString('default', { month: 'long' })}
                                                 </SelectItem>
                                             ))}
@@ -362,7 +362,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                 }}
                                 variant="ghost"
                                 size="sm"
-                                className="h-9 px-4 text-sm text-teal-700 hover:text-teal-800 hover:bg-teal-100 rounded-lg border border-teal-200 bg-white hover:bg-white shadow-sm transition-all duration-200"
+                                className="h-9 px-4 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg border-2 border-gray-300 bg-white hover:border-gray-400 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
                             >
                                 <X className="h-4 w-4 mr-2" />
                                 Clear
