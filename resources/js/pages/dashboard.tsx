@@ -9,7 +9,7 @@ import AppLayout from '@/layouts/app-layout';
 import { notify } from '@/lib/notifications';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Eye, FileText, MapPin, MoreHorizontal, Pencil, Plus, Trash2, Users, Heart, MessageCircle, Share2, Download, Calendar, Clock, Sparkles, TrendingUp, Activity, Filter, X } from 'lucide-react';
+import { Eye, FileText, MapPin, MoreHorizontal, Pencil, Plus, Trash2, Users, Heart, MessageCircle, Share2, Download, Calendar, Clock, Sparkles, TrendingUp, Activity, Filter, X, LayoutDashboard } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -191,7 +191,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                     <div className="relative">
                         <div className="relative group">
                             <h1 className="text-4xl font-bold tracking-tight text-teal-800 flex items-center gap-3">
-                                <Sparkles className="h-10 w-10 text-teal-600 transform transition-all duration-300 group-hover:rotate-12 group-hover:scale-110 drop-shadow-sm" />
+                                <LayoutDashboard className="h-10 w-10 text-teal-600 transform transition-all duration-300 group-hover:scale-110 drop-shadow-sm" />
                                 Dashboard
                             </h1>
                             <p className="text-teal-600 mt-2 flex items-center gap-2 font-medium">
