@@ -245,7 +245,6 @@ export default function MapUpload() {
                         </div>
                         <div>
                             <h1 className="text-4xl font-bold tracking-tight text-gray-800 flex items-center gap-3">
-                                <Sparkles className="h-8 w-8 text-gray-500 transform transition-all duration-300 hover:rotate-12 hover:scale-110" />
                                 Upload New Map
                             </h1>
                             <p className="text-gray-600 mt-2 flex items-center gap-2 font-medium text-lg">
