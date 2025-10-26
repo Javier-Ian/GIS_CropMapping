@@ -318,7 +318,6 @@ export default function MapEdit({ map, errors }: Props) {
                             </div>
                             <div>
                                 <h1 className="text-4xl font-bold tracking-tight text-gray-800 flex items-center gap-3 mb-2">
-                                    <Sparkles className="h-8 w-8 text-gray-500 transform transition-all duration-300 hover:rotate-12 hover:scale-110" />
                                     Edit Map
                                 </h1>
                                 <p className="text-gray-600 flex items-center gap-2 font-medium text-lg">
@@ -392,7 +391,7 @@ export default function MapEdit({ map, errors }: Props) {
                                         onChange={(e) => setData('title', e.target.value)}
                                         placeholder="Enter map title"
                                         required
-                                        className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${(errors.title || formErrors?.title) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
+                                        className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl bg-white text-gray-900 placeholder:text-gray-400 ${(errors.title || formErrors?.title) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                     />
                                     {(errors.title || formErrors?.title) && (
                                         <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
@@ -412,7 +411,7 @@ export default function MapEdit({ map, errors }: Props) {
                                         value={data.description}
                                         onChange={(e) => setData('description', e.target.value)}
                                         placeholder="Describe your map"
-                                        className={`min-h-[120px] border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${(errors.description || formErrors?.description) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
+                                        className={`min-h-[120px] border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl bg-white text-gray-900 placeholder:text-gray-400 ${(errors.description || formErrors?.description) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}
                                     />
                                     {(errors.description || formErrors?.description) && (
                                         <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
@@ -428,23 +427,23 @@ export default function MapEdit({ map, errors }: Props) {
                                         Barangay Location
                                     </Label>
                                     <Select value={data.barangay} onValueChange={(value) => setData('barangay', value)}>
-                                        <SelectTrigger className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl ${(errors.barangay || formErrors?.barangay) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}>
-                                            <SelectValue placeholder="Select barangay location..." />
+                                        <SelectTrigger className={`border-2 transition-all duration-300 focus:border-teal-400 focus:ring-teal-200 rounded-xl bg-white text-gray-900 ${(errors.barangay || formErrors?.barangay) ? 'border-red-400 focus:border-red-400' : 'border-gray-200 hover:border-gray-300'}`}>
+                                            <SelectValue placeholder="Select barangay location..." className="text-gray-900" />
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-xl border-gray-200">
-                                            <SelectItem value="Butong" className="cursor-pointer hover:bg-gray-50 focus:bg-gray-100 rounded-lg">
+                                        <SelectContent className="rounded-xl border-gray-200 bg-white">
+                                            <SelectItem value="Butong" className="cursor-pointer hover:bg-teal-600 hover:text-white focus:bg-teal-600 focus:text-white rounded-lg text-gray-900">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-2 h-2 bg-teal-700 rounded-full"></div>
                                                     Butong
                                                 </div>
                                             </SelectItem>
-                                            <SelectItem value="Salawagan" className="cursor-pointer hover:bg-gray-50 focus:bg-gray-100 rounded-lg">
+                                            <SelectItem value="Salawagan" className="cursor-pointer hover:bg-teal-600 hover:text-white focus:bg-teal-600 focus:text-white rounded-lg text-gray-900">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-2 h-2 bg-teal-700 rounded-full"></div>
                                                     Salawagan
                                                 </div>
                                             </SelectItem>
-                                            <SelectItem value="San Jose" className="cursor-pointer hover:bg-gray-50 focus:bg-gray-100 rounded-lg">
+                                            <SelectItem value="San Jose" className="cursor-pointer hover:bg-teal-600 hover:text-white focus:bg-teal-600 focus:text-white rounded-lg text-gray-900">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-2 h-2 bg-teal-700 rounded-full"></div>
                                                     San Jose
