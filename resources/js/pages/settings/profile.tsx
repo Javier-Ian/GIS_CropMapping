@@ -77,7 +77,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                     </Label>
                                     <Input
                                         id="name"
-                                        className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg ${errors.name ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
+                                        className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg text-gray-900 ${errors.name ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
                                         required
@@ -100,7 +100,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                     <Input
                                         id="email"
                                         type="email"
-                                        className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg ${errors.email ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
+                                        className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg text-gray-900 ${errors.email ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
                                         value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
                                         required
