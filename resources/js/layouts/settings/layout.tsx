@@ -76,14 +76,14 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                             variant="ghost"
                                             asChild
                                             className={cn(
-                                                'w-full justify-start h-10 rounded-lg font-medium transition-all duration-200',
+                                                'w-full justify-start h-10 rounded-lg font-medium transition-all duration-200 bg-white',
                                                 isActive 
-                                                    ? 'bg-teal-100/80 text-teal-800 border border-teal-200/60 shadow-sm' 
-                                                    : 'hover:bg-slate-100/70 hover:text-slate-700 text-slate-600'
+                                                    ? 'bg-teal-100/80 text-teal-800 border border-teal-200/60 shadow-sm hover:bg-teal-100/80' 
+                                                    : 'hover:bg-teal-50/50 hover:text-teal-800 text-slate-700 border border-transparent hover:border-teal-100'
                                             )}
                                         >
                                             <Link href={item.href} prefetch className="flex items-center gap-3">
-                                                {Icon && <Icon className={cn("h-4 w-4", isActive ? "text-teal-700" : "text-slate-500")} />}
+                                                {Icon && <Icon className={cn("h-4 w-4 transition-colors", isActive ? "text-teal-700" : "text-slate-500 group-hover:text-teal-600")} />}
                                                 {item.title}
                                             </Link>
                                         </Button>
