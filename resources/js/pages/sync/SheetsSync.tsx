@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { RefreshCw, Database, FileSpreadsheet, CheckCircle, AlertCircle, Info, Search } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface SyncStatistics {
     [key: string]: {
@@ -383,15 +384,22 @@ export default function SheetsSync() {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <label className="text-sm font-medium text-gray-700">Select Barangay:</label>
-                                    <select 
-                                        value={selectedBarangay} 
-                                        onChange={(e) => setSelectedBarangay(e.target.value)}
-                                        className="border border-gray-200 rounded-lg px-4 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
-                                    >
-                                        {barangays.map((barangay) => (
-                                            <option key={barangay} value={barangay}>{barangay}</option>
-                                        ))}
-                                    </select>
+                                    <Select value={selectedBarangay} onValueChange={setSelectedBarangay}>
+                                        <SelectTrigger className="w-[240px] border-gray-200 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900">
+                                            <SelectValue placeholder="Select a barangay" className="text-gray-900" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-white border border-gray-200">
+                                            {barangays.map((barangay) => (
+                                                <SelectItem 
+                                                    key={barangay} 
+                                                    value={barangay}
+                                                    className="cursor-pointer bg-white text-gray-900 hover:bg-teal-50 focus:bg-teal-50 hover:text-teal-900 focus:text-teal-900 transition-colors"
+                                                >
+                                                    {barangay}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
                                     <span className="text-sm font-medium text-gray-700">
