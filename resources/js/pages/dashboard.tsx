@@ -238,7 +238,7 @@ export default function Dashboard({ maps = [], auth }: Props) {
                                 {maps.filter(map => map.user.id === auth.user.id).length}
                             </div>
                             <p className="text-sm text-teal-600 flex items-center gap-2 mt-2 font-medium">
-                                <Sparkles className="h-4 w-4 text-teal-600 animate-pulse" />
+                                <MapPin className="h-4 w-4 text-teal-600 animate-pulse" />
                                 Maps you've created
                             </p>
                         </CardContent>
