@@ -69,14 +69,6 @@ export default function MapEdit({ map, errors }: Props) {
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Dashboard',
-            href: '/dashboard',
-        },
-        {
-            title: map.title,
-            href: `/maps/${map.id}`,
-        },
-        {
             title: 'Edit',
             href: `/maps/${map.id}/edit`,
         },
