@@ -14,10 +14,6 @@ import Swal from 'sweetalert2';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
-    },
-    {
         title: 'Upload Map',
         href: '/maps/upload',
     },
