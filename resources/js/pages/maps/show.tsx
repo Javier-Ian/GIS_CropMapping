@@ -63,10 +63,6 @@ export default function MapShow({ map, isOwner }: Props) {
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Dashboard',
-            href: '/dashboard',
-        },
-        {
             title: map.title,
             href: `/maps/${map.id}`,
         },
