@@ -100,49 +100,17 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                     <Input
                                         id="email"
                                         type="email"
-                                        className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg text-gray-900 ${errors.email ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
+                                        className="border transition-all duration-200 rounded-lg text-gray-900 bg-gray-50 border-slate-200 cursor-not-allowed"
                                         value={data.email}
-                                        onChange={(e) => setData('email', e.target.value)}
-                                        required
+                                        readOnly
+                                        disabled
                                         autoComplete="username"
-                                        placeholder="Enter your email address"
                                     />
-                                    {errors.email && (
-                                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg border border-red-100">
-                                            <AlertCircle className="h-4 w-4" />
-                                            {errors.email}
-                                        </div>
-                                    )}
+                                    <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                                        <AlertCircle className="h-3.5 w-3.5" />
+                                        Email address cannot be changed
+                                    </p>
                                 </div>
-
-                                {mustVerifyEmail && auth.user.email_verified_at === null && (
-                                    <Card className="border-amber-200/60 bg-gradient-to-r from-amber-50/80 to-yellow-50/60">
-                                        <CardContent className="p-4">
-                                            <div className="flex items-center gap-3">
-                                                <AlertCircle className="h-5 w-5 text-amber-600" />
-                                                <div>
-                                                    <p className="text-amber-800 font-medium">
-                                                        Your email address is unverified.{' '}
-                                                        <Link
-                                                            href={route('verification.send')}
-                                                            method="post"
-                                                            as="button"
-                                                            className="text-amber-700 underline decoration-amber-300 underline-offset-4 transition-colors duration-200 hover:decoration-amber-600 font-semibold"
-                                                        >
-                                                            Click here to resend the verification email.
-                                                        </Link>
-                                                    </p>
-                                                    {status === 'verification-link-sent' && (
-                                                        <div className="mt-2 text-sm font-medium text-teal-600 flex items-center gap-2">
-                                                            <CheckCircle className="h-4 w-4" />
-                                                            A new verification link has been sent to your email address.
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                )}
 
                                 <div className="flex items-center gap-4 pt-2">
                                     <Button 
