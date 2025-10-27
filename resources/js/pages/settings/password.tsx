@@ -121,7 +121,7 @@ export default function Password() {
                                             value={data.current_password}
                                             onChange={(e) => setData('current_password', e.target.value)}
                                             type={showPasswords.current ? "text" : "password"}
-                                            className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg pr-12 ${errors.current_password ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
+                                            className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg pr-12 text-gray-900 ${errors.current_password ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
                                             autoComplete="current-password"
                                             placeholder="Enter your current password"
                                         />
@@ -155,7 +155,7 @@ export default function Password() {
                                             value={data.password}
                                             onChange={(e) => setData('password', e.target.value)}
                                             type={showPasswords.new ? "text" : "password"}
-                                            className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg pr-12 ${errors.password ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
+                                            className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg pr-12 text-gray-900 ${errors.password ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
                                             autoComplete="new-password"
                                             placeholder="Enter your new password"
                                         />
@@ -188,7 +188,7 @@ export default function Password() {
                                             value={data.password_confirmation}
                                             onChange={(e) => setData('password_confirmation', e.target.value)}
                                             type={showPasswords.confirm ? "text" : "password"}
-                                            className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg pr-12 ${errors.password_confirmation ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
+                                            className={`border transition-all duration-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 rounded-lg pr-12 text-gray-900 ${errors.password_confirmation ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 hover:border-slate-300'}`}
                                             autoComplete="new-password"
                                             placeholder="Confirm your new password"
                                         />
