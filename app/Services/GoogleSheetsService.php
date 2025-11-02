@@ -25,12 +25,23 @@ class GoogleSheetsService
             
             // Use service account credentials
             $credentialsPath = public_path('credentials.json');
+            
+            if (!file_exists($credentialsPath)) {
+                throw new \Exception('Credentials file not found at: ' . $credentialsPath);
+            }
+            
             $this->client->setAuthConfig($credentialsPath);
             $this->client->setScopes([Sheets::SPREADSHEETS]);
             
             $this->service = new Sheets($this->client);
+            
+            Log::info('Google Sheets client initialized successfully');
         } catch (\Exception $e) {
-            Log::error('Failed to initialize Google Sheets client: ' . $e->getMessage());
+            Log::error('Failed to initialize Google Sheets client', [
+                'error' => $e->getMessage(),
+                'credentials_path' => $credentialsPath ?? 'unknown',
+                'trace' => $e->getTraceAsString()
+            ]);
             throw $e;
         }
     }
@@ -40,21 +51,25 @@ class GoogleSheetsService
      */
     public function getSheetUrlForBarangay($barangay)
     {
-        try {
-            $sheetName = "Brgy. " . $barangay;
-            
-            // Get or create the sheet
-            $sheetId = $this->getOrCreateSheet($sheetName);
-            
-            if ($sheetId === null) {
-                return null;
-            }
-
-            return "https://docs.google.com/spreadsheets/d/{$this->spreadsheetId}/edit#gid={$sheetId}";
-        } catch (\Exception $e) {
-            Log::error('Failed to get sheet URL for barangay: ' . $e->getMessage());
-            return null;
+        // Normalize barangay name - remove "Brgy. " prefix if it exists
+        $barangayName = preg_replace('/^Brgy\.\s*/i', '', $barangay);
+        $sheetName = "Brgy. " . $barangayName;
+        
+        Log::info('Getting sheet URL for barangay', [
+            'original' => $barangay,
+            'normalized' => $barangayName,
+            'sheet_name' => $sheetName
+        ]);
+        
+        // Get or create the sheet - let exceptions propagate
+        $sheetId = $this->getOrCreateSheet($sheetName);
+        
+        if ($sheetId === null) {
+            Log::error('Failed to get sheet ID for barangay', ['sheet_name' => $sheetName]);
+            throw new \Exception('Unable to retrieve Google Sheet ID for ' . $sheetName);
         }
+
+        return "https://docs.google.com/spreadsheets/d/{$this->spreadsheetId}/edit#gid={$sheetId}";
     }
 
     /**
@@ -80,11 +95,32 @@ class GoogleSheetsService
             }
             
             // Sheet doesn't exist, create it
+            Log::info('Sheet not found, creating new sheet: ' . $sheetName);
             return $this->createNewSheet($sheetName);
             
+        } catch (\Google\Service\Exception $e) {
+            // Handle Google API specific errors
+            $errorDetails = json_decode($e->getMessage(), true);
+            Log::error('Google API error in getOrCreateSheet', [
+                'sheet_name' => $sheetName,
+                'error' => $e->getMessage(),
+                'status_code' => $e->getCode(),
+                'error_details' => $errorDetails
+            ]);
+            
+            // Re-throw with more context
+            if (isset($errorDetails['error']) && $errorDetails['error'] === 'invalid_grant') {
+                throw new \Exception('Google Sheets authentication failed: Invalid or expired credentials. Please regenerate the service account key.');
+            }
+            
+            throw new \Exception('Failed to access Google Sheets: ' . $e->getMessage());
         } catch (\Exception $e) {
-            Log::error('Failed to get or create sheet: ' . $e->getMessage());
-            return null;
+            Log::error('Failed to get or create sheet', [
+                'sheet_name' => $sheetName,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
         }
     }
 

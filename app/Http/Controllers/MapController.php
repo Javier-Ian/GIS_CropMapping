@@ -482,6 +482,7 @@ class MapController extends Controller
             ]);
 
             if (!$map->barangay) {
+                \Log::warning('No barangay specified for map', ['map_id' => $map->id]);
                 abort(400, 'No barangay specified for this map');
             }
 
@@ -494,7 +495,10 @@ class MapController extends Controller
                     'barangay' => $map->barangay
                 ]);
 
-                abort(404, 'Failed to get Google Sheet for barangay: ' . $map->barangay);
+                return response()->view('errors.google-sheets-error', [
+                    'message' => 'Unable to access Google Sheets. Please check your credentials and try again.',
+                    'barangay' => $map->barangay
+                ], 500);
             }
 
             \Log::info('Successfully redirecting to Google Sheets', [
@@ -508,11 +512,32 @@ class MapController extends Controller
         } catch (\Exception $e) {
             \Log::error('Error redirecting to Google Sheets', [
                 'map_id' => $map->id,
+                'barangay' => $map->barangay ?? 'Unknown',
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
 
-            abort(500, 'Internal server error: ' . $e->getMessage());
+            $errorMessage = $e->getMessage();
+            
+            // Check if it's a JWT/credentials/authentication error
+            if (strpos($errorMessage, 'JWT') !== false || 
+                strpos($errorMessage, 'invalid_grant') !== false ||
+                strpos($errorMessage, 'authentication failed') !== false ||
+                strpos($errorMessage, 'expired credentials') !== false) {
+                
+                return response()->view('errors.google-sheets-error', [
+                    'message' => 'Google Sheets authentication has failed. The service account credentials have expired or are invalid. Please regenerate the credentials following the guide in GOOGLE_SHEETS_AUTH_FIX.md or contact your system administrator.',
+                    'barangay' => $map->barangay ?? 'Unknown',
+                    'technical_details' => config('app.debug') ? $errorMessage : null
+                ], 500);
+            }
+
+            // Generic error
+            return response()->view('errors.google-sheets-error', [
+                'message' => 'Unable to access Google Sheets. ' . $errorMessage,
+                'barangay' => $map->barangay ?? 'Unknown',
+                'technical_details' => config('app.debug') ? $errorMessage : null
+            ], 500);
         }
     }
 
