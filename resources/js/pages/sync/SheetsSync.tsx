@@ -22,6 +22,7 @@ interface CropData {
     total_area: string;
     total_yield: string;
     synced_at: string;
+    synced_by: string;
     created_at: string;
 }
 
@@ -59,7 +60,8 @@ export default function SheetsSync() {
                     crop.planting_date.toLowerCase().includes(query) ||
                     crop.harvest_date.toLowerCase().includes(query) ||
                     crop.total_area.toLowerCase().includes(query) ||
-                    crop.total_yield.toLowerCase().includes(query)
+                    crop.total_yield.toLowerCase().includes(query) ||
+                    (crop.synced_by && crop.synced_by.toLowerCase().includes(query))
                 );
             });
             setFilteredCropData(filtered);
@@ -424,7 +426,7 @@ export default function SheetsSync() {
                                         </div>
                                         <input
                                             type="text"
-                                            placeholder="Search by name, place, crop, area, yield..."
+                                            placeholder="Search by name, place, crop, user..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
@@ -480,6 +482,7 @@ export default function SheetsSync() {
                                                     <th className="text-left p-4 font-semibold text-gray-700">Harvest Date</th>
                                                     <th className="text-left p-4 font-semibold text-gray-700">Total Area</th>
                                                     <th className="text-left p-4 font-semibold text-gray-700">Total Yield</th>
+                                                    <th className="text-left p-4 font-semibold text-gray-700">Synced By</th>
                                                     <th className="text-left p-4 font-semibold text-gray-700">Synced At</th>
                                                 </tr>
                                             </thead>
@@ -493,6 +496,16 @@ export default function SheetsSync() {
                                                         <td className="p-4 text-gray-800">{highlightSearchTerm(crop.harvest_date, searchQuery)}</td>
                                                         <td className="p-4 text-gray-800">{highlightSearchTerm(crop.total_area, searchQuery)}</td>
                                                         <td className="p-4 text-gray-800">{highlightSearchTerm(crop.total_yield, searchQuery)}</td>
+                                                        <td className="p-4 text-gray-800">
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+                                                                    <span className="text-xs font-semibold text-teal-700">
+                                                                        {crop.synced_by?.charAt(0).toUpperCase() || 'U'}
+                                                                    </span>
+                                                                </div>
+                                                                <span className="font-medium">{crop.synced_by || 'Unknown'}</span>
+                                                            </div>
+                                                        </td>
                                                         <td className="p-4 text-gray-800">{formatDate(crop.synced_at)}</td>
                                                     </tr>
                                                 ))}

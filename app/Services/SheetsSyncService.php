@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 class SheetsSyncService
 {
     protected $googleSheetsService;
+    protected $userId;
+    protected $userName;
     
     // Map barangay names to their corresponding models
     protected $barangayModels = [
@@ -18,9 +20,11 @@ class SheetsSyncService
         'Brgy. San Jose' => BrgySanJoseCrop::class,
     ];
 
-    public function __construct()
+    public function __construct($userId = null)
     {
         $this->googleSheetsService = new GoogleSheetsService();
+        $this->userId = $userId ?? auth()->id();
+        $this->userName = auth()->user()?->name ?? 'Unknown User';
     }
 
     /**
@@ -153,6 +157,7 @@ class SheetsSyncService
         $row = array_pad($row, 7, '');
 
         $data = [
+            'user_id' => $this->userId,
             'name' => trim($row[0] ?? ''),
             'place' => trim($row[1] ?? ''),
             'crop' => trim($row[2] ?? ''),
@@ -162,6 +167,7 @@ class SheetsSyncService
             'total_yield' => trim($row[6] ?? ''),
             'sheet_row_index' => $rowIndex,
             'synced_at' => now(),
+            'synced_by' => $this->userName,
         ];
 
         // Skip rows with placeholder data
@@ -169,9 +175,12 @@ class SheetsSyncService
             return;
         }
 
-        // Update or create record based on sheet_row_index
+        // Update or create record based on user_id and sheet_row_index
         $modelClass::updateOrCreate(
-            ['sheet_row_index' => $rowIndex],
+            [
+                'user_id' => $this->userId,
+                'sheet_row_index' => $rowIndex
+            ],
             $data
         );
     }
@@ -204,9 +213,13 @@ class SheetsSyncService
         $stats = [];
 
         foreach ($this->barangayModels as $barangayName => $modelClass) {
-            $totalRecords = $modelClass::count();
-            $recentlysynced = $modelClass::where('synced_at', '>=', now()->subHour())->count();
-            $lastSync = $modelClass::latest('synced_at')->first()?->synced_at;
+            $totalRecords = $modelClass::where('user_id', $this->userId)->count();
+            $recentlysynced = $modelClass::where('user_id', $this->userId)
+                ->where('synced_at', '>=', now()->subHour())
+                ->count();
+            $lastSync = $modelClass::where('user_id', $this->userId)
+                ->latest('synced_at')
+                ->first()?->synced_at;
 
             $stats[$barangayName] = [
                 'total_records' => $totalRecords,
@@ -241,7 +254,9 @@ class SheetsSyncService
         }
 
         $modelClass = $this->barangayModels[$barangayName];
-        return $modelClass::orderBy('created_at', 'desc')->get();
+        return $modelClass::where('user_id', $this->userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     /**
@@ -252,8 +267,10 @@ class SheetsSyncService
         $detailedStatus = [];
 
         foreach ($this->barangayModels as $barangayName => $modelClass) {
-            $dbCount = $modelClass::count();
-            $lastSync = $modelClass::latest('synced_at')->first()?->synced_at;
+            $dbCount = $modelClass::where('user_id', $this->userId)->count();
+            $lastSync = $modelClass::where('user_id', $this->userId)
+                ->latest('synced_at')
+                ->first()?->synced_at;
             
             try {
                 // Get sheet data count using the barangay name directly as sheet name
